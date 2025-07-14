@@ -1,0 +1,44 @@
+services:
+  formeta-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: formeta-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://formeta:FormWebDB123!@formeta-db:5432/formeta_web
+      - JWT_SECRET=FormetaJWTSecret2025SuperSecure!
+      - SMTP_HOST=mail.smtp2go.com
+      - SMTP_PORT=465
+      - SMTP_USER=formeta.es
+      - SMTP_PASSWORD=YOUR_SMTP2GO_API_KEY
+      - SMTP_FROM=web@formeta.es
+    depends_on:
+      - formeta-db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.formeta-web.rule=Host(`formeta.es`,`www.formeta.es`)"
+      - "traefik.http.routers.formeta-web.entrypoints=web"
+      - "traefik.http.services.formeta-web.loadbalancer.server.port=3000"
+      - "traefik.http.routers.formeta-web-secure.rule=Host(`formeta.es`,`www.formeta.es`)"
+      - "traefik.http.routers.formeta-web-secure.entrypoints=websecure"
+      - "traefik.http.routers.formeta-web-secure.tls.certresolver=cloudflare"
+
+  formeta-db:
+    image: postgres:15
+    container_name: formeta-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: formeta
+      POSTGRES_PASSWORD: FormWebDB123!
+      POSTGRES_DB: formeta_web
+    volumes:
+      - formeta_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  formeta_db_data:
