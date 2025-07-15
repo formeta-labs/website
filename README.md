@@ -1,166 +1,66 @@
-# Formeta Website
+# Formeta Labs Website
 
-Sitio web oficial de Formeta - Soluciones de gestión empresarial, digitalización y automatización.
+Un sitio web moderno con estética pixel art para Formeta Labs, estudio tecnológico especializado en digitalización empresarial.
 
-## 🚀 Características
+## Características
 
-- **Frontend Moderno**: Desarrollado con SvelteKit y TypeScript
-- **UI/UX Profesional**: Utilizando Tailwind CSS con diseño responsivo
-- **Autenticación**: Sistema de login para empleados y dashboard interno
-- **Base de Datos**: PostgreSQL con Prisma ORM
-- **Despliegue**: Dockerizado con docker-compose
-- **Herramientas**: Integración con herramientas internas de Formeta
+- **Diseño Pixel Art Moderno**: Estética brutalista con elementos pixel art
+- **Responsive**: Optimizado para todos los dispositivos
+- **Performance**: Carga rápida y optimizado para SEO
+- **Accesibilidad**: Cumple con estándares web modernos
 
-## 🛠️ Tecnologías
+## Tecnologías
 
-- **Frontend**: SvelteKit, TypeScript, Tailwind CSS
-- **Backend**: Node.js, Prisma, PostgreSQL
-- **Autenticación**: JWT, bcrypt
-- **Despliegue**: Docker, Docker Compose
-- **Proxy**: Traefik (configurado para SSL)
+- **SvelteKit**: Framework frontend moderno
+- **TypeScript**: Tipado estático
+- **Tailwind CSS**: Framework de CSS utility-first
+- **Geist Font**: Tipografía moderna
 
-## 📦 Instalación
-
-1. Clonar el repositorio
-2. Instalar dependencias:
-   ```bash
-   npm install
-   ```
-
-3. Configurar variables de entorno:
-   ```bash
-   cp .env.example .env
-   ```
-
-4. Configurar base de datos:
-   ```bash
-   npx prisma generate
-   npx prisma db push
-   ```
-
-5. Ejecutar en desarrollo:
-   ```bash
-   npm run dev
-   ```
-
-## 🐳 Despliegue con Docker
-
-1. Construir y ejecutar:
-   ```bash
-   docker-compose up -d
-   ```
-
-2. La aplicación estará disponible en `http://localhost:3000`
-
-## 🔐 Autenticación
-
-### Usuarios por defecto:
-- **Admin**: `admin@formeta.es` / `admin123`
-- **Empleado 1**: `empleado1@formeta.es` / `admin123`
-- **Empleado 2**: `empleado2@formeta.es` / `admin123`
-
-## 📁 Estructura del Proyecto
-
-```
-src/
-├── lib/
-│   ├── components/          # Componentes reutilizables
-│   ├── stores/             # Stores de Svelte
-│   ├── server/             # Lógica del servidor
-│   └── data/               # Datos estáticos
-├── routes/                 # Rutas de la aplicación
-└── app.html               # Template principal
-```
-
-## 🔧 Configuración
-
-### Variables de Entorno
-
-```env
-JWT_SECRET=FormetaJWTSecret2025SuperSecure!
-DATABASE_URL=postgresql://formeta:FormWebDB123!@localhost:5432/formeta_web
-NODE_ENV=development
-SMTP_HOST=mail.smtp2go.com
-SMTP_PORT=465
-SMTP_USER=formeta.es
-SMTP_PASSWORD=YOUR_SMTP2GO_API_KEY
-SMTP_FROM=web@formeta.es
-```
-
-### Traefik Labels
-
-El proyecto incluye configuración para Traefik con:
-- Dominio: `formeta.es` y `www.formeta.es`
-- SSL automático vía Cloudflare
-- Redirección HTTP a HTTPS
-
-## 📊 Funcionalidades
-
-### Sitio Público
-- Página de inicio con servicios
-- Información de la empresa
-- Blog y noticias
-- Formulario de contacto
-- Información sobre VeriFactu
-
-### Dashboard Interno
-- Autenticación de empleados
-- Acceso a herramientas internas
-- Gestión de proyectos
-- Configuración de usuario
-
-### Herramientas Integradas
-- Vikunja (Gestión de tareas)
-- n8n (Automatización)
-- Paperless-NGX (Gestión documental)
-- Bitwarden (Gestión de contraseñas)
-- Form.io (Formularios)
-- Linkwarden (Gestión de enlaces)
-- Grafana (Monitoreo)
-- Matomo (Analytics)
-- Ollama (IA)
-- Lobechat (Chat)
-
-## 🚀 Comandos Útiles
+## Desarrollo
 
 ```bash
-# Desarrollo
+# Instalar dependencias
+npm install
+
+# Servidor de desarrollo
 npm run dev
 
-# Construcción
+# Build para producción
 npm run build
 
-# Vista previa
+# Preview del build
 npm run preview
-
-# Formateo
-npm run format
-
-# Base de datos
-npx prisma studio
-npx prisma migrate dev
-npx prisma generate
-
-# Docker
-docker-compose up -d
-docker-compose down
-docker-compose logs -f formeta-web
 ```
 
-## 📝 Contribución
+## Servicios
 
-1. Fork del repositorio
-2. Crear rama feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit cambios (`git commit -am 'Añadir nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Crear Pull Request
+1. **Web Design/Development** - Desarrollo web moderno
+2. **RAG & MCP** - Sistemas de gestión documental inteligente
+3. **Automatización de Procesos** - Flujos de trabajo automatizados
+4. **VeriCRM** - CRM especializado en Verifactu
 
-## 📄 Licencia
+## Paleta de Colores
 
-Este proyecto es privado y pertenece a Formeta. Todos los derechos reservados.
+- **Primarios**: Formeta Blue (#4A90E2), Formeta Lavender (#A78BFA), Formeta Action (#007AFF)
+- **Neutros**: Formeta Dark (#111111), Formeta Gray (#1A1A1A), Formeta Light (#CCCCCC)
 
-## 🆘 Soporte
+© 2025 Formeta Labs. Todos los derechos reservados.
 
-Para soporte técnico, contactar:
-- Email: soporte@formeta.es
-- Documentación interna: Consultar documentación en `/docs`
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.

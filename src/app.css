@@ -1,141 +1,908 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+/* Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Fuente Inter */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Base Styles */
+@layer base {
+  html {
+    font-family: 'Geist', system-ui, sans-serif;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  body {
+    @apply bg-formeta-white text-formeta-text;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04';
+  }
+  
+  /* Enterprise Typography Hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-semibold;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl font-medium;
+  }
+  
+  h4 {
+    @apply text-xl md:text-2xl font-medium;
+  }
+  
+  /* Technical Text */
+  .font-mono {
+    font-family: 'Geist Mono', Monaco, Menlo, monospace;
+    font-feature-settings: 'cv01', 'cv02';
+  }
+  
+  /* Body Text */
+  p {
+    @apply text-base leading-relaxed;
+    font-family: 'Geist', system-ui, sans-serif;
+  }
+  
+  /* Links */
+  a {
+    @apply transition-colors duration-200;
+  }
+  
+  /* Focus States */
+  *:focus {
+    @apply outline-none ring-2 ring-formeta-primary ring-offset-2;
+  }
+}
 
-/* Formeta Glassmorphism Components */
+/* Custom Components */
 @layer components {
-  .glass-card {
-    @apply bg-white/80 backdrop-blur-[40px] rounded-lg border border-white/20 shadow-lg;
+  /* Pixel Art Button */
+  .btn-pixel {
+    @apply inline-flex items-center justify-center px-6 py-3 text-14 font-medium tracking-pixel uppercase border-2 border-formeta-action bg-formeta-action text-white transition-all duration-100;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
   }
   
-  .glass-modal {
-    @apply bg-white/90 backdrop-blur-[40px] rounded-lg border border-white/30 shadow-2xl;
+  .btn-pixel:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.5);
   }
   
-  .glass-nav {
-    @apply bg-white/95 backdrop-blur-[40px] border-b border-white/20 shadow-sm;
+  .btn-pixel:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
   }
   
-  .glass-button {
-    @apply bg-white/20 backdrop-blur-[40px] border border-white/30 rounded-lg transition-all duration-300 hover:bg-white/30;
+  /* Secondary Button */
+  .btn-secondary {
+    @apply btn-pixel bg-formeta-lavender border-formeta-lavender;
   }
   
-  /* Gradientes de Formeta */
-  .bg-formeta-gradient {
-    background: linear-gradient(135deg, #4A90E2 0%, #A78BFA 100%);
+  /* Tertiary Button */
+  .btn-tertiary {
+    @apply btn-pixel bg-transparent border-formeta-action text-formeta-action;
   }
   
-  .bg-formeta-gradient-subtle {
-    background: linear-gradient(135deg, #4A90E2 0%, #A78BFA 100%);
-    opacity: 0.1;
+  .btn-tertiary:hover {
+    @apply bg-formeta-action text-white;
   }
   
-  .text-formeta-gradient {
-    background: linear-gradient(135deg, #4A90E2 0%, #A78BFA 100%);
+  /* Pixel Art Card */
+  .card-pixel {
+    @apply bg-white bg-opacity-95 border-2 border-formeta-blue p-6;
+    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
+  }
+  
+  /* Navigation Menu */
+  .nav-item {
+    @apply text-14 font-medium tracking-pixel uppercase text-formeta-text hover:text-formeta-action transition-colors duration-200;
+  }
+  
+  /* Input Fields */
+  .input-pixel {
+    @apply w-full px-4 py-3 text-16 border-2 border-formeta-text bg-white focus:border-formeta-action focus:outline-none transition-colors duration-100;
+  }
+  
+  /* Text Shadows */
+  .text-shadow-pixel {
+    text-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
+  }
+  
+  .text-shadow-dark {
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Patterns */
+  .pattern-dots {
+    background-image: radial-gradient(circle, rgba(74, 144, 226, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .pattern-grid {
+    background-image: 
+      linear-gradient(rgba(167, 139, 250, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(167, 139, 250, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .pattern-circuits {
+    background-image: 
+      linear-gradient(45deg, transparent 35%, rgba(167, 139, 250, 0.05) 35%, rgba(167, 139, 250, 0.05) 65%, transparent 65%),
+      linear-gradient(-45deg, transparent 35%, rgba(74, 144, 226, 0.08) 35%, rgba(74, 144, 226, 0.08) 65%, transparent 65%);
+    background-size: 30px 30px;
+  }
+  
+  /* 3D Wireframe Animation */
+  .wireframe-3d {
+    @apply animate-rotate-slow;
+    filter: drop-shadow(0 0 10px #4A90E2);
+  }
+  
+  /* Modal */
+  .modal-backdrop {
+    @apply fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50;
+  }
+  
+  .modal-content {
+    @apply bg-formeta-dark border-2 border-white p-8 max-w-2xl w-full mx-4;
+    box-shadow: 6px 6px 0px rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Dark Theme Overrides */
+  .dark-section {
+    @apply bg-formeta-dark text-formeta-light;
+  }
+  
+  .dark-section h1,
+  .dark-section h2,
+  .dark-section h3 {
+    @apply text-formeta-white;
+  }
+  
+  /* PIXEL ART CARDS V2.0 - ESPECIFICACIÓN COMPLETA */
+  
+  /* Tarjeta Pixel con 95% opacidad y sombras desplazadas */
+  .card-pixel {
+    background: rgba(255, 255, 255, 0.95); /* 95% opacidad según guía */
+    border: 2px solid #4A90E2; /* Borde 2px según especificación */
+    border-radius: 0; /* Sin border-radius para estética pixelada */
+    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3); /* Sombra desplazada sin blur */
+    padding: 24px; /* Múltiplo de 8px según sistema de espaciado */
+    transition: none; /* Sin transiciones suaves según guía */
+    position: relative;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Patrón interno dots sutil como textura de fondo */
+  .card-pixel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 50% 50%, rgba(74, 144, 226, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .card-pixel > * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .card-pixel:hover {
+    transform: translate(-2px, -2px); /* Elevación según especificación */
+    box-shadow: 6px 6px 0px rgba(74, 144, 226, 0.4);
+  }
+  
+  /* Contenedores de Cristal - Backdrop blur 20px + bordes pixelados */
+  .container-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px); /* Efecto glassmorphism según guía */
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(74, 144, 226, 0.3);
+    border-radius: 0; /* Bordes pixelados */
+    padding: 32px; /* Múltiplo de 8px */
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Actualización de enterprise-card para compliance v2.0 */
+  .enterprise-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #4A90E2;
+    border-radius: 0;
+    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
+    transition: none;
+    padding: 24px;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  .enterprise-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px rgba(74, 144, 226, 0.4);
+  }
+  
+  /* PIXEL ART BUTTONS V2.0 - GUÍA ESTILO COMPLETA */
+  
+  /* Botón Primario - Gradiente característico según guía */
+  .btn-pixel {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: 2px solid #4A90E2;
+    background: linear-gradient(180deg, #4A90E2 0%, #A78BFA 100%);
+    color: white;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
+    border-radius: 0; /* Sin border-radius para estética pixelada */
+    transition: none; /* Sin transiciones suaves según guía */
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  .btn-pixel:hover {
+    transform: translate(-1px, -1px); /* Elevación exacta según especificación */
+    box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.4);
+  }
+  
+  .btn-pixel:active {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
+  }
+  
+  /* Botón Secundario - Lavanda sólido según guía */
+  .btn-pixel-secondary {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: 2px solid #A78BFA;
+    background: #A78BFA;
+    color: white;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
+    border-radius: 0;
+    transition: none;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  .btn-pixel-secondary:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0px rgba(167, 139, 250, 0.4);
+  }
+  
+  .btn-pixel-secondary:active {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px rgba(167, 139, 250, 0.3);
+  }
+  
+  /* Botón Terciario - Transparente con borde según guía */
+  .btn-pixel-tertiary {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: 2px solid #4A90E2;
+    background: transparent;
+    color: #4A90E2;
+    text-shadow: none;
+    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.2);
+    border-radius: 0;
+    transition: none;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  .btn-pixel-tertiary:hover {
+    transform: translate(-1px, -1px);
+    background: rgba(74, 144, 226, 0.1);
+    box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.3);
+  }
+  
+  .btn-pixel-tertiary:active {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
+  }
+  
+  /* Compatibilidad con clase anterior */
+  .btn-enterprise {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: 2px solid #4A90E2;
+    background: linear-gradient(180deg, #4A90E2 0%, #A78BFA 100%);
+    color: white;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
+    border-radius: 0;
+    transition: none;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  .btn-enterprise:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.4);
+  }
+  
+  .btn-enterprise:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+  }
+  
+  .btn-enterprise-secondary {
+    background: transparent;
+    color: #007AFF;
+    border-color: #007AFF;
+  }
+  
+  .btn-enterprise-secondary:hover {
+    background: #007AFF;
+    color: white;
+  }
+  
+  /* Professional Status Badges */
+  .status-badge {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    padding: 4px 8px;
+    border: 1px solid;
+    border-radius: 0;
+  }
+  
+  .status-critical { border-color: #dc2626; background: rgba(220, 38, 38, 0.1); color: #dc2626; }
+  .status-high { border-color: #ea580c; background: rgba(234, 88, 12, 0.1); color: #ea580c; }
+  .status-medium { border-color: #ca8a04; background: rgba(202, 138, 4, 0.1); color: #ca8a04; }
+  .status-ready { border-color: #16a34a; background: rgba(22, 163, 74, 0.1); color: #16a34a; }
+  .status-production { border-color: #0ea5e9; background: rgba(14, 165, 233, 0.1); color: #0ea5e9; }
+  
+  /* Metric Displays */
+  .metric-display {
+    font-family: 'Geist Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+  
+  .metric-label {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+  }
+  
+  /* Tech Stack Tags */
+  .tech-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 8px;
+    background: rgba(74, 144, 226, 0.1);
+    border: 1px solid rgba(74, 144, 226, 0.3);
+    color: #4A90E2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Enterprise Form Elements */
+  .form-enterprise {
+    font-family: 'Geist', system-ui, sans-serif;
+  }
+  
+  .input-enterprise {
+    font-family: 'Geist', system-ui, sans-serif;
+    padding: 12px 16px;
+    border: 2px solid #333333;
+    background: white;
+    transition: border-color 0.2s ease;
+    font-size: 16px;
+  }
+  
+  .input-enterprise:focus {
+    border-color: #007AFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  }
+  
+  .label-enterprise {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #333333;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+  /* Navigation Enhancement */
+  .nav-enterprise {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(74, 144, 226, 0.1);
+  }
+  
+  .nav-link-enterprise {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #333333;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+  
+  .nav-link-enterprise:hover {
+    color: #007AFF;
+  }
+  
+  .nav-link-enterprise::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #007AFF;
+    transition: width 0.2s ease;
+  }
+  
+  .nav-link-enterprise:hover::after {
+    width: 100%;
+  }
+  
+  /* ICONOGRAFÍA PIXEL ART COMPLETA V2.0 */
+  
+  /* Renderizado pixelado para iconos */
+  .icon-pixel {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    border-radius: 0; /* Sin border-radius para elementos icon */
+  }
+  
+  /* Tamaños múltiplos de 8px según especificación */
+  .icon-pixel-16 { width: 16px; height: 16px; }
+  .icon-pixel-24 { width: 24px; height: 24px; }
+  .icon-pixel-32 { width: 32px; height: 32px; }
+  .icon-pixel-48 { width: 48px; height: 48px; }
+  
+  /* Estados hover - transiciones abruptas, no suaves */
+  .icon-pixel:hover {
+    transform: scale(1.1);
+    transition: none; /* Sin transiciones suaves según guía */
+  }
+  
+  /* Símbolos pixelados para elementos especiales */
+  .symbol-menu::before { content: "▦▦▦"; }
+  .symbol-arrow-up::before { content: "▲"; }
+  .symbol-arrow-down::before { content: "▼"; }
+  .symbol-arrow-left::before { content: "◀"; }
+  .symbol-arrow-right::before { content: "▶"; }
+  .symbol-diamond::before { content: "◆"; }
+  .symbol-circle::before { content: "●"; }
+  
+  /* Container para iconos con bordes definidos */
+  .icon-container-pixel {
+    border: 2px solid #4A90E2;
+    border-radius: 0;
+    padding: 8px; /* Múltiplo de 8px */
+    background: rgba(255, 255, 255, 0.95);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  .icon-container-pixel:hover {
+    background: rgba(74, 144, 226, 0.1);
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
+  }
+}
+
+/* Utility Classes */
+@layer utilities {
+  .debug-border {
+    @apply border border-red-500;
+  }
+  
+  .container-formeta {
+    @apply max-w-6xl mx-auto px-4 md:px-8 lg:px-12;
+  }
+  
+  .section-spacing {
+    @apply py-16 md:py-24;
+  }
+  
+  .text-gradient {
+    background: linear-gradient(180deg, #4A90E2 0%, #A78BFA 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   
-  /* Botones con efecto glassmorphism */
-  .btn-formeta-primary {
-    @apply bg-formeta-gradient text-white font-medium px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+  /* Formeta Color Utilities */
+  .bg-formeta-gradient {
+    @apply bg-gradient-to-br from-formeta-primary to-formeta-secondary;
   }
   
-  .btn-formeta-secondary {
-    @apply bg-formeta-secondary text-white font-medium px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+  .bg-formeta-hero {
+    @apply bg-gradient-to-br from-formeta-text via-formeta-primary to-formeta-secondary;
   }
   
-  .btn-formeta-outline {
-    @apply border-2 border-formeta-primary text-formeta-primary font-medium px-6 py-3 rounded-lg hover:bg-formeta-primary hover:text-white transition-all duration-300;
+  /* Tag colors - Consistent with Formeta palette */
+  .tag-technology { @apply bg-formeta-primary-100 text-formeta-primary-700; }
+  .tag-compliance { @apply bg-red-100 text-red-700; }
+  .tag-ai { @apply bg-green-100 text-green-700; }
+  .tag-development { @apply bg-formeta-secondary-100 text-formeta-secondary-700; }
+  .tag-enterprise { @apply bg-gray-100 text-gray-700; }
+  
+  /* Service badge colors */
+  .service-badge-critical { @apply bg-formeta-error text-white; }
+  .service-badge-advanced { @apply bg-formeta-secondary text-white; }
+  .service-badge-production { @apply bg-formeta-success text-white; }
+  .service-badge-default { @apply bg-formeta-primary text-white; }
+  
+  /* FORMULARIOS PIXEL ART V2.0 - ESPECIFICACIÓN COMPLETA */
+  
+  /* Input Pixel - Bordes 2px, focus states destacados */
+  .input-pixel {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 400;
+    padding: 12px 16px; /* Múltiplo de 8px */
+    border: 2px solid #4A90E2;
+    border-radius: 0; /* Sin border-radius para estética pixelada */
+    background: rgba(255, 255, 255, 0.95);
+    color: #333333;
+    transition: none; /* Sin transiciones suaves según guía */
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
   }
   
-  .btn-formeta-glass {
-    @apply glass-button text-formeta-primary font-medium px-6 py-3 hover:text-formeta-accent;
+  .input-pixel:focus {
+    outline: none;
+    border-color: #A78BFA;
+    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
+    transform: translate(-1px, -1px); /* Cambio abrupto según estética */
   }
   
-  /* Inputs con estilo Formeta */
-  .input-formeta {
-    @apply w-full px-4 py-3 rounded-lg border-2 border-gray-200 bg-white/80 backdrop-blur-sm 
-           focus:border-formeta-accent focus:ring-4 focus:ring-formeta-accent/20 
-           transition-all duration-300 text-formeta-text placeholder-gray-400;
+  /* Estados de validación con paleta consistente */
+  .input-pixel.error {
+    border-color: #EF4444;
+    box-shadow: 2px 2px 0px rgba(239, 68, 68, 0.2);
   }
   
-  /* Animaciones personalizadas */
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+  .input-pixel.success {
+    border-color: #10B981;
+    box-shadow: 2px 2px 0px rgba(16, 185, 129, 0.2);
   }
   
-  .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
+  /* Labels Geist Medium según jerarquía */
+  .label-pixel {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    color: #333333;
+    margin-bottom: 8px; /* Múltiplo de 8px */
+    display: block;
   }
   
-  .animate-slide-down {
-    animation: slideDown 0.3s ease-out;
+  /* Campos técnicos - Geist Mono para código/datos */
+  .input-pixel-mono {
+    font-family: 'Geist Mono', Monaco, Menlo, monospace;
+    font-weight: 400;
+    padding: 12px 16px;
+    border: 2px solid #4A90E2;
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333333;
+    transition: none;
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
   }
   
-  .animate-bounce-subtle {
-    animation: bounceSubtle 2s infinite;
+  .input-pixel-mono:focus {
+    outline: none;
+    border-color: #A78BFA;
+    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
+    transform: translate(-1px, -1px);
   }
   
-  /* Hover effects */
-  .hover-lift {
-    @apply transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg;
+  /* Textarea pixel art */
+  .textarea-pixel {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 400;
+    padding: 12px 16px;
+    border: 2px solid #4A90E2;
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333333;
+    transition: none;
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    resize: none; /* Control de redimensionamiento */
   }
   
-  .hover-glow {
-    @apply transition-all duration-300 hover:shadow-lg hover:shadow-formeta-primary/25;
+  .textarea-pixel:focus {
+    outline: none;
+    border-color: #A78BFA;
+    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
+    transform: translate(-1px, -1px);
+  }
+  
+  /* Select pixel art */
+  .select-pixel {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 400;
+    padding: 12px 16px;
+    border: 2px solid #4A90E2;
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333333;
+    transition: none;
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    appearance: none; /* Remove default styling */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234A90E2' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+  }
+  
+  .select-pixel:focus {
+    outline: none;
+    border-color: #A78BFA;
+    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
+    transform: translate(-1px, -1px);
   }
 }
 
-/* Keyframes personalizados */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { transform: translateY(10px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes slideDown {
-  from { transform: translateY(-10px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes bounceSubtle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-
-/* Configuración base de tipografía */
-html {
-  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  @apply text-formeta-text bg-formeta-bg;
-}
-
-/* Scrollbar personalizada */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-gray-100;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-formeta-primary rounded-full;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-formeta-secondary;
-}
+/* SISTEMA DE ANIMACIONES PIXEL V2.0 */
+  
+  /* Timing estándar según especificación */
+  .animation-pixel-micro {
+    animation-duration: 0.1s; /* Micro-interacciones */
+    animation-timing-function: steps(1, end); /* Sin easing suave */
+  }
+  
+  .animation-pixel-transition {
+    animation-duration: 0.3s; /* Transiciones */
+    animation-timing-function: steps(2, end);
+  }
+  
+  .animation-pixel-effect {
+    animation-duration: 0.5s; /* Efectos */
+    animation-timing-function: steps(4, end);
+  }
+  
+  /* Animaciones específicas con estética 8-bit refinada */
+  @keyframes pixelPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  @keyframes pixelShake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    50% { transform: translateX(2px); }
+    75% { transform: translateX(-1px); }
+    100% { transform: translateX(0); }
+  }
+  
+  @keyframes pixelGlow {
+    0% { box-shadow: 0 0 0 rgba(74, 144, 226, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.6); }
+    100% { box-shadow: 0 0 0 rgba(74, 144, 226, 0.3); }
+  }
+  
+  /* Classes aplicables */
+  .pulse-pixel {
+    animation: pixelPulse 2s steps(2, end) infinite;
+  }
+  
+  .shake-pixel {
+    animation: pixelShake 0.5s steps(4, end);
+  }
+  
+  .glow-pixel {
+    animation: pixelGlow 2s steps(3, end) infinite;
+  }
+  
+  /* Respeto por reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .animation-pixel-micro,
+    .animation-pixel-transition,
+    .animation-pixel-effect,
+    .pulse-pixel,
+    .shake-pixel,
+    .glow-pixel {
+      animation: none;
+    }
+  }
+  
+  /* Loading states pixel art para formularios */
+  .loading-pixel {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .loading-pixel::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(74, 144, 226, 0.3), 
+      transparent
+    );
+    animation: pixelLoading 1.5s steps(6, end) infinite;
+  }
+  
+  @keyframes pixelLoading {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+  
+  /* Focus indicators visuales claros para navegación teclado */
+  .focus-pixel:focus {
+    outline: 2px solid #A78BFA;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.2);
+  }
+  
+  /* Touch feedback - 44px mínimo para elementos móviles */
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .touch-feedback:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px rgba(74, 144, 226, 0.3);
+  }
+  
+  /* CLASES DE COMPATIBILIDAD Y UTILIDADES */
+  
+  /* Botones secundarios y terciarios para compatibilidad */
+  .btn-secondary {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: 2px solid #A78BFA;
+    background: #A78BFA;
+    color: white;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
+    border-radius: 0;
+    transition: none;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  .btn-secondary:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0px rgba(167, 139, 250, 0.4);
+  }
+  
+  .btn-tertiary {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: 2px solid #4A90E2;
+    background: transparent;
+    color: #4A90E2;
+    text-shadow: none;
+    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.2);
+    border-radius: 0;
+    transition: none;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  .btn-tertiary:hover {
+    transform: translate(-1px, -1px);
+    background: rgba(74, 144, 226, 0.1);
+    box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.3);
+  }
+  
+  /* Botón de servicio especializado */
+  .btn-service {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    padding: 8px 16px;
+    border: 2px solid #4A90E2;
+    background: rgba(74, 144, 226, 0.1);
+    color: #4A90E2;
+    border-radius: 0;
+    transition: none;
+    cursor: pointer;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  .btn-service:hover {
+    background: rgba(74, 144, 226, 0.2);
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
+  }
+  
+  /* Enterprise secondary button para navegación */
+  .btn-enterprise-secondary {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    padding: 8px 16px;
+    border: 2px solid #A78BFA;
+    background: transparent;
+    color: #A78BFA;
+    border-radius: 0;
+    transition: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  
+  .btn-enterprise-secondary:hover {
+    background: rgba(167, 139, 250, 0.1);
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0px rgba(167, 139, 250, 0.3);
+  }
