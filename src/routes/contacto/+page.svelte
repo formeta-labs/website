@@ -2,27 +2,26 @@
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import Icon from '$lib/components/Icon.svelte';
+	import ValidationMessage from '$lib/components/ValidationMessage.svelte';
+	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+	import FormField from '$lib/components/FormField.svelte';
+	import AutoComplete from '$lib/components/AutoComplete.svelte';
+	import FormProgress from '$lib/components/FormProgress.svelte';
+	import FormTips from '$lib/components/FormTips.svelte';
+	import FormSummary from '$lib/components/FormSummary.svelte';
+	import { contactFormData, contactFormState, setSubmissionState, clearSubmissionMessage } from '$lib/stores/contact';
+	import { useContactForm } from '$lib/composables/useContactForm';
+	import { getCompanySuggestions, getPositionSuggestions, getEmailSuggestions } from '$lib/data/autocomplete';
 	
 	let form: HTMLFormElement;
-	let isSubmitting = false;
-	let submitMessage = '';
-	let submitSuccess = false;
+	let showValidation = false;
 	
-	// Form data with enhanced fields
-	let formData = {
-		name: '',
-		email: '',
-		company: '',
-		position: '',
-		phone: '',
-		service: '',
-		projectType: '',
-		budget: '',
-		timeline: '',
-		message: '',
-		priority: 'normal',
-		gdprConsent: false
-	};
+	// Use stores for reactive state
+	$: formData = $contactFormData;
+	$: ({ isSubmitting, submitMessage, submitSuccess } = $contactFormState);
+	
+	// Initialize form handler
+	const { submitForm, validateEmail, validateName, validateMessage, validateCompany } = useContactForm();
 	
 	const contactStats = [
 		{ label: 'VeriFactu Urgente', value: '2h', description: 'Tiempo respuesta' },
@@ -72,19 +71,20 @@
 			const urlParams = new URLSearchParams(window.location.search);
 			const preSelectedService = urlParams.get('service');
 			if (preSelectedService) {
-				formData.service = preSelectedService;
+				updateFormData('service', preSelectedService);
 			}
 			
 			// Set priority based on service
 			if (preSelectedService === 'verifactu') {
-				formData.priority = 'urgent';
+				updateFormData('priority', 'urgent');
 			}
 		}
 		
 		// Animate floating elements
 		const animateFloatingElements = () => {
+			const heroElements = document.querySelectorAll('[class*="hero-element"]');
 			heroElements.forEach((el, index) => {
-				if (el) {
+				if (el instanceof HTMLElement) {
 					const delay = index * 200;
 					setTimeout(() => {
 						el.style.animation = `pixel-float 3s ease-in-out infinite`;
@@ -98,68 +98,33 @@
 	});
 	
 	async function handleSubmit() {
-		if (!form.checkValidity()) {
-			return;
-		}
-		
-		if (!formData.gdprConsent) {
-			submitMessage = 'Debes aceptar el tratamiento de datos para continuar.';
-			submitSuccess = false;
-			return;
-		}
-		
-		isSubmitting = true;
-		submitMessage = '';
-		
-		try {
-			// Enhanced submission with priority handling
-			const submissionData = {
-				...formData,
-				timestamp: new Date().toISOString(),
-				userAgent: browser ? navigator.userAgent : '',
-				priority: formData.service === 'verifactu' ? 'urgent' : formData.priority
-			};
-			
-			// Simulate API call with realistic delay
-			await new Promise(resolve => setTimeout(resolve, 2000));
-			
-			submitSuccess = true;
-			
-			// Different messages based on service priority
-			if (formData.service === 'verifactu') {
-				submitMessage = '🚨 SOLICITUD VERIFACTU RECIBIDA - Respuesta garantizada en 2 horas. Un especialista en compliance te contactará inmediatamente.';
-			} else if (services.find(s => s.id === formData.service)?.advanced) {
-				submitMessage = '🤖 SOLICITUD IA EMPRESARIAL RECIBIDA - Te contactaremos en 4 horas para agendar demo técnica personalizada.';
-			} else {
-				submitMessage = 'SOLICITUD RECIBIDA CORRECTAMENTE - Te contactaremos en menos de 24 horas con una propuesta personalizada.';
-			}
-			
-			// Reset form
-			formData = {
-				name: '',
-				email: '',
-				company: '',
-				position: '',
-				phone: '',
-				service: '',
-				projectType: '',
-				budget: '',
-				timeline: '',
-				message: '',
-				priority: 'normal',
-				gdprConsent: false
-			};
-			
-		} catch (error) {
-			submitSuccess = false;
-			submitMessage = 'Error al enviar la solicitud. Por favor, inténtalo de nuevo o contacta directamente por email.';
-		} finally {
-			isSubmitting = false;
-		}
+		showValidation = true;
+		await submitForm(form);
 	}
 	
 	function clearMessage() {
-		submitMessage = '';
+		clearSubmissionMessage();
+	}
+	
+	// Update form data reactively
+	function updateFormData(field: string, value: any) {
+		contactFormData.update(current => ({
+			...current,
+			[field]: value
+		}));
+	}
+	
+	// Autocomplete handlers
+	function handleCompanyInput(event: CustomEvent) {
+		updateFormData('company', event.detail.value);
+	}
+	
+	function handlePositionInput(event: CustomEvent) {
+		updateFormData('position', event.detail.value);
+	}
+	
+	function handleEmailInput(event: CustomEvent) {
+		updateFormData('email', event.detail.value);
 	}
 	
 	// Real-time validation helper
@@ -176,6 +141,35 @@
 		if (service.production) return 'bg-green-500 text-white';
 		return 'bg-blue-500 text-white';
 	}
+	
+	// Dynamic suggestions based on current input
+	$: companySuggestions = getCompanySuggestions(formData.company);
+	$: positionSuggestions = getPositionSuggestions(formData.position);
+	$: emailSuggestions = getEmailSuggestions(formData.email);
+	
+	// Form progress tracking
+	$: completedFields = [
+		formData.name.trim(),
+		formData.email.trim(),
+		formData.company.trim(),
+		formData.service.trim(),
+		formData.message.trim()
+	].filter(Boolean).length;
+	
+	$: formValid = formData.name.trim() && 
+		formData.email.trim() && 
+		formData.company.trim() && 
+		formData.service.trim() && 
+		formData.message.trim() && 
+		formData.gdprConsent &&
+		validateEmail(formData.email) &&
+		validateName(formData.name) &&
+		validateMessage(formData.message);
+	
+	$: currentStep = completedFields <= 2 ? 1 : completedFields <= 4 ? 2 : 3;
+	
+	// Show form summary when form is mostly complete and valid
+	$: showFormSummary = formValid && !isSubmitting && completedFields >= 3 && formData.service && formData.message.length > 50;
 </script>
 
 <svelte:head>
@@ -258,159 +252,150 @@
 						Formulario de Contacto <span class="text-formeta-primary">Enterprise</span>
 					</h2>
 					
+					<!-- Form Progress Indicator -->
+					<FormProgress 
+						{currentStep}
+						{completedFields}
+						totalFields={5}
+						{formValid}
+					/>
+					
 					<form bind:this={form} on:submit|preventDefault={handleSubmit} class="space-y-6">
 						<!-- Personal Information Row -->
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div>
-								<label for="name" class="form-label">Nombre completo *</label>
-								<input 
-									type="text" 
-									id="name" 
-									bind:value={formData.name}
-									required
-									class="input-pixel"
-									placeholder="Tu nombre completo"
-								/>
-							</div>
-							<div>
-								<label for="email" class="form-label">Email corporativo *</label>
-								<input 
-									type="email" 
-									id="email" 
-									bind:value={formData.email}
-									required
-									class="input-pixel"
-									placeholder="tu@empresa.com"
-								/>
-							</div>
+							<FormField
+								type="text"
+								label="Nombre completo"
+								bind:value={formData.name}
+								placeholder="Tu nombre completo"
+								required={true}
+								{showValidation}
+								validationFn={validateName}
+								customErrorMessage="El nombre debe tener entre 2 y 100 caracteres"
+							/>
+							
+							<AutoComplete
+								label="Email corporativo"
+								bind:value={formData.email}
+								placeholder="tu@empresa.com"
+								required={true}
+								suggestions={emailSuggestions}
+								on:input={handleEmailInput}
+							/>
 						</div>
 						
 						<!-- Company Information Row -->
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div>
-								<label for="company" class="form-label">Empresa *</label>
-								<input 
-									type="text" 
-									id="company" 
-									bind:value={formData.company}
-									required
-									class="input-pixel"
-									placeholder="Nombre de tu empresa"
-								/>
-							</div>
-							<div>
-								<label for="position" class="form-label">Cargo/Posición</label>
-								<input 
-									type="text" 
-									id="position" 
-									bind:value={formData.position}
-									class="input-pixel"
-									placeholder="CTO, CEO, IT Manager..."
-								/>
-							</div>
+							<AutoComplete
+								label="Empresa"
+								bind:value={formData.company}
+								placeholder="Nombre de tu empresa"
+								required={true}
+								suggestions={companySuggestions}
+								on:input={handleCompanyInput}
+							/>
+							
+							<AutoComplete
+								label="Cargo/Posición"
+								bind:value={formData.position}
+								placeholder="CTO, CEO, IT Manager..."
+								required={false}
+								suggestions={positionSuggestions}
+								on:input={handlePositionInput}
+							/>
 						</div>
 						
 						<!-- Contact & Service Row -->
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div>
-								<label for="phone" class="form-label">Teléfono</label>
-								<input 
-									type="tel" 
-									id="phone" 
-									bind:value={formData.phone}
-									class="input-pixel"
-									placeholder="+34 XXX XXX XXX"
-								/>
-							</div>
-							<div>
-								<label for="service" class="form-label">Servicio principal *</label>
-								<select 
-									id="service" 
-									bind:value={formData.service}
-									required
-									class="input-pixel"
-								>
-									<option value="">Selecciona un servicio</option>
-									{#each services as service}
-										<option value={service.id}>
-											{service.name}
-										</option>
-									{/each}
-								</select>
-							</div>
+							<FormField
+								type="tel"
+								label="Teléfono"
+								bind:value={formData.phone}
+								placeholder="+34 XXX XXX XXX"
+								required={false}
+								{showValidation}
+							/>
+							
+							<FormField
+								type="select"
+								label="Servicio principal"
+								bind:value={formData.service}
+								placeholder="Selecciona un servicio"
+								required={true}
+								{showValidation}
+								options={services}
+							/>
 						</div>
 						
 						<!-- Project Details Row -->
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div>
-								<label for="projectType" class="form-label">Tipo de proyecto</label>
-								<select 
-									id="projectType" 
-									bind:value={formData.projectType}
-									class="input-pixel"
-								>
-									<option value="">Selecciona tipo</option>
-									{#each projectTypes as type}
-										<option value={type.id}>{type.name}</option>
-									{/each}
-								</select>
-							</div>
-							<div>
-								<label for="budget" class="form-label">Presupuesto estimado</label>
-								<select 
-									id="budget" 
-									bind:value={formData.budget}
-									class="input-pixel"
-								>
-									<option value="">Selecciona rango</option>
-									{#each budgetRanges as budget}
-										<option value={budget.id}>{budget.name}</option>
-									{/each}
-								</select>
-							</div>
+							<FormField
+								type="select"
+								label="Tipo de proyecto"
+								bind:value={formData.projectType}
+								placeholder="Selecciona tipo"
+								required={false}
+								{showValidation}
+								options={projectTypes}
+							/>
+							
+							<FormField
+								type="select"
+								label="Presupuesto estimado"
+								bind:value={formData.budget}
+								placeholder="Selecciona rango"
+								required={false}
+								{showValidation}
+								options={budgetRanges}
+							/>
 						</div>
 						
 						<!-- Timeline & Priority -->
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div>
-								<label for="timeline" class="form-label">Timeline preferido</label>
-								<select 
-									id="timeline" 
-									bind:value={formData.timeline}
-									class="input-pixel"
-								>
-									<option value="">Selecciona timeline</option>
-									{#each timelineOptions as timeline}
-										<option value={timeline.id}>{timeline.name}</option>
-									{/each}
-								</select>
-							</div>
-							<div>
-								<label for="priority" class="form-label">Prioridad del proyecto</label>
-								<select 
-									id="priority" 
-									bind:value={formData.priority}
-									class="input-pixel"
-								>
-									<option value="normal">Normal</option>
-									<option value="high">Alta</option>
-									<option value="urgent">Urgente</option>
-								</select>
-							</div>
+							<FormField
+								type="select"
+								label="Timeline preferido"
+								bind:value={formData.timeline}
+								placeholder="Selecciona timeline"
+								required={false}
+								{showValidation}
+								options={timelineOptions}
+							/>
+							
+							<FormField
+								type="select"
+								label="Prioridad del proyecto"
+								bind:value={formData.priority}
+								placeholder="Selecciona prioridad"
+								required={false}
+								{showValidation}
+								options={[
+									{ id: 'normal', name: 'Normal' },
+									{ id: 'high', name: 'Alta' },
+									{ id: 'urgent', name: 'Urgente' }
+								]}
+							/>
 						</div>
 						
 						<!-- Message -->
-						<div>
-							<label for="message" class="form-label">Descripción detallada del proyecto *</label>
-							<textarea 
-								id="message" 
-								bind:value={formData.message}
-								required
-								rows="6"
-								class="input-pixel resize-none"
-								placeholder="Describe tu proyecto, objetivos, requisitos técnicos, challenges actuales, expectativas de ROI..."
-							></textarea>
-						</div>
+						<FormField
+							type="textarea"
+							label="Descripción detallada del proyecto"
+							bind:value={formData.message}
+							placeholder="Describe tu proyecto, objetivos, requisitos técnicos, challenges actuales, expectativas de ROI..."
+							required={true}
+							{showValidation}
+							rows={6}
+							validationFn={validateMessage}
+							customErrorMessage="La descripción debe tener entre 10 y 2000 caracteres"
+						/>
+						
+						<!-- Smart Tips -->
+						<FormTips 
+							service={formData.service}
+							message={formData.message}
+							priority={formData.priority}
+						/>
 						
 						<!-- GDPR Consent -->
 						<div class="flex items-start gap-3">
@@ -429,6 +414,11 @@
 							</label>
 						</div>
 						
+						<!-- Form Summary (shown when form is complete) -->
+						{#if showFormSummary}
+							<FormSummary {formData} show={showFormSummary} />
+						{/if}
+						
 						<!-- Enhanced Submit Button -->
 						<button 
 							type="submit" 
@@ -436,13 +426,9 @@
 							class="w-full bg-formeta-primary hover:bg-formeta-primary/90 text-white px-8 py-4 font-bold text-lg transition-all duration-200 border-2 border-formeta-primary {isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'}"
 						>
 							{#if isSubmitting}
-								<span class="flex items-center justify-center gap-2">
-									<svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
-										<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-										<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-									</svg>
+								<LoadingSpinner size="md" color="text-white">
 									ENVIANDO SOLICITUD...
-								</span>
+								</LoadingSpinner>
 							{:else}
 								{#if formData.service === 'verifactu'}
 									🚨 ENVIAR SOLICITUD VERIFACTU URGENTE
@@ -459,15 +445,13 @@
 						
 						<!-- Submit Message -->
 						{#if submitMessage}
-							<div 
-								class="p-4 border-2 {submitSuccess ? 'bg-green-50 border-green-500 text-green-800' : 'bg-red-50 border-red-500 text-red-800'} cursor-pointer" 
-								on:click={clearMessage} 
-								role="button" 
-								tabindex="0" 
-								on:keydown={(e) => e.key === 'Enter' && clearMessage()}
-							>
-								{submitMessage}
-								<div class="text-xs mt-2 opacity-70">Haz clic para cerrar</div>
+							<div class="cursor-pointer" on:click={clearMessage} role="button" tabindex="0" on:keydown={(e) => e.key === 'Enter' && clearMessage()}>
+								<ValidationMessage 
+									message={submitMessage} 
+									type={submitSuccess ? 'success' : 'error'} 
+									show={!!submitMessage} 
+								/>
+								<div class="text-xs mt-2 opacity-70 text-center">Haz clic para cerrar</div>
 							</div>
 						{/if}
 					</form>

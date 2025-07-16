@@ -4,6 +4,7 @@
 		ChevronRight,
 		ChevronDown,
 		CheckCircle,
+		CheckSquare,
 		AlertTriangle,
 		Settings,
 		Rocket,
@@ -76,7 +77,13 @@
 		UserCheck,
 		Megaphone,
 		Gift,
-		Headphones
+		Headphones,
+		LayoutDashboard,
+		LogOut,
+		AlertCircle,
+		Edit,
+		Trash,
+		RefreshCw
 	} from 'lucide-svelte';
 
 	export let name: string;
@@ -99,6 +106,7 @@
 		
 		// Status & Feedback
 		'check-circle': CheckCircle,
+		'check-square': CheckSquare,
 		'check': Check,
 		'x': X,
 		'x-circle': XCircle,
@@ -169,10 +177,19 @@
 		'scale': Scale,
 		'user-check': UserCheck,
 		'megaphone': Megaphone,
-		'headphones': Headphones
-	};
+		'headphones': Headphones,
+		'dashboard': LayoutDashboard,
+		'logout': LogOut,
+		'alert-circle': AlertCircle,
+		'edit': Edit,
+		'trash': Trash,
+		'refresh': RefreshCw
+	} as const;
 
-	$: IconComponent = icons[name];
+	type IconName = keyof typeof icons;
+	type IconComponentType = typeof ChevronRight; // All imported icons have the same type
+
+	$: IconComponent = icons[name as IconName] as IconComponentType | undefined;
 </script>
 
 {#if IconComponent}

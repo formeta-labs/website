@@ -1,17 +1,29 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import Icon from '$lib/components/Icon.svelte';
 	
+	let email = '';
+	let password = '';
 	let isLoading = false;
-	let loginData = {
-		username: '',
-		password: ''
-	};
 	let errorMessage = '';
+	let rememberMe = false;
+	
+	// Check if user is already logged in
+	onMount(() => {
+		if (browser) {
+			const token = localStorage.getItem('formeta_token');
+			if (token) {
+				// TODO: Verify token and redirect to dashboard
+				goto('/intranet/dashboard');
+			}
+		}
+	});
 	
 	async function handleLogin() {
-		if (!loginData.username || !loginData.password) {
-			errorMessage = 'Por favor, completa todos los campos';
+		if (!email || !password) {
+			errorMessage = 'Por favor, introduce email y contraseña';
 			return;
 		}
 		
@@ -19,21 +31,35 @@
 		errorMessage = '';
 		
 		try {
-			// Simulate login process
-			await new Promise(resolve => setTimeout(resolve, 1500));
+			const response = await fetch('http://localhost:3000/api/auth/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ email, password })
+			});
 			
-			// In a real application, you would validate credentials here
-			// For demo purposes, we'll just show a success message
-			alert('Login simulado - En desarrollo');
+			const data = await response.json();
 			
+			if (response.ok && data.success) {
+				// Store token and user info
+				localStorage.setItem('formeta_token', data.data.token);
+				localStorage.setItem('formeta_user', JSON.stringify(data.data.user));
+				
+				// Redirect to dashboard
+				goto('/intranet/dashboard');
+			} else {
+				errorMessage = data.error || 'Error al iniciar sesión';
+			}
 		} catch (error) {
-			errorMessage = 'Error de conexión. Inténtalo de nuevo.';
+			console.error('Login error:', error);
+			errorMessage = 'Error de conexión. Por favor, verifica que el servidor esté funcionando.';
 		} finally {
 			isLoading = false;
 		}
 	}
 	
-	function handleKeyDown(event: KeyboardEvent) {
+	function handleKeyPress(event: KeyboardEvent) {
 		if (event.key === 'Enter') {
 			handleLogin();
 		}
@@ -66,20 +92,21 @@
 		
 		<!-- Login Form -->
 		<form on:submit|preventDefault={handleLogin} class="space-y-6">
-			<!-- Username -->
+			<!-- Email -->
 			<div>
-				<label for="username" class="form-label">
-					USUARIO
+				<label for="email" class="form-label">
+					EMAIL
 				</label>
 				<input 
-					type="text" 
-					id="username" 
-					bind:value={loginData.username}
-					on:keydown={handleKeyDown}
+					type="email" 
+					id="email" 
+					bind:value={email}
+					on:keypress={handleKeyPress}
 					required
 					class="input-mono"
-					placeholder="usuario@formeta-labs.com"
-					autocomplete="username"
+					placeholder="usuario@formeta.es"
+					autocomplete="email"
+					disabled={isLoading}
 				/>
 			</div>
 			
@@ -91,13 +118,28 @@
 				<input 
 					type="password" 
 					id="password" 
-					bind:value={loginData.password}
-					on:keydown={handleKeyDown}
+					bind:value={password}
+					on:keypress={handleKeyPress}
 					required
 					class="input-mono"
 					placeholder="••••••••"
 					autocomplete="current-password"
+					disabled={isLoading}
 				/>
+			</div>
+			
+			<!-- Remember Me -->
+			<div class="remember-me">
+				<input 
+					type="checkbox" 
+					id="remember" 
+					bind:checked={rememberMe}
+					disabled={isLoading}
+					class="checkbox-mono"
+				/>
+				<label for="remember" class="checkbox-label">
+					RECORDARME
+				</label>
 			</div>
 			
 			<!-- Error Message -->
@@ -118,7 +160,7 @@
 			
 			<!-- Additional Options -->
 			<div class="additional-options text-center space-y-2">
-				<a href="mailto:support@formeta-labs.com?subject=Recuperar acceso Intranet" class="link-secondary">
+				<a href="mailto:support@formeta.es?subject=Recuperar acceso Intranet" class="link-secondary">
 					¿Olvidaste tu contraseña?
 				</a>
 				<a href="/contacto" class="link-secondary">
@@ -126,6 +168,26 @@
 				</a>
 			</div>
 		</form>
+		
+		<!-- Demo Credentials -->
+		<div class="demo-credentials">
+			<div class="demo-header">
+				<Icon name="info" size={16} class="text-formeta-action" />
+				<span class="text-12 text-formeta-light font-mono">
+					CREDENCIALES DE PRUEBA
+				</span>
+			</div>
+			<div class="demo-content">
+				<div class="demo-item">
+					<span class="demo-role">ADMIN:</span>
+					<span class="demo-cred">admin@formeta.es / admin123</span>
+				</div>
+				<div class="demo-item">
+					<span class="demo-role">USER:</span>
+					<span class="demo-cred">user@formeta.es / user123</span>
+				</div>
+			</div>
+		</div>
 		
 		<!-- System Status -->
 		<div class="system-status mt-8">
@@ -213,6 +275,73 @@
 	
 	.input-mono::placeholder {
 		color: #666666;
+	}
+	
+	.remember-me {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin: 1rem 0;
+	}
+	
+	.checkbox-mono {
+		width: 16px;
+		height: 16px;
+		border: 2px solid #4A90E2;
+		background: rgba(17, 17, 17, 0.8);
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+	
+	.checkbox-mono:checked {
+		background: #007AFF;
+		border-color: #007AFF;
+	}
+	
+	.checkbox-label {
+		font-family: 'Geist Mono', monospace;
+		font-size: 12px;
+		color: #CCCCCC;
+		letter-spacing: 0.5px;
+		cursor: pointer;
+		text-transform: uppercase;
+	}
+	
+	.demo-credentials {
+		margin-top: 2rem;
+		padding: 1rem;
+		background: rgba(255, 193, 7, 0.05);
+		border: 1px solid rgba(255, 193, 7, 0.3);
+		border-radius: 4px;
+	}
+	
+	.demo-header {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 12px;
+		justify-content: center;
+	}
+	
+	.demo-content {
+		font-family: 'Geist Mono', monospace;
+		font-size: 11px;
+		color: #CCCCCC;
+		line-height: 1.6;
+	}
+	
+	.demo-item {
+		margin-bottom: 4px;
+	}
+	
+	.demo-role {
+		color: #FFC107;
+		font-weight: 600;
+		margin-right: 8px;
+	}
+	
+	.demo-cred {
+		color: #AAAAAA;
 	}
 	
 	.btn-login {

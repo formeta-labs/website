@@ -1,0 +1,1082 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
+	import Icon from '$lib/components/Icon.svelte';
+	import LoadingSpinner from '$lib/components/Loa	function getPriorityBadge(priority: string | null) {
+		if (!priority) return { class: 'bg-gray-500', text: 'Normal' };
+		
+		const badges: Record<string, { class: string; text: string }> = {
+			'urgent': { class: 'bg-red-500', text: 'Urgente' },
+			'high': { class: 'bg-orange-500', text: 'Alta' },
+			'normal': { class: 'bg-blue-500', text: 'Normal' },
+			'low': { class: 'bg-green-500', text: 'Baja' }
+		};
+		
+		return badges[priority] || { class: 'bg-gray-500', text: priority };
+	}
+
+	async function loadSettings() {
+		try {
+			settingsLoading = true;
+			const response = await apiRequest('/api/settings');
+			settings = response.data;
+		} catch (err) {
+			console.error('Error loading settings:', err);
+		} finally {
+			settingsLoading = false;
+		}
+	}
+
+	async function saveSettings() {
+		try {
+			settingsSaving = true;
+			await apiRequest('/api/settings', {
+				method: 'PUT',
+				body: JSON.stringify(settings)
+			});
+		} catch (err) {
+			error = 'Error saving settings: ' + (err as Error).message;
+		} finally {
+			settingsSaving = false;
+		}
+	}
+
+	async function testEmailConfiguration() {
+		try {
+			await apiRequest('/api/contact/test');
+			alert('Configuración de email probada exitosamente');
+		} catch (err) {
+			alert('Error probando configuración de email: ' + (err as Error).message);
+		}
+	}
+
+	async function exportContacts() {
+		try {
+			const response = await fetch('http://localhost:3000/api/contact/export?format=csv', {
+				headers: {
+					'Authorization': `Bearer ${localStorage.getItem('token')}`
+				}
+			});
+
+			if (!response.ok) {
+				throw new Error('Error exporting contacts');
+			}
+
+			const blob = await response.blob();
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = 'contactos.csv';
+			document.body.appendChild(a);
+			a.click();
+			window.URL.revokeObjectURL(url);
+			document.body.removeChild(a);
+		} catch (err) {
+			alert('Error exportando contactos: ' + (err as Error).message);
+		}
+	}svelte';
+	
+	interface Contact {
+		id: string;
+		name: string;
+		email: string;
+		company: string | null;
+		position: string | null;
+		phone: string | null;
+		service: string | null;
+		projectType: string | null;
+		budget: string | null;
+		timeline: string | null;
+		priority: string | null;
+		message: string;
+		gdprConsent: boolean;
+		processed: boolean;
+		createdAt: string;
+		updatedAt: string;
+	}
+
+	interface ContactStats {
+		total: number;
+		processed: number;
+		pending: number;
+		byService: Record<string, number>;
+		byPriority: Record<string, number>;
+	}
+
+	interface User {
+		id: string;
+		email: string;
+		name: string | null;
+		role: 'USER' | 'ADMIN';
+		createdAt: string;
+		updatedAt: string;
+	}
+
+	let activeTab = 'contacts';
+	let contacts: Contact[] = [];
+	let stats: ContactStats | null = null;
+	let users: User[] = [];
+	let loading = false;
+	let error = '';
+	let selectedContact: Contact | null = null;
+	let showContactDetail = false;
+	let currentUser: User | null = null;
+	let authenticated = false;
+
+	// Configuration variables
+	let settings = {
+		smtp: {
+			host: '',
+			port: 587,
+			user: '',
+			password: '',
+			from: '',
+			to: ''
+		},
+		system: {
+			siteName: 'Formeta Labs',
+			maxContactsPerPage: 10,
+			enableRegistration: false,
+			maintenanceMode: false
+		}
+	};
+	let settingsLoading = false;
+	let settingsSaving = false;
+
+	// Pagination
+	let currentPage = 1;
+	let contactsPerPage = 10;
+	$: totalPages = Math.ceil(contacts.length / contactsPerPage);
+	$: paginatedContacts = contacts.slice(
+		(currentPage - 1) * contactsPerPage,
+		currentPage * contactsPerPage
+	);
+
+	// Filters
+	let filterService = '';
+	let filterPriority = '';
+	let filterStatus = '';
+	let searchQuery = '';
+
+	$: filteredContacts = contacts.filter(contact => {
+		const matchesSearch = !searchQuery || 
+			contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+			contact.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+			contact.company?.toLowerCase().includes(searchQuery.toLowerCase());
+		
+		const matchesService = !filterService || contact.service === filterService;
+		const matchesStatus = !filterStatus || 
+			(filterStatus === 'processed' && contact.processed) ||
+			(filterStatus === 'pending' && !contact.processed);
+		const matchesPriority = !filterPriority || contact.priority === filterPriority;
+		
+		return matchesSearch && matchesService && matchesStatus && matchesPriority;
+	});
+
+	onMount(() => {
+		if (browser) {
+			checkAuthentication();
+		}
+	});
+
+	async function checkAuthentication() {
+		try {
+			const token = localStorage.getItem('token');
+			if (!token) {
+				goto('/intranet');
+				return;
+			}
+
+			const response = await apiRequest('/api/auth/me');
+			currentUser = response.data;
+			
+			if (currentUser.role !== 'ADMIN') {
+				goto('/intranet/dashboard');
+				return;
+			}
+
+			authenticated = true;
+			loadContacts();
+			loadStats();
+			loadUsers();
+			loadSettings();
+		} catch (err) {
+			console.error('Auth check failed:', err);
+			localStorage.removeItem('token');
+			goto('/intranet');
+		}
+	}
+
+	async function apiRequest(endpoint: string, options: RequestInit = {}) {
+		const token = localStorage.getItem('token');
+		if (!token) {
+			throw new Error('No token found');
+		}
+
+		const response = await fetch(`http://localhost:3000${endpoint}`, {
+			...options,
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${token}`,
+				...options.headers,
+			},
+		});
+
+		if (!response.ok) {
+			if (response.status === 401) {
+				localStorage.removeItem('token');
+				goto('/intranet');
+				throw new Error('Authentication failed');
+			}
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+
+		return response.json();
+	}
+
+	async function loadContacts() {
+		try {
+			loading = true;
+			error = '';
+			const response = await apiRequest('/api/contact');
+			contacts = response.data;
+		} catch (err) {
+			error = 'Error loading contacts: ' + (err as Error).message;
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function loadStats() {
+		try {
+			const response = await apiRequest('/api/contact/stats');
+			stats = response.data;
+		} catch (err) {
+			console.error('Error loading stats:', err);
+		}
+	}
+
+	async function loadUsers() {
+		try {
+			const response = await apiRequest('/api/users');
+			users = response.data;
+		} catch (err) {
+			console.error('Error loading users:', err);
+		}
+	}
+
+	async function markAsProcessed(contactId: string) {
+		try {
+			await apiRequest(`/api/contact/${contactId}/processed`, {
+				method: 'PUT'
+			});
+			
+			// Update local state
+			contacts = contacts.map(contact => 
+				contact.id === contactId ? { ...contact, processed: true } : contact
+			);
+			
+			// Reload stats
+			await loadStats();
+		} catch (err) {
+			error = 'Error marking contact as processed: ' + (err as Error).message;
+		}
+	}
+
+	function formatDate(dateString: string) {
+		return new Date(dateString).toLocaleDateString('es-ES', {
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit'
+		});
+	}
+
+	function getServiceBadge(service: string | null) {
+		if (!service) return { class: 'bg-gray-500', text: 'Sin servicio' };
+		
+		const badges: Record<string, { class: string; text: string }> = {
+			'verifactu': { class: 'bg-red-500', text: 'VeriFactu' },
+			'ia-local': { class: 'bg-purple-500', text: 'IA Local' },
+			'web-development': { class: 'bg-blue-500', text: 'Web Dev' },
+			'automation': { class: 'bg-green-500', text: 'Automation' },
+			'consulting': { class: 'bg-yellow-500', text: 'Consulting' }
+		};
+		
+		return badges[service] || { class: 'bg-gray-500', text: service };
+	}
+
+	function getPriorityBadge(priority: string | null) {
+		if (!priority) return { class: 'bg-gray-500', text: 'Normal' };
+		
+		const badges: Record<string, { class: string; text: string }> = {
+			'urgent': { class: 'bg-red-500', text: 'Urgente' },
+			'high': { class: 'bg-orange-500', text: 'Alta' },
+			'normal': { class: 'bg-green-500', text: 'Normal' },
+			'low': { class: 'bg-gray-500', text: 'Baja' }
+		};
+		
+		return badges[priority] || { class: 'bg-gray-500', text: priority };
+	}
+
+	function showContactDetails(contact: Contact) {
+		selectedContact = contact;
+		showContactDetail = true;
+	}
+
+	function closeContactDetail() {
+		showContactDetail = false;
+		selectedContact = null;
+	}
+
+	function getUniqueServices() {
+		const services = new Set(contacts.map(c => c.service).filter(Boolean));
+		return Array.from(services);
+	}
+
+	function getUniquePriorities() {
+		const priorities = new Set(contacts.map(c => c.priority).filter(Boolean));
+		return Array.from(priorities);
+	}
+</script>
+
+<svelte:head>
+	<title>Panel de Administración - Formeta Labs</title>
+	<meta name="description" content="Panel de administración para gestionar contactos y usuarios" />
+</svelte:head>
+
+<div class="min-h-screen bg-gray-50">
+	<!-- Header -->
+	<header class="bg-white shadow-sm border-b">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex justify-between items-center py-4">
+				<div class="flex items-center space-x-4">
+					<Icon name="shield" size={24} className="text-formeta-primary" />
+					<h1 class="text-2xl font-bold text-formeta-text">Panel de Administración</h1>
+				</div>
+				<div class="flex items-center space-x-4">
+					<span class="text-sm text-gray-600">Administrador</span>
+					<button
+						class="px-4 py-2 text-sm bg-formeta-primary text-white rounded-md hover:bg-formeta-primary/90"
+						on:click={() => window.location.href = '/intranet/dashboard'}
+					>
+						Volver al Dashboard
+					</button>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Navigation Tabs -->
+	<nav class="bg-white border-b">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex space-x-8">
+				<button
+					class="py-4 px-1 border-b-2 font-medium text-sm {activeTab === 'contacts' 
+						? 'border-formeta-primary text-formeta-primary' 
+						: 'border-transparent text-gray-500 hover:text-gray-700'}"
+					on:click={() => activeTab = 'contacts'}
+				>
+					<Icon name="mail" size={16} className="inline mr-2" />
+					Contactos
+				</button>
+				<button
+					class="py-4 px-1 border-b-2 font-medium text-sm {activeTab === 'stats' 
+						? 'border-formeta-primary text-formeta-primary' 
+						: 'border-transparent text-gray-500 hover:text-gray-700'}"
+					on:click={() => activeTab = 'stats'}
+				>
+					<Icon name="chart" size={16} className="inline mr-2" />
+					Estadísticas
+				</button>
+				<button
+					class="py-4 px-1 border-b-2 font-medium text-sm {activeTab === 'users' 
+						? 'border-formeta-primary text-formeta-primary' 
+						: 'border-transparent text-gray-500 hover:text-gray-700'}"
+					on:click={() => activeTab = 'users'}
+				>
+					<Icon name="users" size={16} className="inline mr-2" />
+					Usuarios
+				</button>
+				<button
+					class="py-4 px-1 border-b-2 font-medium text-sm {activeTab === 'settings' 
+						? 'border-formeta-primary text-formeta-primary' 
+						: 'border-transparent text-gray-500 hover:text-gray-700'}"
+					on:click={() => activeTab = 'settings'}
+				>
+					<Icon name="settings" size={16} className="inline mr-2" />
+					Configuración
+				</button>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Main Content -->
+	<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+		{#if loading}
+			<div class="flex justify-center items-center py-12">
+				<LoadingSpinner />
+			</div>
+		{:else if error}
+			<div class="bg-red-50 border border-red-200 rounded-md p-4">
+				<div class="flex">
+					<Icon name="alert" size={20} className="text-red-400 mr-3" />
+					<div>
+						<h3 class="text-sm font-medium text-red-800">Error</h3>
+						<p class="text-sm text-red-700 mt-1">{error}</p>
+					</div>
+				</div>
+			</div>
+		{:else}
+			<!-- Contacts Tab -->
+			{#if activeTab === 'contacts'}
+				<div class="space-y-6">
+					<!-- Filters -->
+					<div class="bg-white rounded-lg shadow p-6">
+						<h2 class="text-lg font-medium text-gray-900 mb-4">Filtros</h2>
+						<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+								<input
+									type="text"
+									class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-formeta-primary"
+									placeholder="Nombre, email, empresa..."
+									bind:value={searchQuery}
+								/>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Servicio</label>
+								<select
+									class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-formeta-primary"
+									bind:value={filterService}
+								>
+									<option value="">Todos</option>
+									{#each getUniqueServices() as service}
+										<option value={service}>{service}</option>
+									{/each}
+								</select>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Prioridad</label>
+								<select
+									class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-formeta-primary"
+									bind:value={filterPriority}
+								>
+									<option value="">Todas</option>
+									{#each getUniquePriorities() as priority}
+										<option value={priority}>{priority}</option>
+									{/each}
+								</select>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+								<select
+									class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-formeta-primary"
+									bind:value={filterStatus}
+								>
+									<option value="">Todos</option>
+									<option value="pending">Pendientes</option>
+									<option value="processed">Procesados</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<!-- Contacts Table -->				<div class="bg-white rounded-lg shadow overflow-hidden">
+					<div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+						<h2 class="text-lg font-medium text-gray-900">
+							Contactos ({filteredContacts.length})
+						</h2>
+						<div class="flex space-x-2">
+							<button 
+								class="btn-primary" 
+								on:click={exportContacts}
+							>
+								<Icon name="download" size={16} className="mr-2" />
+								Exportar CSV
+							</button>
+						</div>
+					</div>
+						<div class="overflow-x-auto">
+							<table class="min-w-full divide-y divide-gray-200">
+								<thead class="bg-gray-50">
+									<tr>
+										<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+											Contacto
+										</th>
+										<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+											Empresa
+										</th>
+										<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+											Servicio
+										</th>
+										<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+											Prioridad
+										</th>
+										<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+											Estado
+										</th>
+										<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+											Fecha
+										</th>
+										<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+											Acciones
+										</th>
+									</tr>
+								</thead>
+								<tbody class="bg-white divide-y divide-gray-200">
+									{#each paginatedContacts as contact}
+										<tr class="hover:bg-gray-50">
+											<td class="px-6 py-4 whitespace-nowrap">
+												<div class="flex items-center">
+													<div>
+														<div class="text-sm font-medium text-gray-900">{contact.name}</div>
+														<div class="text-sm text-gray-500">{contact.email}</div>
+													</div>
+												</div>
+											</td>
+											<td class="px-6 py-4 whitespace-nowrap">
+												<div class="text-sm text-gray-900">{contact.company || '-'}</div>
+												<div class="text-sm text-gray-500">{contact.position || '-'}</div>
+											</td>
+											<td class="px-6 py-4 whitespace-nowrap">
+												{#if contact.service}
+													{@const badge = getServiceBadge(contact.service)}
+													<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white {badge.class}">
+														{badge.text}
+													</span>
+												{:else}
+													<span class="text-gray-500">-</span>
+												{/if}
+											</td>
+											<td class="px-6 py-4 whitespace-nowrap">
+												{#if contact.priority}
+													{@const badge = getPriorityBadge(contact.priority)}
+													<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white {badge.class}">
+														{badge.text}
+													</span>
+												{:else}
+													<span class="text-gray-500">-</span>
+												{/if}
+											</td>
+											<td class="px-6 py-4 whitespace-nowrap">
+												<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {contact.processed 
+													? 'bg-green-100 text-green-800' 
+													: 'bg-yellow-100 text-yellow-800'}">
+													{contact.processed ? 'Procesado' : 'Pendiente'}
+												</span>
+											</td>
+											<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+												{formatDate(contact.createdAt)}
+											</td>
+											<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+												<div class="flex space-x-2">
+													<button
+														class="text-formeta-primary hover:text-formeta-primary/80"
+														on:click={() => showContactDetails(contact)}
+													>
+														Ver
+													</button>
+													{#if !contact.processed}
+														<button
+															class="text-green-600 hover:text-green-800"
+															on:click={() => markAsProcessed(contact.id)}
+														>
+															Marcar
+														</button>
+													{/if}
+												</div>
+											</td>
+										</tr>
+									{/each}
+								</tbody>
+							</table>
+						</div>
+						
+						<!-- Pagination -->
+						{#if totalPages > 1}
+							<div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+								<div class="flex justify-between items-center">
+									<div>
+										<p class="text-sm text-gray-700">
+											Mostrando {(currentPage - 1) * contactsPerPage + 1} a {Math.min(currentPage * contactsPerPage, filteredContacts.length)} de {filteredContacts.length} resultados
+										</p>
+									</div>
+									<div class="flex space-x-2">
+										<button
+											class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+											disabled={currentPage === 1}
+											on:click={() => currentPage--}
+										>
+											Anterior
+										</button>
+										<button
+											class="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+											disabled={currentPage === totalPages}
+											on:click={() => currentPage++}
+										>
+											Siguiente
+										</button>
+									</div>
+								</div>
+							</div>
+						{/if}
+					</div>
+				</div>
+			{/if}
+
+			<!-- Stats Tab -->
+			{#if activeTab === 'stats'}
+				{#if stats}
+					<div class="space-y-6">
+						<!-- Overview Cards -->
+						<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+							<div class="bg-white rounded-lg shadow p-6">
+								<div class="flex items-center">
+									<div class="flex-shrink-0">
+										<Icon name="mail" size={24} className="text-blue-500" />
+									</div>
+									<div class="ml-5">
+										<div class="text-sm font-medium text-gray-500">Total Contactos</div>
+										<div class="text-2xl font-bold text-gray-900">{stats.total}</div>
+									</div>
+								</div>
+							</div>
+							<div class="bg-white rounded-lg shadow p-6">
+								<div class="flex items-center">
+									<div class="flex-shrink-0">
+										<Icon name="check" size={24} className="text-green-500" />
+									</div>
+									<div class="ml-5">
+										<div class="text-sm font-medium text-gray-500">Procesados</div>
+										<div class="text-2xl font-bold text-gray-900">{stats.processed}</div>
+									</div>
+								</div>
+							</div>
+							<div class="bg-white rounded-lg shadow p-6">
+								<div class="flex items-center">
+									<div class="flex-shrink-0">
+										<Icon name="clock" size={24} className="text-yellow-500" />
+									</div>
+									<div class="ml-5">
+										<div class="text-sm font-medium text-gray-500">Pendientes</div>
+										<div class="text-2xl font-bold text-gray-900">{stats.pending}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Service Stats -->
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<div class="bg-white rounded-lg shadow p-6">
+								<h3 class="text-lg font-medium text-gray-900 mb-4">Por Servicio</h3>
+								<div class="space-y-3">
+									{#each Object.entries(stats.byService) as [service, count]}
+										{@const badge = getServiceBadge(service)}
+										<div class="flex justify-between items-center">
+											<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white {badge.class}">
+												{badge.text}
+											</span>
+											<span class="text-sm font-medium text-gray-900">{count}</span>
+										</div>
+									{/each}
+								</div>
+							</div>
+
+							<div class="bg-white rounded-lg shadow p-6">
+								<h3 class="text-lg font-medium text-gray-900 mb-4">Por Prioridad</h3>
+								<div class="space-y-3">
+									{#each Object.entries(stats.byPriority) as [priority, count]}
+										{@const badge = getPriorityBadge(priority)}
+										<div class="flex justify-between items-center">
+											<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white {badge.class}">
+												{badge.text}
+											</span>
+											<span class="text-sm font-medium text-gray-900">{count}</span>
+										</div>
+									{/each}
+								</div>
+							</div>
+						</div>
+					</div>
+				{/if}
+			{/if}
+
+			<!-- Users Tab -->
+			{#if activeTab === 'users'}
+				<div class="bg-white rounded-lg shadow overflow-hidden">
+					<div class="px-6 py-4 border-b border-gray-200">
+						<h2 class="text-lg font-medium text-gray-900">Usuarios ({users.length})</h2>
+					</div>
+					<div class="overflow-x-auto">
+						<table class="min-w-full divide-y divide-gray-200">
+							<thead class="bg-gray-50">
+								<tr>
+									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Usuario
+									</th>
+									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Rol
+									</th>
+									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Fecha Creación
+									</th>
+									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Acciones
+									</th>
+								</tr>
+							</thead>
+							<tbody class="bg-white divide-y divide-gray-200">
+								{#each users as user}
+									<tr class="hover:bg-gray-50">
+										<td class="px-6 py-4 whitespace-nowrap">
+											<div class="flex items-center">
+												<div>
+													<div class="text-sm font-medium text-gray-900">{user.name || 'Sin nombre'}</div>
+													<div class="text-sm text-gray-500">{user.email}</div>
+												</div>
+											</div>
+										</td>
+										<td class="px-6 py-4 whitespace-nowrap">
+											<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {user.role === 'ADMIN' 
+												? 'bg-red-100 text-red-800' 
+												: 'bg-blue-100 text-blue-800'}">
+												{user.role}
+											</span>
+										</td>
+										<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+											{formatDate(user.createdAt)}
+										</td>
+										<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+											<button class="text-formeta-primary hover:text-formeta-primary/80">
+												Editar
+											</button>
+										</td>
+									</tr>
+								{/each}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			{/if}
+
+			<!-- Settings Tab -->
+			{#if activeTab === 'settings'}
+				<div class="space-y-8">
+					<!-- SMTP Configuration -->
+					<div class="bg-white rounded-lg shadow p-6">
+						<div class="flex items-center justify-between mb-6">
+							<h2 class="text-lg font-medium text-gray-900">Configuración SMTP</h2>
+							<button 
+								class="btn-primary" 
+								on:click={testEmailConfiguration}
+								disabled={settingsLoading}
+							>
+								<Icon name="zap" size={16} className="mr-2" />
+								Probar Configuración
+							</button>
+						</div>
+						
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">
+									Servidor SMTP
+								</label>
+								<input 
+									type="text" 
+									bind:value={settings.smtp.host}
+									placeholder="mail.smtp2go.com"
+									class="input-field"
+								/>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">
+									Puerto
+								</label>
+								<input 
+									type="number" 
+									bind:value={settings.smtp.port}
+									placeholder="587"
+									class="input-field"
+								/>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">
+									Usuario
+								</label>
+								<input 
+									type="text" 
+									bind:value={settings.smtp.user}
+									placeholder="formeta"
+									class="input-field"
+								/>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">
+									Contraseña
+								</label>
+								<input 
+									type="password" 
+									bind:value={settings.smtp.password}
+									placeholder="••••••••"
+									class="input-field"
+								/>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">
+									Email Remitente
+								</label>
+								<input 
+									type="email" 
+									bind:value={settings.smtp.from}
+									placeholder="info@formeta.es"
+									class="input-field"
+								/>
+							</div>
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">
+									Email Destinatario
+								</label>
+								<input 
+									type="email" 
+									bind:value={settings.smtp.to}
+									placeholder="correo_destino@formeta.es"
+									class="input-field"
+								/>
+							</div>
+						</div>
+					</div>
+
+					<!-- System Configuration -->
+					<div class="bg-white rounded-lg shadow p-6">
+						<h2 class="text-lg font-medium text-gray-900 mb-6">Configuración del Sistema</h2>
+						
+						<div class="space-y-6">
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">
+									Nombre del Sitio
+								</label>
+								<input 
+									type="text" 
+									bind:value={settings.system.siteName}
+									placeholder="Formeta Labs"
+									class="input-field"
+								/>
+							</div>
+							
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">
+									Contactos por Página
+								</label>
+								<input 
+									type="number" 
+									bind:value={settings.system.maxContactsPerPage}
+									min="5"
+									max="100"
+									class="input-field"
+								/>
+							</div>
+							
+							<div class="space-y-4">
+								<div class="flex items-center">
+									<input 
+										type="checkbox" 
+										bind:checked={settings.system.enableRegistration}
+										class="h-4 w-4 text-formeta-primary focus:ring-formeta-primary border-gray-300 rounded"
+									/>
+									<label class="ml-2 block text-sm text-gray-700">
+										Permitir registro de nuevos usuarios
+									</label>
+								</div>
+								
+								<div class="flex items-center">
+									<input 
+										type="checkbox" 
+										bind:checked={settings.system.maintenanceMode}
+										class="h-4 w-4 text-formeta-primary focus:ring-formeta-primary border-gray-300 rounded"
+									/>
+									<label class="ml-2 block text-sm text-gray-700">
+										Modo mantenimiento
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Save Button -->
+					<div class="flex justify-end">
+						<button 
+							class="btn-primary" 
+							on:click={saveSettings}
+							disabled={settingsSaving}
+						>
+							{#if settingsSaving}
+								<LoadingSpinner size="sm" className="mr-2" />
+								Guardando...
+							{:else}
+								<Icon name="save" size={16} className="mr-2" />
+								Guardar Configuración
+							{/if}
+						</button>
+					</div>
+				</div>
+			{/if}
+		{/if}
+	</main>
+</div>
+
+<!-- Contact Detail Modal -->
+{#if showContactDetail && selectedContact}
+	<div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+		<div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+			<div class="flex justify-between items-center mb-4">
+				<h3 class="text-lg font-medium text-gray-900">Detalle del Contacto</h3>
+				<button
+					class="text-gray-400 hover:text-gray-600"
+					on:click={closeContactDetail}
+				>
+					<Icon name="x" size={24} />
+				</button>
+			</div>
+			
+			<div class="space-y-4">
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Nombre</label>
+						<p class="mt-1 text-sm text-gray-900">{selectedContact.name}</p>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Email</label>
+						<p class="mt-1 text-sm text-gray-900">{selectedContact.email}</p>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Empresa</label>
+						<p class="mt-1 text-sm text-gray-900">{selectedContact.company || '-'}</p>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Posición</label>
+						<p class="mt-1 text-sm text-gray-900">{selectedContact.position || '-'}</p>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Teléfono</label>
+						<p class="mt-1 text-sm text-gray-900">{selectedContact.phone || '-'}</p>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Servicio</label>
+						<p class="mt-1 text-sm text-gray-900">{selectedContact.service || '-'}</p>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Tipo de Proyecto</label>
+						<p class="mt-1 text-sm text-gray-900">{selectedContact.projectType || '-'}</p>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Presupuesto</label>
+						<p class="mt-1 text-sm text-gray-900">{selectedContact.budget || '-'}</p>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Timeline</label>
+						<p class="mt-1 text-sm text-gray-900">{selectedContact.timeline || '-'}</p>
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-gray-700">Prioridad</label>
+						<p class="mt-1 text-sm text-gray-900">{selectedContact.priority || '-'}</p>
+					</div>
+				</div>
+				
+				<div>
+					<label class="block text-sm font-medium text-gray-700">Mensaje</label>
+					<p class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{selectedContact.message}</p>
+				</div>
+				
+				<div class="flex justify-between items-center pt-4 border-t">
+					<div class="flex space-x-4">
+						<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {selectedContact.processed 
+							? 'bg-green-100 text-green-800' 
+							: 'bg-yellow-100 text-yellow-800'}">
+							{selectedContact.processed ? 'Procesado' : 'Pendiente'}
+						</span>
+						<span class="text-sm text-gray-500">
+							GDPR: {selectedContact.gdprConsent ? 'Aceptado' : 'No aceptado'}
+						</span>
+					</div>
+					<div class="text-sm text-gray-500">
+						Creado: {formatDate(selectedContact.createdAt)}
+					</div>
+				</div>
+				
+				<div class="flex justify-end space-x-3 pt-4">
+					<button
+						class="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
+						on:click={closeContactDetail}
+					>
+						Cerrar
+					</button>
+					{#if !selectedContact.processed}
+						<button
+							class="px-4 py-2 text-sm bg-formeta-primary text-white rounded-md hover:bg-formeta-primary/90"
+							on:click={() => {
+								markAsProcessed(selectedContact.id);
+								closeContactDetail();
+							}}
+						>
+							Marcar como Procesado
+						</button>
+					{/if}
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+
+<style>
+	.pattern-grid {
+		background-image: 
+			linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+		background-size: 20px 20px;
+	}
+
+	.input-field {
+		width: 100%;
+		padding: 0.5rem 0.75rem;
+		border: 1px solid #d1d5db;
+		border-radius: 0.375rem;
+		font-size: 0.875rem;
+		line-height: 1.25rem;
+		background-color: white;
+		transition: all 0.2s;
+	}
+
+	.input-field:focus {
+		outline: none;
+		ring: 2px;
+		ring-color: #4A90E2;
+		border-color: #4A90E2;
+	}
+
+	.btn-primary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.5rem 1rem;
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: white;
+		background-color: #4A90E2;
+		border: none;
+		border-radius: 0.375rem;
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+
+	.btn-primary:hover {
+		background-color: #357abd;
+	}
+
+	.btn-primary:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+</style>

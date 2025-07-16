@@ -20,16 +20,20 @@
     font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04';
   }
   
-  /* Enterprise Typography Hierarchy */
+  /* Enterprise Typography Hierarchy - Valores enteros para pixel art */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Geist', system-ui, sans-serif;
     font-weight: 600;
-    letter-spacing: -0.025em;
+    letter-spacing: 0;
     line-height: 1.2;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
   }
   
   h1 {
     @apply text-4xl md:text-5xl lg:text-6xl font-bold;
+    text-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
   }
   
   h2 {
@@ -47,147 +51,102 @@
   /* Technical Text */
   .font-mono {
     font-family: 'Geist Mono', Monaco, Menlo, monospace;
-    font-feature-settings: 'cv01', 'cv02';
+    font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04';
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
   }
   
-  /* Body Text */
+  /* Body Text - Line-height fijo para precisión */
   p {
-    @apply text-base leading-relaxed;
+    @apply text-base;
     font-family: 'Geist', system-ui, sans-serif;
+    line-height: 1.5;
   }
   
-  /* Links */
+  /* Links - Sin transiciones suaves */
   a {
-    @apply transition-colors duration-200;
+    transition: none;
   }
   
-  /* Focus States */
+  /* Focus States - Border desplazado en lugar de ring blur */
   *:focus {
-    @apply outline-none ring-2 ring-formeta-primary ring-offset-2;
+    outline: none;
+    border: 2px solid #4A90E2;
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
   }
 }
 
 /* Custom Components */
 @layer components {
-  /* Pixel Art Button */
+  /* PIXEL ART BUTTON V2.0 - ESPECIFICACIÓN ÚNICA */
   .btn-pixel {
-    @apply inline-flex items-center justify-center px-6 py-3 text-14 font-medium tracking-pixel uppercase border-2 border-formeta-action bg-formeta-action text-white transition-all duration-100;
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    padding: 12px 24px; /* Múltiplo de 8px */
+    border: 2px solid #4A90E2;
+    background: linear-gradient(180deg, #4A90E2 0%, #A78BFA 100%);
+    color: white;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
+    border-radius: 0;
+    transition: none;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
   }
   
   .btn-pixel:hover {
     transform: translate(-1px, -1px);
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.4);
   }
   
   .btn-pixel:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
   }
   
-  /* Secondary Button */
+  /* Secondary Button - Fondo lavanda sólido */
   .btn-secondary {
-    @apply btn-pixel bg-formeta-lavender border-formeta-lavender;
+    background: #A78BFA;
+    border-color: #A78BFA;
+    color: white;
   }
   
-  /* Tertiary Button */
+  /* Tertiary Button - Transparente con borde */
   .btn-tertiary {
-    @apply btn-pixel bg-transparent border-formeta-action text-formeta-action;
+    background: transparent;
+    border-color: #4A90E2;
+    color: #4A90E2;
+    transition: none;
   }
   
   .btn-tertiary:hover {
-    @apply bg-formeta-action text-white;
+    background: #4A90E2;
+    color: white;
   }
   
-  /* Pixel Art Card */
+  /* PIXEL ART CARD V2.0 - ESPECIFICACIÓN ÚNICA */
   .card-pixel {
-    @apply bg-white bg-opacity-95 border-2 border-formeta-blue p-6;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #4A90E2;
+    border-radius: 0;
     box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
-  }
-  
-  /* Navigation Menu */
-  .nav-item {
-    @apply text-14 font-medium tracking-pixel uppercase text-formeta-text hover:text-formeta-action transition-colors duration-200;
-  }
-  
-  /* Input Fields */
-  .input-pixel {
-    @apply w-full px-4 py-3 text-16 border-2 border-formeta-text bg-white focus:border-formeta-action focus:outline-none transition-colors duration-100;
-  }
-  
-  /* Text Shadows */
-  .text-shadow-pixel {
-    text-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
-  }
-  
-  .text-shadow-dark {
-    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
-  }
-  
-  /* Patterns */
-  .pattern-dots {
-    background-image: radial-gradient(circle, rgba(74, 144, 226, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-  
-  .pattern-grid {
-    background-image: 
-      linear-gradient(rgba(167, 139, 250, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(167, 139, 250, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-  
-  .pattern-circuits {
-    background-image: 
-      linear-gradient(45deg, transparent 35%, rgba(167, 139, 250, 0.05) 35%, rgba(167, 139, 250, 0.05) 65%, transparent 65%),
-      linear-gradient(-45deg, transparent 35%, rgba(74, 144, 226, 0.08) 35%, rgba(74, 144, 226, 0.08) 65%, transparent 65%);
-    background-size: 30px 30px;
-  }
-  
-  /* 3D Wireframe Animation */
-  .wireframe-3d {
-    @apply animate-rotate-slow;
-    filter: drop-shadow(0 0 10px #4A90E2);
-  }
-  
-  /* Modal */
-  .modal-backdrop {
-    @apply fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50;
-  }
-  
-  .modal-content {
-    @apply bg-formeta-dark border-2 border-white p-8 max-w-2xl w-full mx-4;
-    box-shadow: 6px 6px 0px rgba(255, 255, 255, 0.2);
-  }
-  
-  /* Dark Theme Overrides */
-  .dark-section {
-    @apply bg-formeta-dark text-formeta-light;
-  }
-  
-  .dark-section h1,
-  .dark-section h2,
-  .dark-section h3 {
-    @apply text-formeta-white;
-  }
-  
-  /* PIXEL ART CARDS V2.0 - ESPECIFICACIÓN COMPLETA */
-  
-  /* Tarjeta Pixel con 95% opacidad y sombras desplazadas */
-  .card-pixel {
-    background: rgba(255, 255, 255, 0.95); /* 95% opacidad según guía */
-    border: 2px solid #4A90E2; /* Borde 2px según especificación */
-    border-radius: 0; /* Sin border-radius para estética pixelada */
-    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3); /* Sombra desplazada sin blur */
-    padding: 24px; /* Múltiplo de 8px según sistema de espaciado */
-    transition: none; /* Sin transiciones suaves según guía */
+    padding: 24px; /* Múltiplo de 8px */
+    transition: none;
     position: relative;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
   }
   
-  /* Patrón interno dots sutil como textura de fondo */
+  /* Patrón interno dots sutil */
   .card-pixel::before {
     content: '';
     position: absolute;
@@ -207,24 +166,122 @@
   }
   
   .card-pixel:hover {
-    transform: translate(-2px, -2px); /* Elevación según especificación */
+    transform: translate(-2px, -2px);
     box-shadow: 6px 6px 0px rgba(74, 144, 226, 0.4);
   }
   
-  /* Contenedores de Cristal - Backdrop blur 20px + bordes pixelados */
+  /* INPUT FIELDS V2.0 - ESPECIFICACIÓN ÚNICA */
+  .input-pixel {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 400;
+    padding: 12px 16px; /* Múltiplo de 8px */
+    border: 2px solid #4A90E2;
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333333;
+    transition: none;
+    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    width: 100%;
+    font-size: 16px;
+  }
+  
+  .input-pixel:focus {
+    outline: none;
+    border-color: #A78BFA;
+    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
+    transform: translate(-1px, -1px);
+  }
+  
+  .input-pixel.error {
+    border-color: #EF4444;
+    box-shadow: 2px 2px 0px rgba(239, 68, 68, 0.2);
+  }
+  
+  .input-pixel.success {
+    border-color: #10B981;
+    box-shadow: 2px 2px 0px rgba(16, 185, 129, 0.2);
+  }
+  
+  /* Labels */
+  .label-pixel {
+    font-family: 'Geist', system-ui, sans-serif;
+    font-weight: 500;
+    color: #333333;
+    margin-bottom: 8px;
+    display: block;
+  }
+  
+  /* Text Shadows - Solo paleta Formeta */
+  .text-shadow-pixel {
+    text-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
+  }
+  
+  .text-shadow-dark {
+    text-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
+  }
+  
+  /* Patrones - Más duros para pixel art */
+  .pattern-dots {
+    background-image: radial-gradient(circle, rgba(74, 144, 226, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .pattern-grid {
+    background-image: 
+      linear-gradient(rgba(167, 139, 250, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(167, 139, 250, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .pattern-circuits {
+    background-image: 
+      linear-gradient(45deg, transparent 50%, rgba(167, 139, 250, 0.05) 50%, rgba(167, 139, 250, 0.05) 50%, transparent 50%),
+      linear-gradient(-45deg, transparent 50%, rgba(74, 144, 226, 0.08) 50%, rgba(74, 144, 226, 0.08) 50%, transparent 50%);
+    background-size: 30px 30px;
+  }
+  
+
+  
+  /* Modal - Opacidad 95% estándar */
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  
+  .modal-content {
+    background: #333333;
+    border: 2px solid white;
+    padding: 32px; /* Múltiplo de 8px */
+    max-width: 42rem;
+    width: 100%;
+    margin: 0 1rem;
+    box-shadow: 6px 6px 0px rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+  }
+  
+  /* Contenedores de Cristal - Solo para overlays específicos */
   .container-glass {
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px); /* Efecto glassmorphism según guía */
-    -webkit-backdrop-filter: blur(20px);
     border: 2px solid rgba(74, 144, 226, 0.3);
-    border-radius: 0; /* Bordes pixelados */
-    padding: 32px; /* Múltiplo de 8px */
+    border-radius: 0;
+    padding: 32px;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
   }
   
-  /* Actualización de enterprise-card para compliance v2.0 */
+  /* Enterprise Card - Consistente con card-pixel */
   .enterprise-card {
     background: rgba(255, 255, 255, 0.95);
     border: 2px solid #4A90E2;
@@ -242,91 +299,7 @@
     box-shadow: 6px 6px 0px rgba(74, 144, 226, 0.4);
   }
   
-  /* PIXEL ART BUTTONS V2.0 - GUÍA ESTILO COMPLETA */
-  
-  /* Botón Primario - Gradiente característico según guía */
-  .btn-pixel {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    padding: 12px 24px;
-    border: 2px solid #4A90E2;
-    background: linear-gradient(180deg, #4A90E2 0%, #A78BFA 100%);
-    color: white;
-    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
-    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
-    border-radius: 0; /* Sin border-radius para estética pixelada */
-    transition: none; /* Sin transiciones suaves según guía */
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .btn-pixel:hover {
-    transform: translate(-1px, -1px); /* Elevación exacta según especificación */
-    box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.4);
-  }
-  
-  .btn-pixel:active {
-    transform: translate(1px, 1px);
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
-  }
-  
-  /* Botón Secundario - Lavanda sólido según guía */
-  .btn-pixel-secondary {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    padding: 12px 24px;
-    border: 2px solid #A78BFA;
-    background: #A78BFA;
-    color: white;
-    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
-    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
-    border-radius: 0;
-    transition: none;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .btn-pixel-secondary:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 5px 5px 0px rgba(167, 139, 250, 0.4);
-  }
-  
-  .btn-pixel-secondary:active {
-    transform: translate(1px, 1px);
-    box-shadow: 2px 2px 0px rgba(167, 139, 250, 0.3);
-  }
-  
-  /* Botón Terciario - Transparente con borde según guía */
-  .btn-pixel-tertiary {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    padding: 12px 24px;
-    border: 2px solid #4A90E2;
-    background: transparent;
-    color: #4A90E2;
-    text-shadow: none;
-    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.2);
-    border-radius: 0;
-    transition: none;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .btn-pixel-tertiary:hover {
-    transform: translate(-1px, -1px);
-    background: rgba(74, 144, 226, 0.1);
-    box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.3);
-  }
-  
-  .btn-pixel-tertiary:active {
-    transform: translate(1px, 1px);
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
-  }
-  
-  /* Compatibilidad con clase anterior */
+  /* Botones Enterprise - Consistentes con btn-pixel */
   .btn-enterprise {
     font-family: 'Geist', system-ui, sans-serif;
     font-weight: 500;
@@ -348,106 +321,46 @@
     box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.4);
   }
   
-  .btn-enterprise:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
-  }
-  
   .btn-enterprise-secondary {
     background: transparent;
-    color: #007AFF;
-    border-color: #007AFF;
+    color: #4A90E2;
+    border-color: #4A90E2;
+    transition: none;
   }
   
   .btn-enterprise-secondary:hover {
-    background: #007AFF;
+    background: #4A90E2;
     color: white;
   }
   
-  /* Professional Status Badges */
+  /* Status Badges */
   .status-badge {
     font-family: 'Geist Mono', monospace;
     font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
+    letter-spacing: 1px;
     padding: 4px 8px;
     border: 1px solid;
     border-radius: 0;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
   }
   
-  .status-critical { border-color: #dc2626; background: rgba(220, 38, 38, 0.1); color: #dc2626; }
-  .status-high { border-color: #ea580c; background: rgba(234, 88, 12, 0.1); color: #ea580c; }
-  .status-medium { border-color: #ca8a04; background: rgba(202, 138, 4, 0.1); color: #ca8a04; }
-  .status-ready { border-color: #16a34a; background: rgba(22, 163, 74, 0.1); color: #16a34a; }
-  .status-production { border-color: #0ea5e9; background: rgba(14, 165, 233, 0.1); color: #0ea5e9; }
-  
-  /* Metric Displays */
-  .metric-display {
-    font-family: 'Geist Mono', monospace;
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.05em;
+  .status-production { 
+    border-color: #4A90E2; 
+    background: rgba(74, 144, 226, 0.1); 
+    color: #4A90E2; 
   }
   
-  .metric-label {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    opacity: 0.8;
-  }
-  
-  /* Tech Stack Tags */
-  .tech-tag {
-    font-family: 'Geist Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 8px;
-    background: rgba(74, 144, 226, 0.1);
-    border: 1px solid rgba(74, 144, 226, 0.3);
-    color: #4A90E2;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  /* Enterprise Form Elements */
-  .form-enterprise {
-    font-family: 'Geist', system-ui, sans-serif;
-  }
-  
-  .input-enterprise {
-    font-family: 'Geist', system-ui, sans-serif;
-    padding: 12px 16px;
-    border: 2px solid #333333;
-    background: white;
-    transition: border-color 0.2s ease;
-    font-size: 16px;
-  }
-  
-  .input-enterprise:focus {
-    border-color: #007AFF;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-  }
-  
-  .label-enterprise {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #333333;
-    margin-bottom: 8px;
-    display: block;
-  }
-  
-  /* Navigation Enhancement */
+  /* Navigation */
   .nav-enterprise {
-    backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.95);
-    border-bottom: 1px solid rgba(74, 144, 226, 0.1);
+    border-bottom: 2px solid rgba(74, 144, 226, 0.1);
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
   }
   
   .nav-link-enterprise {
@@ -455,14 +368,14 @@
     font-weight: 500;
     font-size: 14px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     color: #333333;
-    transition: color 0.2s ease;
+    transition: none;
     position: relative;
   }
   
   .nav-link-enterprise:hover {
-    color: #007AFF;
+    color: #4A90E2;
   }
   
   .nav-link-enterprise::after {
@@ -472,78 +385,48 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: #007AFF;
-    transition: width 0.2s ease;
+    background: #4A90E2;
+    transition: none;
   }
   
   .nav-link-enterprise:hover::after {
     width: 100%;
   }
-  
-  /* ICONOGRAFÍA PIXEL ART COMPLETA V2.0 */
-  
-  /* Renderizado pixelado para iconos */
-  .icon-pixel {
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-    border-radius: 0; /* Sin border-radius para elementos icon */
-  }
-  
-  /* Tamaños múltiplos de 8px según especificación */
-  .icon-pixel-16 { width: 16px; height: 16px; }
-  .icon-pixel-24 { width: 24px; height: 24px; }
-  .icon-pixel-32 { width: 32px; height: 32px; }
-  .icon-pixel-48 { width: 48px; height: 48px; }
-  
-  /* Estados hover - transiciones abruptas, no suaves */
-  .icon-pixel:hover {
-    transform: scale(1.1);
-    transition: none; /* Sin transiciones suaves según guía */
-  }
-  
-  /* Símbolos pixelados para elementos especiales */
-  .symbol-menu::before { content: "▦▦▦"; }
-  .symbol-arrow-up::before { content: "▲"; }
-  .symbol-arrow-down::before { content: "▼"; }
-  .symbol-arrow-left::before { content: "◀"; }
-  .symbol-arrow-right::before { content: "▶"; }
-  .symbol-diamond::before { content: "◆"; }
-  .symbol-circle::before { content: "●"; }
-  
-  /* Container para iconos con bordes definidos */
-  .icon-container-pixel {
-    border: 2px solid #4A90E2;
-    border-radius: 0;
-    padding: 8px; /* Múltiplo de 8px */
-    background: rgba(255, 255, 255, 0.95);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .icon-container-pixel:hover {
-    background: rgba(74, 144, 226, 0.1);
-    transform: translate(-1px, -1px);
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
-  }
 }
 
 /* Utility Classes */
 @layer utilities {
-  .debug-border {
-    @apply border border-red-500;
+  .container-formeta {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   
-  .container-formeta {
-    @apply max-w-6xl mx-auto px-4 md:px-8 lg:px-12;
+  @media (min-width: 768px) {
+    .container-formeta {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container-formeta {
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
   }
   
   .section-spacing {
-    @apply py-16 md:py-24;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  
+  @media (min-width: 768px) {
+    .section-spacing {
+      padding-top: 6rem;
+      padding-bottom: 6rem;
+    }
   }
   
   .text-gradient {
@@ -555,354 +438,61 @@
   
   /* Formeta Color Utilities */
   .bg-formeta-gradient {
-    @apply bg-gradient-to-br from-formeta-primary to-formeta-secondary;
+    background: linear-gradient(180deg, #4A90E2 0%, #A78BFA 100%);
   }
   
   .bg-formeta-hero {
-    @apply bg-gradient-to-br from-formeta-text via-formeta-primary to-formeta-secondary;
+    background: linear-gradient(180deg, #333333 0%, #4A90E2 50%, #A78BFA 100%);
   }
   
-  /* Tag colors - Consistent with Formeta palette */
-  .tag-technology { @apply bg-formeta-primary-100 text-formeta-primary-700; }
-  .tag-compliance { @apply bg-red-100 text-red-700; }
-  .tag-ai { @apply bg-green-100 text-green-700; }
-  .tag-development { @apply bg-formeta-secondary-100 text-formeta-secondary-700; }
-  .tag-enterprise { @apply bg-gray-100 text-gray-700; }
-  
-  /* Service badge colors */
-  .service-badge-critical { @apply bg-formeta-error text-white; }
-  .service-badge-advanced { @apply bg-formeta-secondary text-white; }
-  .service-badge-production { @apply bg-formeta-success text-white; }
-  .service-badge-default { @apply bg-formeta-primary text-white; }
-  
-  /* FORMULARIOS PIXEL ART V2.0 - ESPECIFICACIÓN COMPLETA */
-  
-  /* Input Pixel - Bordes 2px, focus states destacados */
-  .input-pixel {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 400;
-    padding: 12px 16px; /* Múltiplo de 8px */
-    border: 2px solid #4A90E2;
-    border-radius: 0; /* Sin border-radius para estética pixelada */
-    background: rgba(255, 255, 255, 0.95);
-    color: #333333;
-    transition: none; /* Sin transiciones suaves según guía */
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .input-pixel:focus {
-    outline: none;
-    border-color: #A78BFA;
-    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
-    transform: translate(-1px, -1px); /* Cambio abrupto según estética */
-  }
-  
-  /* Estados de validación con paleta consistente */
-  .input-pixel.error {
-    border-color: #EF4444;
-    box-shadow: 2px 2px 0px rgba(239, 68, 68, 0.2);
-  }
-  
-  .input-pixel.success {
-    border-color: #10B981;
-    box-shadow: 2px 2px 0px rgba(16, 185, 129, 0.2);
-  }
-  
-  /* Labels Geist Medium según jerarquía */
-  .label-pixel {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    color: #333333;
-    margin-bottom: 8px; /* Múltiplo de 8px */
-    display: block;
-  }
-  
-  /* Campos técnicos - Geist Mono para código/datos */
-  .input-pixel-mono {
-    font-family: 'Geist Mono', Monaco, Menlo, monospace;
-    font-weight: 400;
-    padding: 12px 16px;
-    border: 2px solid #4A90E2;
+  /* Tag colors - Solo paleta Formeta */
+  .tag-technology { 
+    background: rgba(74, 144, 226, 0.1); 
+    color: #4A90E2; 
+    border: 1px solid #4A90E2;
     border-radius: 0;
-    background: rgba(255, 255, 255, 0.95);
-    color: #333333;
-    transition: none;
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
+    padding: 4px 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   
-  .input-pixel-mono:focus {
-    outline: none;
-    border-color: #A78BFA;
-    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
-    transform: translate(-1px, -1px);
-  }
-  
-  /* Textarea pixel art */
-  .textarea-pixel {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 400;
-    padding: 12px 16px;
-    border: 2px solid #4A90E2;
+  .tag-development { 
+    background: rgba(167, 139, 250, 0.1); 
+    color: #A78BFA; 
+    border: 1px solid #A78BFA;
     border-radius: 0;
-    background: rgba(255, 255, 255, 0.95);
-    color: #333333;
-    transition: none;
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
+    padding: 4px 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* Aplicar image-rendering globalmente */
+  .crisp-edges {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
-    resize: none; /* Control de redimensionamiento */
   }
   
-  .textarea-pixel:focus {
-    outline: none;
-    border-color: #A78BFA;
-    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
-    transform: translate(-1px, -1px);
-  }
+  /* Espaciado múltiplos de 8px */
+  .spacing-8 { margin: 8px; }
+  .spacing-16 { margin: 16px; }
+  .spacing-24 { margin: 24px; }
+  .spacing-32 { margin: 32px; }
+  .spacing-40 { margin: 40px; }
+  .spacing-48 { margin: 48px; }
+  .spacing-56 { margin: 56px; }
+  .spacing-64 { margin: 64px; }
   
-  /* Select pixel art */
-  .select-pixel {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 400;
-    padding: 12px 16px;
-    border: 2px solid #4A90E2;
-    border-radius: 0;
-    background: rgba(255, 255, 255, 0.95);
-    color: #333333;
-    transition: none;
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-    appearance: none; /* Remove default styling */
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234A90E2' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 12px center;
-    background-repeat: no-repeat;
-    background-size: 16px;
-    padding-right: 40px;
-  }
-  
-  .select-pixel:focus {
-    outline: none;
-    border-color: #A78BFA;
-    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
-    transform: translate(-1px, -1px);
-  }
+  .padding-8 { padding: 8px; }
+  .padding-16 { padding: 16px; }
+  .padding-24 { padding: 24px; }
+  .padding-32 { padding: 32px; }
+  .padding-40 { padding: 40px; }
+  .padding-48 { padding: 48px; }
+  .padding-56 { padding: 56px; }
+  .padding-64 { padding: 64px; }
 }
-
-/* SISTEMA DE ANIMACIONES PIXEL V2.0 */
-  
-  /* Timing estándar según especificación */
-  .animation-pixel-micro {
-    animation-duration: 0.1s; /* Micro-interacciones */
-    animation-timing-function: steps(1, end); /* Sin easing suave */
-  }
-  
-  .animation-pixel-transition {
-    animation-duration: 0.3s; /* Transiciones */
-    animation-timing-function: steps(2, end);
-  }
-  
-  .animation-pixel-effect {
-    animation-duration: 0.5s; /* Efectos */
-    animation-timing-function: steps(4, end);
-  }
-  
-  /* Animaciones específicas con estética 8-bit refinada */
-  @keyframes pixelPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-  }
-  
-  @keyframes pixelShake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-2px); }
-    50% { transform: translateX(2px); }
-    75% { transform: translateX(-1px); }
-    100% { transform: translateX(0); }
-  }
-  
-  @keyframes pixelGlow {
-    0% { box-shadow: 0 0 0 rgba(74, 144, 226, 0.3); }
-    50% { box-shadow: 0 0 20px rgba(74, 144, 226, 0.6); }
-    100% { box-shadow: 0 0 0 rgba(74, 144, 226, 0.3); }
-  }
-  
-  /* Classes aplicables */
-  .pulse-pixel {
-    animation: pixelPulse 2s steps(2, end) infinite;
-  }
-  
-  .shake-pixel {
-    animation: pixelShake 0.5s steps(4, end);
-  }
-  
-  .glow-pixel {
-    animation: pixelGlow 2s steps(3, end) infinite;
-  }
-  
-  /* Respeto por reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    .animation-pixel-micro,
-    .animation-pixel-transition,
-    .animation-pixel-effect,
-    .pulse-pixel,
-    .shake-pixel,
-    .glow-pixel {
-      animation: none;
-    }
-  }
-  
-  /* Loading states pixel art para formularios */
-  .loading-pixel {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .loading-pixel::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-      transparent, 
-      rgba(74, 144, 226, 0.3), 
-      transparent
-    );
-    animation: pixelLoading 1.5s steps(6, end) infinite;
-  }
-  
-  @keyframes pixelLoading {
-    0% { left: -100%; }
-    100% { left: 100%; }
-  }
-  
-  /* Focus indicators visuales claros para navegación teclado */
-  .focus-pixel:focus {
-    outline: 2px solid #A78BFA;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.2);
-  }
-  
-  /* Touch feedback - 44px mínimo para elementos móviles */
-  .touch-target {
-    min-width: 44px;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .touch-feedback:active {
-    transform: translate(1px, 1px);
-    box-shadow: 1px 1px 0px rgba(74, 144, 226, 0.3);
-  }
-  
-  /* CLASES DE COMPATIBILIDAD Y UTILIDADES */
-  
-  /* Botones secundarios y terciarios para compatibilidad */
-  .btn-secondary {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    padding: 12px 24px;
-    border: 2px solid #A78BFA;
-    background: #A78BFA;
-    color: white;
-    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
-    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
-    border-radius: 0;
-    transition: none;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .btn-secondary:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 5px 5px 0px rgba(167, 139, 250, 0.4);
-  }
-  
-  .btn-tertiary {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    padding: 12px 24px;
-    border: 2px solid #4A90E2;
-    background: transparent;
-    color: #4A90E2;
-    text-shadow: none;
-    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.2);
-    border-radius: 0;
-    transition: none;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .btn-tertiary:hover {
-    transform: translate(-1px, -1px);
-    background: rgba(74, 144, 226, 0.1);
-    box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.3);
-  }
-  
-  /* Botón de servicio especializado */
-  .btn-service {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    padding: 8px 16px;
-    border: 2px solid #4A90E2;
-    background: rgba(74, 144, 226, 0.1);
-    color: #4A90E2;
-    border-radius: 0;
-    transition: none;
-    cursor: pointer;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .btn-service:hover {
-    background: rgba(74, 144, 226, 0.2);
-    transform: translate(-1px, -1px);
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
-  }
-  
-  /* Enterprise secondary button para navegación */
-  .btn-enterprise-secondary {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    padding: 8px 16px;
-    border: 2px solid #A78BFA;
-    background: transparent;
-    color: #A78BFA;
-    border-radius: 0;
-    transition: none;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .btn-enterprise-secondary:hover {
-    background: rgba(167, 139, 250, 0.1);
-    transform: translate(-1px, -1px);
-    box-shadow: 2px 2px 0px rgba(167, 139, 250, 0.3);
-  }

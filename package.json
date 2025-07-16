@@ -22,6 +22,7 @@
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.31.0",
 		"prettier": "^3.6.2",
+		"purgecss": "^7.0.2",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
 		"tailwindcss": "^3.4.17",
