@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
+	import { debug } from '$lib/utils/debug';
 	
 	let selectedComplexity = 'standard';
 	let documentVolume = 1000;
@@ -47,7 +48,7 @@
 	};
 	
 	function handleSubmit() {
-		console.log('Enviando consulta RAG+MCP:', contactForm);
+		debug.log('Enviando consulta RAG+MCP:', contactForm);
 	}
 </script>
 

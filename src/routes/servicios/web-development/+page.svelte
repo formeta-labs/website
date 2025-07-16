@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
+	import { debug } from '$lib/utils/debug';
 	
 	// Calculator State
 	let projectType = 'landing';
@@ -111,7 +112,7 @@
 	};
 	
 	function handleSubmit() {
-		console.log('Enviando consulta Web Development:', contactForm);
+		debug.log('Enviando consulta Web Development:', contactForm);
 	}
 	
 	function copyCalculatorResults() {

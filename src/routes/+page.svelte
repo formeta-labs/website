@@ -66,7 +66,7 @@
 			<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-8">
 				<div class="text-center mb-6">
 					<div class="w-16 h-16 bg-gradient-to-br from-formeta-primary to-formeta-secondary mx-auto mb-4 flex items-center justify-center text-2xl">
-						<Icon name="atom" size={24} class="text-white" />
+						<Icon name="atom" size={24} className="text-white" />
 					</div>
 					<h3 class="text-xl font-bold mb-2">Frontend Moderno</h3>
 				</div>
@@ -94,7 +94,7 @@
 			<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-8">
 				<div class="text-center mb-6">
 					<div class="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 mx-auto mb-4 flex items-center justify-center text-2xl">
-						<Icon name="rocket" size={24} class="text-white" />
+						<Icon name="rocket" size={24} className="text-white" />
 					</div>
 					<h3 class="text-xl font-bold mb-2">Backend Enterprise</h3>
 				</div>

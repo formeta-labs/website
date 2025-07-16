@@ -1,7 +1,9 @@
 // src/lib/services/api.ts
 import type { ContactFormData, ContactResponse } from '../types/contact';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+import { config } from '$lib/config';
+
+const API_BASE_URL = `${config.API_URL}/api`;
 
 export class APIError extends Error {
   constructor(

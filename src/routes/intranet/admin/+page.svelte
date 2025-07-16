@@ -1,26 +1,55 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
   import { goto } from '$app/navigation';
   import Icon from '$lib/components/Icon.svelte';
+  import { config } from '$lib/config';
 
-  let user = null;
-  let users = [];
-  let contacts = [];
-  let showUsers = false;
-  let showContacts = false;
-  let showSettings = false;
-  let loading = false;
-  let error = null;
+  interface User {
+    id: number;
+    name: string;
+    email: string;
+    role: 'ADMIN' | 'USER';
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  interface Contact {
+    id: number;
+    name: string;
+    email: string;
+    company: string;
+    phone: string;
+    service: string;
+    projectType: string;
+    message: string;
+    createdAt: string;
+  }
+
+  interface UserForm {
+    name: string;
+    email: string;
+    password: string;
+    role: 'ADMIN' | 'USER';
+  }
+
+  let user: User | null = null;
+  let users: User[] = [];
+  let contacts: Contact[] = [];
+  let showUsers: boolean = false;
+  let showContacts: boolean = false;
+  let showSettings: boolean = false;
+  let loading: boolean = false;
+  let error: string | null = null;
 
   // Formulario de usuario
-  let userForm = {
+  let userForm: UserForm = {
     name: '',
     email: '',
     password: '',
     role: 'USER'
   };
-  let editingUser = null;
+  let editingUser: User | null = null;
 
   onMount(async () => {
     if (browser) {
@@ -36,7 +65,7 @@
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/me', {
+      const response = await fetch(`${config.API_URL}/api/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -45,7 +74,7 @@
       if (response.ok) {
         const result = await response.json();
         user = result.data;
-        if (user.role !== 'ADMIN') {
+        if (user && user.role !== 'ADMIN') {
           goto('/intranet/dashboard');
         }
       } else {
@@ -66,7 +95,7 @@
     error = null;
     try {
       const token = localStorage.getItem('formeta_token');
-      const response = await fetch('http://localhost:3000/api/users', {
+      const response = await fetch(`${config.API_URL}/api/users`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -91,7 +120,7 @@
     error = null;
     try {
       const token = localStorage.getItem('formeta_token');
-      const response = await fetch('http://localhost:3000/api/contacts', {
+      const response = await fetch(`${config.API_URL}/api/contacts`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -122,12 +151,13 @@
 
     try {
       const token = localStorage.getItem('formeta_token');
-      const url = editingUser ? `http://localhost:3000/api/users/${editingUser.id}` : 'http://localhost:3000/api/users';
+      const url = editingUser ? `${config.API_URL}/api/users/${editingUser.id}` : `${config.API_URL}/api/users`;
       const method = editingUser ? 'PUT' : 'POST';
       
-      const body = { ...userForm };
+      let body: Partial<UserForm> = { ...userForm };
       if (editingUser && !userForm.password) {
-        delete body.password;
+        const { password, ...bodyWithoutPassword } = body;
+        body = bodyWithoutPassword;
       }
 
       const response = await fetch(url, {
@@ -153,7 +183,7 @@
     }
   }
 
-  async function deleteUser(userId) {
+  async function deleteUser(userId: number): Promise<void> {
     if (!confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
       return;
     }
@@ -163,7 +193,7 @@
 
     try {
       const token = localStorage.getItem('formeta_token');
-      const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+      const response = await fetch(`${config.API_URL}/api/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -182,7 +212,7 @@
     }
   }
 
-  function editUser(userToEdit) {
+  function editUser(userToEdit: User): void {
     editingUser = userToEdit;
     userForm = {
       name: userToEdit.name,
@@ -208,7 +238,7 @@
 
     try {
       const token = localStorage.getItem('formeta_token');
-      const response = await fetch('http://localhost:3000/api/contacts/export', {
+      const response = await fetch(`${config.API_URL}/api/contacts/export`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -261,14 +291,14 @@
             on:click={goToDashboard}
             class="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
           >
-            <Icon name="dashboard" class="w-4 h-4" />
+            <Icon name="dashboard" size={16} />
             <span>Dashboard</span>
           </button>
           <button
             on:click={logout}
             class="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700"
           >
-            <Icon name="logout" class="w-4 h-4" />
+            <Icon name="logout" className="w-4 h-4" />
             <span>Cerrar sesión</span>
           </button>
         </div>
@@ -287,7 +317,7 @@
     {#if error}
       <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
         <div class="flex">
-          <Icon name="alert-circle" class="w-5 h-5 text-red-400 mr-2" />
+          <Icon name="alert-circle" className="w-5 h-5 text-red-400 mr-2" />
           <div class="text-sm text-red-800">{error}</div>
         </div>
       </div>
@@ -298,7 +328,7 @@
       <!-- Gestión de Usuarios -->
       <div class="bg-white rounded-lg shadow-sm border p-6">
         <div class="flex items-center mb-4">
-          <Icon name="users" class="w-6 h-6 text-blue-600 mr-3" />
+          <Icon name="users" className="w-6 h-6 text-blue-600 mr-3" />
           <h2 class="text-xl font-semibold text-gray-900">Usuarios</h2>
         </div>
         <p class="text-gray-600 mb-4">Gestionar usuarios del sistema</p>
@@ -313,7 +343,7 @@
       <!-- Gestión de Contactos -->
       <div class="bg-white rounded-lg shadow-sm border p-6">
         <div class="flex items-center mb-4">
-          <Icon name="mail" class="w-6 h-6 text-green-600 mr-3" />
+          <Icon name="mail" className="w-6 h-6 text-green-600 mr-3" />
           <h2 class="text-xl font-semibold text-gray-900">Contactos</h2>
         </div>
         <p class="text-gray-600 mb-4">Ver mensajes de contacto</p>
@@ -328,7 +358,7 @@
       <!-- Configuración -->
       <div class="bg-white rounded-lg shadow-sm border p-6">
         <div class="flex items-center mb-4">
-          <Icon name="settings" class="w-6 h-6 text-gray-600 mr-3" />
+          <Icon name="settings" className="w-6 h-6 text-gray-600 mr-3" />
           <h2 class="text-xl font-semibold text-gray-900">Configuración</h2>
         </div>
         <p class="text-gray-600 mb-4">Ajustes del sistema</p>
@@ -350,7 +380,7 @@
             on:click={() => showUsers = false}
             class="text-gray-500 hover:text-gray-700"
           >
-            <Icon name="x" class="w-5 h-5" />
+            <Icon name="x" className="w-5 h-5" />
           </button>
         </div>
 
@@ -441,13 +471,13 @@
                       on:click={() => editUser(user)}
                       class="text-blue-600 hover:text-blue-900"
                     >
-                      <Icon name="edit" class="w-4 h-4" />
+                      <Icon name="edit" className="w-4 h-4" />
                     </button>
                     <button
                       on:click={() => deleteUser(user.id)}
                       class="text-red-600 hover:text-red-900"
                     >
-                      <Icon name="trash" class="w-4 h-4" />
+                      <Icon name="trash" className="w-4 h-4" />
                     </button>
                   </td>
                 </tr>
@@ -468,14 +498,14 @@
               on:click={exportContacts}
               class="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700"
             >
-              <Icon name="download" class="w-4 h-4" />
+              <Icon name="download" className="w-4 h-4" />
               <span>Exportar CSV</span>
             </button>
             <button
               on:click={() => showContacts = false}
               class="text-gray-500 hover:text-gray-700"
             >
-              <Icon name="x" class="w-5 h-5" />
+              <Icon name="x" className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -536,7 +566,7 @@
             on:click={() => showSettings = false}
             class="text-gray-500 hover:text-gray-700"
           >
-            <Icon name="x" class="w-5 h-5" />
+            <Icon name="x" className="w-5 h-5" />
           </button>
         </div>
         <div class="space-y-4">

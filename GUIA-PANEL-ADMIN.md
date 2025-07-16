@@ -137,7 +137,7 @@ npx prisma db seed
 - **Contactos**: 4 contactos de ejemplo con diferentes servicios y prioridades
 - **Usuarios**: 2 usuarios (1 admin, 1 user normal)
 
-## 📝 Próximas Mejoras
+## 📝 Próximas Mejoras Dashboard
 
 ### Funcionalidades Pendientes
 - [ ] Exportación de datos (CSV/Excel)

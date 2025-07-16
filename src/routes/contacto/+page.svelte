@@ -436,7 +436,7 @@
 									🤖 SOLICITAR DEMO IA EMPRESARIAL
 								{:else}
 									<div class="flex items-center gap-2">
-									<Icon name="briefcase" size={20} class="text-white" />
+									<Icon name="briefcase" size={20} className="text-white" />
 									<span>ENVIAR CONSULTA ENTERPRISE</span>
 								</div>
 								{/if}
@@ -466,7 +466,7 @@
 					<div class="space-y-4">
 						<div class="flex items-start gap-4">
 							<div class="w-10 h-10 bg-formeta-primary text-white flex items-center justify-center rounded">
-								<Icon name="mail" size={20} class="text-white" />
+								<Icon name="mail" size={20} className="text-white" />
 							</div>
 							<div>
 								<h4 class="font-bold text-formeta-text">Email Enterprise</h4>
@@ -479,7 +479,7 @@
 						
 						<div class="flex items-start gap-4">
 							<div class="w-10 h-10 bg-formeta-primary text-white flex items-center justify-center rounded">
-								<Icon name="phone" size={20} class="text-white" />
+								<Icon name="phone" size={20} className="text-white" />
 							</div>
 							<div>
 								<h4 class="font-bold text-formeta-text">Consulta Técnica</h4>
@@ -498,7 +498,7 @@
 									verifactu@formeta-labs.com
 								</a>
 								<p class="text-sm text-red-600 flex items-center gap-1">
-									<Icon name="zap" size={16} class="text-red-600" />
+									<Icon name="zap" size={16} className="text-red-600" />
 									<span>Respuesta en 2 horas</span>
 								</p>
 							</div>
@@ -535,7 +535,7 @@
 				<!-- Response Time Guarantee -->
 				<div class="bg-formeta-primary p-6 text-white">
 					<div class="flex items-center gap-3 mb-4">
-						<Icon name="zap" size={24} class="text-formeta-primary" />
+						<Icon name="zap" size={24} className="text-formeta-primary" />
 						<h3 class="text-xl font-bold">Garantía de Respuesta</h3>
 					</div>
 					<div class="space-y-3 text-sm">
@@ -549,14 +549,14 @@
 						</div>
 						<div class="flex justify-between">
 							<span class="flex items-center gap-2">
-								<Icon name="briefcase" size={16} class="text-formeta-primary" />
+								<Icon name="briefcase" size={16} className="text-formeta-primary" />
 								<span>Consulta Enterprise:</span>
 							</span>
 							<span class="font-bold">24 horas</span>
 						</div>
 						<div class="flex justify-between">
 							<span class="flex items-center gap-2">
-								<Icon name="phone" size={16} class="text-formeta-primary" />
+								<Icon name="phone" size={16} className="text-formeta-primary" />
 								<span>Soporte General:</span>
 							</span>
 							<span class="font-bold">48 horas</span>
@@ -571,7 +571,7 @@
 				<!-- Location & Legal -->
 				<div class="bg-gray-50 p-6 border-2 border-gray-200">
 					<div class="flex items-center gap-3 mb-4">
-						<Icon name="map-pin" size={24} class="text-formeta-primary" />
+						<Icon name="map-pin" size={24} className="text-formeta-primary" />
 						<h3 class="text-xl font-bold text-formeta-text">Información Legal</h3>
 					</div>
 					<div class="space-y-2 text-sm text-formeta-text">
@@ -583,7 +583,7 @@
 					<div class="mt-4 pt-4 border-t border-gray-300">
 						<div class="text-xs text-formeta-text/70">
 							<div class="flex items-center gap-2 mb-2">
-								<Icon name="lock" size={16} class="text-formeta-primary" />
+								<Icon name="lock" size={16} className="text-formeta-primary" />
 								<strong>Datos 100% en España</strong>
 							</div>
 							<div>
@@ -627,7 +627,7 @@
 				
 				<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-8">
 					<div class="mb-4">
-						<Icon name="scale" size={48} class="text-formeta-primary" />
+						<Icon name="scale" size={48} className="text-formeta-primary" />
 					</div>
 					<h3 class="text-2xl font-bold mb-4">Consulta VeriFactu</h3>
 					<p class="text-white/90 mb-6">
@@ -644,7 +644,7 @@
 			
 			<div class="mt-12 bg-white/10 backdrop-blur-sm border border-white/20 p-6">
 				<div class="flex items-center gap-3 mb-4">
-					<Icon name="phone" size={24} class="text-formeta-primary" />
+					<Icon name="phone" size={24} className="text-formeta-primary" />
 					<h4 class="text-xl font-bold">Llamada de Urgencia</h4>
 				</div>
 				<p class="text-white/90 mb-4">

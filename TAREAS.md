@@ -204,6 +204,7 @@ Desarrollar el sitio web corporativo completo de Formeta con frontend en Svelte 
     - [x] Bitwarden (pwd.formeta.es) - Gestor de contraseñas
     - [x] Paperless (docs.formeta.es) - Gestión de documentos
     - [x] Wiki.js (wiki.formeta.es) - Base de conocimiento
+    - [ ] Marcadores (links.formeta.es) - Enlaces rápidos
   - [x] Iconos representativos para cada herramienta
   - [x] Enlaces externos con target="_blank" y rel="noopener noreferrer"
   - [x] Estilos consistentes con el diseño existente
@@ -213,42 +214,38 @@ Desarrollar el sitio web corporativo completo de Formeta con frontend en Svelte 
 
 ## 🛠️ **Mejoras y Correcciones Pendientes**
 
-### 🔧 **Errores TypeScript Críticos**
-- [ ] **Corrección errores componente Icon** *(Alta prioridad)*
-  - [ ] Cambiar `class` por `className` en todos los componentes Icon
-  - [ ] Afecta a: dashboard, admin, login (18+ errores)
-  - [ ] Error: `'"class"' does not exist in type '{ name: string; size?: number | undefined; className?: string | undefined; color?: string | undefined; }'`
+### 🔧 **Errores TypeScript Críticos** ✅ COMPLETADO
+- [x] **Corrección errores componente Icon** *(Completado: 2025-07-16)*
+  - [x] Cambiar `class` por `className` en todos los componentes Icon
+  - [x] Afecta a: dashboard, admin, login (18+ errores)
+  - [x] Error: `'"class"' does not exist in type '{ name: string; size?: number | undefined; className?: string | undefined; color?: string | undefined; }'`
+  - [x] Implementado script automático para reemplazar todas las ocurrencias
 
-- [ ] **Tipos implícitos en admin panel** *(Alta prioridad)*
-  - [ ] Definir tipos para `user`, `users`, `contacts`, `error`, `editingUser`
-  - [ ] Parametros de funciones sin tipo: `userId`, `userToEdit`
-  - [ ] Problema con `delete body.password` - operador delete en propiedad no opcional
+- [x] **Tipos implícitos en admin panel** *(Completado: 2025-07-16)*
+  - [x] Definir tipos para `user`, `users`, `contacts`, `error`, `editingUser`
+  - [x] Parametros de funciones sin tipo: `userId`, `userToEdit`
+  - [x] Problema con `delete body.password` - operador delete en propiedad no opcional
+  - [x] Implementados interfaces TypeScript: `User`, `Contact`, `UserForm`
+  - [x] Agregados tipos a todas las funciones y variables
+  - [x] Corregido problema de `delete` usando destructuring
 
-### 🔄 **URLs Hardcodeadas de Desarrollo**
-- [ ] **Reemplazar URLs localhost por variables de entorno** *(Media prioridad)*
-  - [ ] Frontend: 18 ocurrencias de `http://localhost:3000` en archivos .svelte
-  - [ ] Crear variable de entorno `VITE_API_URL`
-  - [ ] Archivos afectados: `/intranet/+page.svelte`, `/intranet/dashboard/+page.svelte`, `/intranet/admin/+page.svelte`
+### 🔄 **URLs Hardcodeadas de Desarrollo** ✅ COMPLETADO
+- [x] **Reemplazar URLs localhost por variables de entorno** *(Completado: 2025-07-16)*
+  - [x] Frontend: 18 ocurrencias de `http://localhost:3000` en archivos .svelte
+  - [x] Crear variable de entorno `PUBLIC_API_URL`
+  - [x] Archivos afectados: `/intranet/+page.svelte`, `/intranet/dashboard/+page.svelte`, `/intranet/admin/+page.svelte`
+  - [x] Creado `src/lib/config.ts` para gestión centralizada de configuración
+  - [x] Agregados archivos `.env` y `.env.example`
+  - [x] Actualizado servicio de API para usar variables de entorno
 
-### 🧹 **Limpieza de Código**
-- [ ] **Remover console.log de producción** *(Media prioridad)*
-  - [ ] Backend: 20+ console.log en emailService.ts (modo desarrollo OK)
-  - [ ] Frontend: console.log en servicios (web-development, automatizacion, verifactu, rag-mcp)
-  - [ ] Implementar sistema de logging apropiado
-  - [ ] Crear función de debug condicional
-
-### 🔐 **Seguridad y Validación**
-- [ ] **Validación de entrada mejorada** *(Media prioridad)*
-  - [ ] Validación client-side más robusta en formularios
-  - [ ] Sanitización de datos en admin panel
-  - [ ] Validación de tipos en tiempo de ejecución
-  - [ ] Rate limiting más granular por usuario
-
-- [ ] **Manejo de errores mejorado** *(Media prioridad)*
-  - [ ] Mensajes de error más específicos
-  - [ ] Logging estructurado de errores
-  - [ ] Fallbacks para fallos de API
-  - [ ] Retry logic para requests fallidos
+### 🧹 **Limpieza de Código** ✅ COMPLETADO
+- [x] **Remover console.log de producción** *(Completado: 2025-07-16)*
+  - [x] Frontend: console.log en servicios (web-development, automatizacion, verifactu, rag-mcp)
+  - [x] Implementar sistema de logging apropiado
+  - [x] Crear función de debug condicional
+  - [x] Creado `src/lib/utils/debug.ts` con logging condicional
+  - [x] Reemplazados todos los console.log por debug.log en frontend
+  - [x] Backend: console.log en emailService.ts mantenidos para desarrollo (apropiado)
 
 ### 🎨 **Mejoras UX/UI**
 - [ ] **Indicadores de estado mejorados** *(Baja prioridad)*
@@ -283,6 +280,23 @@ Desarrollar el sitio web corporativo completo de Formeta con frontend en Svelte 
   - [ ] Guía de componentes
   - [ ] Troubleshooting guide
   - [ ] Deployment guide
+
+
+
+
+### 🔐 **Seguridad y Validación**
+- [ ] **Validación de entrada mejorada** *(Media prioridad)*
+  - [ ] Validación client-side más robusta en formularios
+  - [ ] Sanitización de datos en admin panel
+  - [ ] Validación de tipos en tiempo de ejecución
+  - [ ] Rate limiting más granular por usuario
+
+- [ ] **Manejo de errores mejorado** *(Media prioridad)*
+  - [ ] Mensajes de error más específicos
+  - [ ] Logging estructurado de errores
+  - [ ] Fallbacks para fallos de API
+  - [ ] Retry logic para requests fallidos
+
 
   ## 📝 Próximas Mejoras Panel de Administracion 
 

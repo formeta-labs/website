@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import Icon from '$lib/components/Icon.svelte';
+	import { config } from '$lib/config';
 	
 	let email = '';
 	let password = '';
@@ -31,7 +32,7 @@
 		errorMessage = '';
 		
 		try {
-			const response = await fetch('http://localhost:3000/api/auth/login', {
+			const response = await fetch(`${config.API_URL}/api/auth/login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -82,7 +83,7 @@
 					FORMETA <span class="text-formeta-action">INTRANET</span>
 				</h1>
 				<div class="lock-icon text-formeta-action text-48 mt-2 font-mono">
-					<Icon name="lock" size={48} class="text-formeta-action" />
+					<Icon name="lock" size={48} className="text-formeta-action" />
 				</div>
 			</div>
 			<p class="text-16 text-formeta-light">
@@ -172,7 +173,7 @@
 		<!-- Demo Credentials -->
 		<div class="demo-credentials">
 			<div class="demo-header">
-				<Icon name="info" size={16} class="text-formeta-action" />
+				<Icon name="info" size={16} className="text-formeta-action" />
 				<span class="text-12 text-formeta-light font-mono">
 					CREDENCIALES DE PRUEBA
 				</span>

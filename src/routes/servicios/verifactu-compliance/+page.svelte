@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
+	import { debug } from '$lib/utils/debug';
 	import { onMount } from 'svelte';
 	
 	let selectedService = 'compliance'; // 'compliance' o 'crm'
@@ -96,7 +97,7 @@
 	};
 	
 	function handleSubmit() {
-		console.log('Enviando consulta VeriFactu:', contactForm);
+		debug.log('Enviando consulta VeriFactu:', contactForm);
 		// Aquí iría la integración con el backend
 	}
 </script>

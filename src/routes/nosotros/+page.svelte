@@ -203,7 +203,7 @@
 					</p>
 					
 					<div class="flex items-center gap-4 mb-6">
-						<Icon name="rocket" size={32} class="text-formeta-primary" />
+						<Icon name="rocket" size={32} className="text-formeta-primary" />
 						<h3 class="text-3xl font-bold text-formeta-text">Visión</h3>
 					</div>
 					<p class="text-lg text-formeta-text/80 leading-relaxed">
@@ -218,7 +218,7 @@
 					<div class="space-y-4">
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-formeta-primary text-white flex items-center justify-center rounded">
-								<Icon name="lock" size={16} class="text-white" />
+								<Icon name="lock" size={16} className="text-white" />
 							</div>
 							<div>
 								<h5 class="font-bold text-formeta-text">Soberanía Digital</h5>
@@ -227,7 +227,7 @@
 						</div>
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-formeta-primary text-white flex items-center justify-center rounded">
-								<Icon name="zap" size={16} class="text-white" />
+								<Icon name="zap" size={16} className="text-white" />
 							</div>
 							<div>
 								<h5 class="font-bold text-formeta-text">Innovación Aplicada</h5>
@@ -236,7 +236,7 @@
 						</div>
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-formeta-primary text-white flex items-center justify-center rounded">
-								<Icon name="check" size={16} class="text-white" />
+								<Icon name="check" size={16} className="text-white" />
 							</div>
 							<div>
 								<h5 class="font-bold text-formeta-text">Compliance Nativo</h5>
@@ -245,7 +245,7 @@
 						</div>
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-formeta-primary text-white flex items-center justify-center rounded">
-								<Icon name="target" size={16} class="text-white" />
+								<Icon name="target" size={16} className="text-white" />
 							</div>
 							<div>
 								<h5 class="font-bold text-formeta-text">Resultados Medibles</h5>
@@ -283,7 +283,7 @@
 					</div>
 					<div class="md:w-3/4">
 						<div class="flex items-center gap-3 mb-4">
-							<Icon name="building" size={24} class="text-formeta-primary" />
+							<Icon name="building" size={24} className="text-formeta-primary" />
 							<h3 class="text-2xl font-bold text-formeta-text">Fundación & Primeros Proyectos</h3>
 						</div>
 						<p class="text-formeta-text/80 mb-4">
@@ -308,7 +308,7 @@
 					</div>
 					<div class="md:w-3/4">
 						<div class="flex items-center gap-3 mb-4">
-							<Icon name="briefcase" size={24} class="text-formeta-primary" />
+							<Icon name="briefcase" size={24} className="text-formeta-primary" />
 							<h3 class="text-2xl font-bold text-formeta-text">Especialización CRM Enterprise</h3>
 						</div>
 						<p class="text-formeta-text/80 mb-4">
@@ -333,7 +333,7 @@
 					</div>
 					<div class="md:w-3/4">
 						<div class="flex items-center gap-3 mb-4">
-							<Icon name="scale" size={24} class="text-formeta-primary" />
+							<Icon name="scale" size={24} className="text-formeta-primary" />
 							<h3 class="text-2xl font-bold text-formeta-text">VeriFactu Compliance Leader</h3>
 						</div>
 						<p class="text-formeta-text/80 mb-4">
@@ -380,7 +380,7 @@
 					</div>
 					<div class="md:w-3/4">
 						<div class="flex items-center gap-3 mb-4">
-							<Icon name="trophy" size={24} class="text-formeta-primary" />
+							<Icon name="trophy" size={24} className="text-formeta-primary" />
 							<h3 class="text-2xl font-bold text-formeta-text">Formeta.Labs - Laboratorio Enterprise</h3>
 						</div>
 						<p class="text-formeta-text/80 mb-4">
@@ -497,13 +497,13 @@
 				<!-- Local AI Advantages -->
 				<div>
 					<div class="flex items-center gap-4 mb-8">
-						<Icon name="check-circle" size={32} class="text-formeta-secondary" />
+						<Icon name="check-circle" size={32} className="text-formeta-secondary" />
 						<h3 class="text-3xl font-bold text-formeta-secondary">IA Local (Formeta)</h3>
 					</div>
 					<div class="space-y-6">
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-green-500 text-white flex items-center justify-center rounded">
-								<Icon name="lock" size={16} class="text-white" />
+								<Icon name="lock" size={16} className="text-white" />
 							</div>
 							<div>
 								<h4 class="font-bold text-lg mb-2">100% Soberanía de Datos</h4>
@@ -512,7 +512,7 @@
 						</div>
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-green-500 text-white flex items-center justify-center rounded">
-								<Icon name="zap" size={16} class="text-white" />
+								<Icon name="zap" size={16} className="text-white" />
 							</div>
 							<div>
 								<h4 class="font-bold text-lg mb-2">Latencia &lt;200ms</h4>
@@ -521,7 +521,7 @@
 						</div>
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-green-500 text-white flex items-center justify-center rounded">
-								<Icon name="shield" size={16} class="text-white" />
+								<Icon name="shield" size={16} className="text-white" />
 							</div>
 							<div>
 								<h4 class="font-bold text-lg mb-2">Compliance Nativo</h4>
@@ -530,7 +530,7 @@
 						</div>
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-green-500 text-white flex items-center justify-center rounded">
-								<Icon name="dollar-sign" size={16} class="text-white" />
+								<Icon name="dollar-sign" size={16} className="text-white" />
 							</div>
 							<div>
 								<h4 class="font-bold text-lg mb-2">Costes Predecibles</h4>
@@ -543,13 +543,13 @@
 				<!-- Cloud AI Disadvantages -->
 				<div>
 					<div class="flex items-center gap-4 mb-8">
-						<Icon name="x-circle" size={32} class="text-red-300" />
+						<Icon name="x-circle" size={32} className="text-red-300" />
 						<h3 class="text-3xl font-bold text-red-300">IA Cloud (Otros)</h3>
 					</div>
 					<div class="space-y-6">
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-red-500 text-white flex items-center justify-center rounded">
-								<Icon name="cloud" size={16} class="text-white" />
+								<Icon name="cloud" size={16} className="text-white" />
 							</div>
 							<div>
 								<h4 class="font-bold text-lg mb-2">Datos en Terceros</h4>
@@ -565,7 +565,7 @@
 						</div>
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-red-500 text-white flex items-center justify-center rounded">
-								<Icon name="scale" size={16} class="text-white" />
+								<Icon name="scale" size={16} className="text-white" />
 							</div>
 							<div>
 								<h4 class="font-bold text-lg mb-2">Riesgos Legales</h4>
@@ -574,7 +574,7 @@
 						</div>
 						<div class="flex items-start gap-4">
 							<div class="w-8 h-8 bg-red-500 text-white flex items-center justify-center rounded">
-								<Icon name="trending-up" size={16} class="text-white" />
+								<Icon name="trending-up" size={16} className="text-white" />
 							</div>
 							<div>
 								<h4 class="font-bold text-lg mb-2">Costes Escalables</h4>
@@ -588,7 +588,7 @@
 			<div class="text-center mt-16">
 				<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-8 inline-block">
 					<div class="flex items-center gap-3 mb-4">
-						<Icon name="target" size={24} class="text-formeta-primary" />
+						<Icon name="target" size={24} className="text-formeta-primary" />
 						<h4 class="text-2xl font-bold">Resultado</h4>
 					</div>
 					<p class="text-lg mb-6">
@@ -624,7 +624,7 @@
 				<!-- VeriFactu Certified -->
 				<div class="text-center bg-red-50 p-6 border-2 border-red-200">
 					<div class="mb-4">
-						<Icon name="scale" size={48} class="text-formeta-primary" />
+						<Icon name="scale" size={48} className="text-formeta-primary" />
 					</div>
 					<h3 class="font-bold text-formeta-text mb-2">VeriFactu Certified</h3>
 					<p class="text-sm text-formeta-text/70">Especialista certificado R.D. 1007/2023</p>
@@ -633,7 +633,7 @@
 				<!-- ISO 27001 -->
 				<div class="text-center bg-blue-50 p-6 border-2 border-blue-200">
 					<div class="mb-4">
-						<Icon name="shield" size={48} class="text-formeta-primary" />
+						<Icon name="shield" size={48} className="text-formeta-primary" />
 					</div>
 					<h3 class="font-bold text-formeta-text mb-2">ISO 27001</h3>
 					<p class="text-sm text-formeta-text/70">Gestión de Seguridad de la Información</p>
@@ -642,7 +642,7 @@
 				<!-- RGPD Expert -->
 				<div class="text-center bg-green-50 p-6 border-2 border-green-200">
 					<div class="mb-4">
-						<Icon name="lock" size={48} class="text-formeta-primary" />
+						<Icon name="lock" size={48} className="text-formeta-primary" />
 					</div>
 					<h3 class="font-bold text-formeta-text mb-2">RGPD Expert</h3>
 					<p class="text-sm text-formeta-text/70">Protección de Datos por Diseño</p>
@@ -662,7 +662,7 @@
 					<div class="text-center">
 						<div class="bg-gray-100 p-4 mb-2">
 							<div class="mb-2">
-								<Icon name="atom" size={32} class="text-formeta-primary" />
+								<Icon name="atom" size={32} className="text-formeta-primary" />
 							</div>
 						</div>
 						<span class="text-sm font-medium">SvelteKit</span>
@@ -694,7 +694,7 @@
 					<div class="text-center">
 						<div class="bg-gray-100 p-4 mb-2">
 							<div class="mb-2">
-								<Icon name="link" size={32} class="text-formeta-primary" />
+								<Icon name="link" size={32} className="text-formeta-primary" />
 							</div>
 						</div>
 						<span class="text-sm font-medium">n8n</span>

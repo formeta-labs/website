@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import Icon from '$lib/components/Icon.svelte';
+	import { config } from '$lib/config';
 	
 	let user: any = null;
 	let isLoading = true;
@@ -24,7 +25,7 @@
 				user = JSON.parse(userData);
 				
 				// Verify token with backend
-				const response = await fetch('http://localhost:3000/api/auth/me', {
+				const response = await fetch(`${config.API_URL}/api/auth/me`, {
 					method: 'GET',
 					headers: {
 						'Authorization': `Bearer ${token}`,
@@ -77,7 +78,7 @@
 {#if isLoading}
 	<div class="min-h-screen bg-formeta-dark flex items-center justify-center">
 		<div class="text-center text-formeta-light">
-			<Icon name="loader" size={48} class="text-formeta-action animate-spin mx-auto mb-4" />
+			<Icon name="loader" size={48} className="text-formeta-action animate-spin mx-auto mb-4" />
 			<p class="font-mono text-sm">CARGANDO DASHBOARD...</p>
 		</div>
 	</div>
@@ -102,7 +103,7 @@
 							on:click={handleLogout}
 							class="btn-logout"
 						>
-							<Icon name="log-out" size={16} class="text-formeta-light" />
+							<Icon name="log-out" size={16} className="text-formeta-light" />
 							SALIR
 						</button>
 					</div>
@@ -117,7 +118,7 @@
 				<div class="bg-formeta-black border-2 border-formeta-primary p-6 shadow-lg">
 					<div class="flex items-center gap-4">
 						<div class="w-12 h-12 bg-formeta-primary rounded-lg flex items-center justify-center">
-							<Icon name="user" size={24} class="text-white" />
+							<Icon name="user" size={24} className="text-white" />
 						</div>
 						<div>
 							<h2 class="text-2xl font-bold text-formeta-white mb-2">
@@ -139,28 +140,28 @@
 					</h3>
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div class="info-item">
-							<Icon name="mail" size={16} class="text-formeta-action" />
+							<Icon name="mail" size={16} className="text-formeta-action" />
 							<div>
 								<span class="label">EMAIL:</span>
 								<span class="value">{user.email}</span>
 							</div>
 						</div>
 						<div class="info-item">
-							<Icon name="shield" size={16} class="text-formeta-action" />
+							<Icon name="shield" size={16} className="text-formeta-action" />
 							<div>
 								<span class="label">ROL:</span>
 								<span class="value">{user.role}</span>
 							</div>
 						</div>
 						<div class="info-item">
-							<Icon name="calendar" size={16} class="text-formeta-action" />
+							<Icon name="calendar" size={16} className="text-formeta-action" />
 							<div>
 								<span class="label">REGISTRO:</span>
 								<span class="value">{formatDate(user.createdAt)}</span>
 							</div>
 						</div>
 						<div class="info-item">
-							<Icon name="clock" size={16} class="text-formeta-action" />
+							<Icon name="clock" size={16} className="text-formeta-action" />
 							<div>
 								<span class="label">ÚLTIMA ACTUALIZACIÓN:</span>
 								<span class="value">{formatDate(user.updatedAt)}</span>
@@ -185,7 +186,7 @@
 							class="tool-link"
 						>
 							<div class="tool-icon">
-								<Icon name="check-square" size={20} class="text-formeta-action" />
+								<Icon name="check-square" size={20} className="text-formeta-action" />
 							</div>
 							<div class="tool-info">
 								<h4 class="tool-title">VIKUNJA</h4>
@@ -201,7 +202,7 @@
 							class="tool-link"
 						>
 							<div class="tool-icon">
-								<Icon name="zap" size={20} class="text-formeta-action" />
+								<Icon name="zap" size={20} className="text-formeta-action" />
 							</div>
 							<div class="tool-info">
 								<h4 class="tool-title">N8N</h4>
@@ -217,7 +218,7 @@
 							class="tool-link"
 						>
 							<div class="tool-icon">
-								<Icon name="server" size={20} class="text-formeta-action" />
+								<Icon name="server" size={20} className="text-formeta-action" />
 							</div>
 							<div class="tool-info">
 								<h4 class="tool-title">CLOUDPANEL</h4>
@@ -233,7 +234,7 @@
 							class="tool-link"
 						>
 							<div class="tool-icon">
-								<Icon name="lock" size={20} class="text-formeta-action" />
+								<Icon name="lock" size={20} className="text-formeta-action" />
 							</div>
 							<div class="tool-info">
 								<h4 class="tool-title">BITWARDEN</h4>
@@ -249,7 +250,7 @@
 							class="tool-link"
 						>
 							<div class="tool-icon">
-								<Icon name="file-text" size={20} class="text-formeta-action" />
+								<Icon name="file-text" size={20} className="text-formeta-action" />
 							</div>
 							<div class="tool-info">
 								<h4 class="tool-title">PAPERLESS</h4>
@@ -265,11 +266,27 @@
 							class="tool-link"
 						>
 							<div class="tool-icon">
-								<Icon name="book" size={20} class="text-formeta-action" />
+								<Icon name="book" size={20} className="text-formeta-action" />
 							</div>
 							<div class="tool-info">
 								<h4 class="tool-title">WIKI.JS</h4>
 								<p class="tool-desc">Base de conocimiento</p>
+							</div>
+						</a>
+
+						<!-- Marcadores -->
+						<a
+							href="https://links.formeta.es"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="tool-link"
+						>
+							<div class="tool-icon">
+								<Icon name="bookmark" size={20} className="text-formeta-action" />
+							</div>
+							<div class="tool-info">
+								<h4 class="tool-title">MARCADORES</h4>
+								<p class="tool-desc">Enlaces rápidos</p>
 							</div>
 						</a>
 					</div>
@@ -281,7 +298,7 @@
 				<!-- Profile -->
 				<div class="action-card">
 					<div class="action-header">
-						<Icon name="user" size={24} class="text-formeta-action" />
+						<Icon name="user" size={24} className="text-formeta-action" />
 						<h3>PERFIL</h3>
 					</div>
 					<p class="action-description">
@@ -295,7 +312,7 @@
 				<!-- Documents -->
 				<div class="action-card">
 					<div class="action-header">
-						<Icon name="file-text" size={24} class="text-formeta-action" />
+						<Icon name="file-text" size={24} className="text-formeta-action" />
 						<h3>DOCUMENTOS</h3>
 					</div>
 					<p class="action-description">
@@ -310,7 +327,7 @@
 				{#if user.role === 'ADMIN'}
 					<div class="action-card admin-card">
 						<div class="action-header">
-							<Icon name="shield" size={24} class="text-red-400" />
+							<Icon name="shield" size={24} className="text-red-400" />
 							<h3>PANEL DE ADMINISTRACIÓN</h3>
 						</div>
 						<p class="action-description">
@@ -320,7 +337,7 @@
 							class="action-btn admin-btn"
 							on:click={() => goto('/intranet/admin')}
 						>
-							<Icon name="settings" size={16} class="text-red-400 inline mr-2" />
+							<Icon name="settings" size={16} className="text-red-400 inline mr-2" />
 							ACCEDER AL PANEL
 						</button>
 					</div>
@@ -348,7 +365,7 @@
 {:else}
 	<div class="min-h-screen bg-formeta-dark flex items-center justify-center">
 		<div class="text-center text-formeta-light">
-			<Icon name="alert-circle" size={48} class="text-red-400 mx-auto mb-4" />
+			<Icon name="alert-circle" size={48} className="text-red-400 mx-auto mb-4" />
 			<p class="font-mono text-sm">ERROR DE AUTENTICACIÓN</p>
 			<button 
 				on:click={() => goto('/intranet')}

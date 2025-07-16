@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
+	import { debug } from '$lib/utils/debug';
 	
 	const automationServices = [
 		{
@@ -34,7 +35,7 @@
 	};
 	
 	function handleSubmit() {
-		console.log('Enviando consulta Automatización:', contactForm);
+		debug.log('Enviando consulta Automatización:', contactForm);
 	}
 </script>
 
