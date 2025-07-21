@@ -1,0 +1,79 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique
+  passwordHash String  @map("password_hash")
+  role       String    @default("employee")
+  name       String
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  lastLogin  DateTime? @map("last_login")
+
+  // Relations
+  blogPosts       BlogPost[]
+  assignedRequests ServiceRequest[] @relation("AssignedTo")
+
+  @@map("users")
+}
+
+model ContactForm {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String
+  company     String?
+  phone       String?
+  message     String
+  serviceType String?  @map("service_type")
+  budgetRange String?  @map("budget_range")
+  createdAt   DateTime @default(now()) @map("created_at")
+  status      String   @default("pending")
+
+  @@map("contact_forms")
+}
+
+model ServiceRequest {
+  id           Int       @id @default(autoincrement())
+  clientName   String    @map("client_name")
+  clientEmail  String    @map("client_email")
+  clientCompany String?  @map("client_company")
+  serviceType  String    @map("service_type")
+  description  String
+  priority     String    @default("medium")
+  status       String    @default("pending")
+  assignedToId Int?      @map("assigned_to")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  dueDate      DateTime? @map("due_date")
+
+  // Relations
+  assignedTo User? @relation("AssignedTo", fields: [assignedToId], references: [id])
+
+  @@map("service_requests")
+}
+
+model BlogPost {
+  id          Int       @id @default(autoincrement())
+  title       String
+  slug        String    @unique
+  content     String
+  excerpt     String?
+  authorId    Int?      @map("author_id")
+  published   Boolean   @default(false)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  publishedAt DateTime? @map("published_at")
+
+  // Relations
+  author User? @relation(fields: [authorId], references: [id])
+
+  @@map("blog_posts")
+}
