@@ -68,13 +68,13 @@
 			<div class="flex flex-wrap gap-4">
 				<button 
 					on:click={handleCTAClick}
-					class="bg-white text-formeta-primary px-8 py-4 font-bold text-lg hover:bg-white/90 transition-all duration-200 border-2 border-white"
+					class="bg-white text-black px-8 py-4 font-bold text-lg hover:bg-white/90 hover:text-black transition-all duration-200 border-2 border-white"
 				>
 					CONSULTA TÉCNICA GRATUITA
 				</button>
 				<button 
 					on:click={handleServicesClick}
-					class="border-2 border-white text-white px-8 py-4 font-bold text-lg hover:bg-white hover:text-formeta-primary transition-all duration-200"
+					class="border-2 border-white text-white px-8 py-4 font-bold text-lg hover:bg-white hover:text-black transition-all duration-200"
 				>
 					VER SERVICIOS ENTERPRISE
 				</button>

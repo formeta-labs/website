@@ -2,16 +2,47 @@
 <html lang="es" class="h-full">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/formeta-favicon.svg" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Formeta Labs - Digitalización Empresarial</title>
-		<meta name="description" content="Formeta Labs es un estudio tecnológico especializado en digitalización empresarial con soluciones modernas de pixel art." />
 		
-		<!-- Geist Fonts -->
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+		<!-- Favicon y iconos optimizados -->
+		<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
+		<link rel="icon" type="image/svg+xml" href="%sveltekit.assets%/images/loofo-formeta.svg" />
+		<link rel="apple-touch-icon" sizes="180x180" href="%sveltekit.assets%/apple-touch-icon.png" />
+		<link rel="apple-touch-icon-precomposed" href="%sveltekit.assets%/apple-touch-icon-precomposed.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="%sveltekit.assets%/images/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="%sveltekit.assets%/images/favicon-16x16.png" />
+		<link rel="manifest" href="%sveltekit.assets%/site.webmanifest" />
+		
+		<!-- Meta viewport optimizado -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+		
+		<!-- Meta tags por defecto (se sobrescriben en páginas específicas) -->
+		<title>Formeta Labs - Automatización Empresarial y Desarrollo Web</title>
+		<meta name="description" content="Especialistas en automatización empresarial, desarrollo web y cumplimiento VeriFactu. Soluciones de IA personalizadas para impulsar tu negocio." />
+		<meta name="keywords" content="automatización empresarial, desarrollo web, VeriFactu, IA empresarial, consultoría tecnológica" />
+		<meta name="author" content="Formeta Labs" />
+		<meta name="robots" content="index, follow" />
+		
+		<!-- Open Graph por defecto -->
+		<meta property="og:site_name" content="Formeta Labs" />
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="es_ES" />
+		
+		<!-- Twitter Cards por defecto -->
+		<meta name="twitter:card" content="summary_large_image" />
+		
+		<!-- Configuración técnica -->
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="google" content="notranslate" />
+		<meta name="theme-color" content="#3b82f6" />
+		<meta name="msapplication-TileColor" content="#3b82f6" />
+		
+		<!-- Preconnect para optimización -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		
+		<!-- Geist Fonts - Local loading optimized -->
+		<link rel="preload" href="/fonts/geist-fonts.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+		<noscript><link rel="stylesheet" href="/fonts/geist-fonts.css"></noscript>
 		
 		%sveltekit.head%
 	</head>

@@ -3,15 +3,15 @@
 export interface ContactFormData {
   name: string;
   email: string;
-  company?: string;
-  position?: string;
-  phone?: string;
-  service?: string;
-  projectType?: string;
-  budget?: string;
-  timeline?: string;
+  company: string;
+  position: string;
+  phone: string;
+  service: string;
+  projectType: string;
+  budget: string;
+  timeline: string;
   message: string;
-  priority?: 'normal' | 'urgent';
+  priority: 'normal' | 'urgent';
   gdprConsent: boolean;
 }
 

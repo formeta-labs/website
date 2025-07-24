@@ -4,58 +4,28 @@
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import Icon from '$lib/components/Icon.svelte';
-	import { config } from '$lib/config';
+	import { isLoaded, isSignedIn, user, signOut, getUserRole } from '$lib/stores/auth';
+	import { toast } from '$lib/stores/toast';
 	
-	let user: any = null;
-	let isLoading = true;
-	let error = '';
-	
-	onMount(async () => {
-		if (browser) {
-			const token = localStorage.getItem('formeta_token');
-			const userData = localStorage.getItem('formeta_user');
-			
-			if (!token || !userData) {
-				goto('/intranet');
-				return;
-			}
-			
-			try {
-				// Parse user data
-				user = JSON.parse(userData);
-				
-				// Verify token with backend
-				const response = await fetch(`${config.API_URL}/api/auth/me`, {
-					method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,
-						'Content-Type': 'application/json'
-					}
-				});
-				
-				if (!response.ok) {
-					throw new Error('Token inválido');
-				}
-				
-				const data = await response.json();
-				user = data.data;
-				
-			} catch (err) {
-				console.error('Auth error:', err);
-				localStorage.removeItem('formeta_token');
-				localStorage.removeItem('formeta_user');
-				goto('/intranet');
-				return;
-			}
-			
-			isLoading = false;
-		}
+	let mounted = false;
+
+	onMount(() => {
+		mounted = true;
 	});
-	
-	function handleLogout() {
-		localStorage.removeItem('formeta_token');
-		localStorage.removeItem('formeta_user');
+
+	// Reactive statement para manejar autenticación
+	$: if (mounted && $isLoaded && !$isSignedIn) {
 		goto('/intranet');
+	}
+
+	function handleLogout() {
+		signOut();
+	}
+
+	function handleGrafanaClick() {
+		toast.info('Accediendo a Grafana', 'Se abrirá el panel de monitoreo en una nueva pestaña', {
+			duration: 3000
+		});
 	}
 	
 	function formatDate(dateString: string) {
@@ -67,6 +37,26 @@
 			minute: '2-digit'
 		});
 	}
+
+	// Reactive values with debug logging
+	$: {
+		if ($user) {
+			console.log('=== USER DEBUG INFO ===');
+			console.log('Full user object:', $user);
+			console.log('Public metadata:', $user.publicMetadata);
+			console.log('Private metadata:', ($user as any).privateMetadata);
+			console.log('Organization memberships:', ($user as any).organizationMemberships);
+			console.log('Role from getUserRole:', getUserRole($user));
+			console.log('========================');
+		}
+	}
+	$: userRole = $user ? getUserRole($user) : 'guest';
+	$: userName = $user?.firstName && $user?.lastName 
+		? `${$user.firstName} ${$user.lastName}` 
+		: $user?.emailAddresses?.[0]?.emailAddress || 'Usuario';
+	$: userEmail = $user?.emailAddresses?.[0]?.emailAddress || '';
+	$: createdAt = $user?.createdAt ? new Date($user.createdAt).toISOString() : new Date().toISOString();
+	$: updatedAt = $user?.updatedAt ? new Date($user.updatedAt).toISOString() : new Date().toISOString();
 </script>
 
 <svelte:head>
@@ -75,288 +65,402 @@
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-{#if isLoading}
+{#if !$isLoaded}
 	<div class="min-h-screen bg-formeta-dark flex items-center justify-center">
 		<div class="text-center text-formeta-light">
 			<Icon name="loader" size={48} className="text-formeta-action animate-spin mx-auto mb-4" />
 			<p class="font-mono text-sm">CARGANDO DASHBOARD...</p>
 		</div>
 	</div>
-{:else if user}
-	<div class="min-h-screen bg-formeta-dark">
-		<!-- Header -->
-		<header class="bg-formeta-black border-b-2 border-formeta-primary">
-			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div class="flex justify-between items-center h-16">
-					<div class="flex items-center">
-						<h1 class="text-xl font-bold text-formeta-white font-mono">
-							FORMETA <span class="text-formeta-action">INTRANET</span>
-						</h1>
-					</div>
-					<div class="flex items-center gap-4">
-						<div class="text-sm text-formeta-light font-mono">
-							<span class="text-formeta-action">{user.role.toUpperCase()}</span>
-							<span class="mx-2">|</span>
-							<span>{user.name}</span>
+{:else if $isSignedIn && $user}
+	<div class="dashboard-container">
+		<!-- Enhanced Header -->
+		<header class="dashboard-header">
+			<div class="header-content">
+				<div class="header-left">
+					<div class="logo-section">
+						<img src="/images/loofo-formeta.svg" alt="Formeta" class="header-logo" />
+						<div class="header-title">
+							<h1>FORMETA</h1>
+							<span class="header-subtitle">INTRANET</span>
 						</div>
-						<button 
-							on:click={handleLogout}
-							class="btn-logout"
-						>
-							<Icon name="log-out" size={16} className="text-formeta-light" />
-							SALIR
-						</button>
 					</div>
+				</div>
+				<div class="header-right">
+					<div class="user-info">
+						<div class="user-details">
+							<span class="user-name">{userName}</span>
+							<span class="user-role">{userRole.toUpperCase()}</span>
+						</div>
+						<div class="user-avatar">
+							<Icon name="user" size={20} />
+						</div>
+					</div>
+					<button 
+						on:click={handleLogout}
+						class="logout-btn"
+						title="Cerrar sesión"
+					>
+						<Icon name="log-out" size={18} />
+					</button>
 				</div>
 			</div>
 		</header>
 
-		<!-- Main Content -->
-		<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-			<!-- Welcome Section -->
-			<section class="mb-8">
-				<div class="bg-formeta-black border-2 border-formeta-primary p-6 shadow-lg">
-					<div class="flex items-center gap-4">
-						<div class="w-12 h-12 bg-formeta-primary rounded-lg flex items-center justify-center">
-							<Icon name="user" size={24} className="text-white" />
-						</div>
-						<div>
-							<h2 class="text-2xl font-bold text-formeta-white mb-2">
-								¡Bienvenido, {user.name}!
-							</h2>
-							<p class="text-formeta-light">
-								Acceso autorizado como <span class="text-formeta-action font-mono">{user.role.toUpperCase()}</span>
-							</p>
-						</div>
+		<!-- Main Dashboard Content -->
+		<main class="dashboard-main">
+			<!-- Welcome Hero Section -->
+			<section class="welcome-hero">
+				<div class="hero-content">
+					<div class="hero-text">
+						<h2 class="hero-title">Bienvenido, {userName}</h2>
+						<p class="hero-subtitle">
+							Portal interno de Formeta Labs • Acceso como <span class="role-badge">{userRole}</span>
+						</p>
 					</div>
-				</div>
-			</section>
-
-			<!-- User Info -->
-			<section class="mb-8">
-				<div class="bg-formeta-black border-2 border-formeta-secondary p-6">
-					<h3 class="text-lg font-bold text-formeta-white mb-4 font-mono">
-						INFORMACIÓN DEL USUARIO
-					</h3>
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div class="info-item">
-							<Icon name="mail" size={16} className="text-formeta-action" />
-							<div>
-								<span class="label">EMAIL:</span>
-								<span class="value">{user.email}</span>
+					<div class="hero-stats">
+						<div class="stat-item">
+							<Icon name="shield-check" size={24} className="text-emerald-400" />
+							<div class="stat-content">
+								<span class="stat-value">Autenticado</span>
+								<span class="stat-label">Estado</span>
 							</div>
 						</div>
-						<div class="info-item">
-							<Icon name="shield" size={16} className="text-formeta-action" />
-							<div>
-								<span class="label">ROL:</span>
-								<span class="value">{user.role}</span>
-							</div>
-						</div>
-						<div class="info-item">
-							<Icon name="calendar" size={16} className="text-formeta-action" />
-							<div>
-								<span class="label">REGISTRO:</span>
-								<span class="value">{formatDate(user.createdAt)}</span>
-							</div>
-						</div>
-						<div class="info-item">
-							<Icon name="clock" size={16} className="text-formeta-action" />
-							<div>
-								<span class="label">ÚLTIMA ACTUALIZACIÓN:</span>
-								<span class="value">{formatDate(user.updatedAt)}</span>
+						<div class="stat-item">
+							<Icon name="calendar" size={24} className="text-blue-400" />
+							<div class="stat-content">
+								<span class="stat-value">{formatDate(createdAt).split(',')[0]}</span>
+								<span class="stat-label">Registro</span>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
 
-			<!-- Internal Tools -->
-			<section class="mb-8">
-				<div class="bg-formeta-black border-2 border-formeta-secondary p-6">
-					<h3 class="text-lg font-bold text-formeta-white mb-6 font-mono">
-						HERRAMIENTAS INTERNAS
-					</h3>
-					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-						<!-- Vikunja -->
+			<!-- Quick Actions Grid -->
+			<section class="quick-actions">
+				<h3 class="section-title">Acceso Rápido</h3>
+				<div class="actions-grid">
+					<!-- Primary Tools -->
+					<div class="action-card primary">
+						<div class="card-header">
+							<div class="card-icon">
+								<Icon name="check-square" size={24} />
+							</div>
+							<div class="card-title">
+								<h4>Gestión de Tareas</h4>
+								<p>Vikunja • Proyectos y asignaciones</p>
+							</div>
+						</div>
 						<a 
 							href="https://tasks.formeta.es" 
 							target="_blank" 
 							rel="noopener noreferrer"
-							class="tool-link"
+							class="card-action"
 						>
-							<div class="tool-icon">
-								<Icon name="check-square" size={20} className="text-formeta-action" />
-							</div>
-							<div class="tool-info">
-								<h4 class="tool-title">VIKUNJA</h4>
-								<p class="tool-desc">Gestión de tareas y proyectos</p>
-							</div>
+							<span>Abrir Vikunja</span>
+							<Icon name="external-link" size={16} />
 						</a>
+					</div>
 
-						<!-- n8n -->
-						<a 
-							href="https://automation.formeta.es" 
-							target="_blank" 
-							rel="noopener noreferrer"
-							class="tool-link"
-						>
-							<div class="tool-icon">
-								<Icon name="zap" size={20} className="text-formeta-action" />
+					<div class="action-card primary">
+						<div class="card-header">
+							<div class="card-icon">
+								<Icon name="file-text" size={24} />
 							</div>
-							<div class="tool-info">
-								<h4 class="tool-title">N8N</h4>
-								<p class="tool-desc">Automatización de workflows</p>
+							<div class="card-title">
+								<h4>Documentos</h4>
+								<p>Paperless • Gestión documental</p>
 							</div>
-						</a>
-
-						<!-- CloudPanel -->
-						<a 
-							href="https://cpanel.formeta.es/" 
-							target="_blank" 
-							rel="noopener noreferrer"
-							class="tool-link"
-						>
-							<div class="tool-icon">
-								<Icon name="server" size={20} className="text-formeta-action" />
-							</div>
-							<div class="tool-info">
-								<h4 class="tool-title">CLOUDPANEL</h4>
-								<p class="tool-desc">Panel de control del servidor</p>
-							</div>
-						</a>
-
-						<!-- Bitwarden -->
-						<a 
-							href="https://pwd.formeta.es/#/login" 
-							target="_blank" 
-							rel="noopener noreferrer"
-							class="tool-link"
-						>
-							<div class="tool-icon">
-								<Icon name="lock" size={20} className="text-formeta-action" />
-							</div>
-							<div class="tool-info">
-								<h4 class="tool-title">BITWARDEN</h4>
-								<p class="tool-desc">Gestor de contraseñas</p>
-							</div>
-						</a>
-
-						<!-- Paperless -->
+						</div>
 						<a 
 							href="https://docs.formeta.es/accounts/login/?next=/" 
 							target="_blank" 
 							rel="noopener noreferrer"
-							class="tool-link"
+							class="card-action"
 						>
-							<div class="tool-icon">
-								<Icon name="file-text" size={20} className="text-formeta-action" />
-							</div>
-							<div class="tool-info">
-								<h4 class="tool-title">PAPERLESS</h4>
-								<p class="tool-desc">Gestión de documentos</p>
-							</div>
+							<span>Abrir Paperless</span>
+							<Icon name="external-link" size={16} />
 						</a>
+					</div>
 
-						<!-- Wiki.js -->
+					<div class="action-card primary">
+						<div class="card-header">
+							<div class="card-icon">
+								<Icon name="book" size={24} />
+							</div>
+							<div class="card-title">
+								<h4>Base de Conocimiento</h4>
+								<p>Wiki.js • Documentación</p>
+							</div>
+						</div>
 						<a 
 							href="https://wiki.formeta.es" 
 							target="_blank" 
 							rel="noopener noreferrer"
-							class="tool-link"
+							class="card-action"
 						>
-							<div class="tool-icon">
-								<Icon name="book" size={20} className="text-formeta-action" />
-							</div>
-							<div class="tool-info">
-								<h4 class="tool-title">WIKI.JS</h4>
-								<p class="tool-desc">Base de conocimiento</p>
-							</div>
-						</a>
-
-						<!-- Marcadores -->
-						<a
-							href="https://links.formeta.es"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="tool-link"
-						>
-							<div class="tool-icon">
-								<Icon name="bookmark" size={20} className="text-formeta-action" />
-							</div>
-							<div class="tool-info">
-								<h4 class="tool-title">MARCADORES</h4>
-								<p class="tool-desc">Enlaces rápidos</p>
-							</div>
+							<span>Abrir Wiki</span>
+							<Icon name="external-link" size={16} />
 						</a>
 					</div>
+
+					<!-- Admin Access -->
+					{#if userRole === 'admin'}
+						<div class="action-card admin">
+							<div class="card-header">
+								<div class="card-icon admin-icon">
+									<Icon name="settings" size={24} />
+								</div>
+								<div class="card-title">
+									<h4>Panel de Administración</h4>
+									<p>Gestión del sistema</p>
+								</div>
+							</div>
+							<button 
+								class="card-action admin-action"
+								on:click={() => goto('/intranet/admin')}
+							>
+								<span>Acceder al Panel</span>
+								<Icon name="arrow-right" size={16} />
+							</button>
+						</div>
+					{/if}
 				</div>
 			</section>
 
-			<!-- Actions -->
-			<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				<!-- Profile -->
-				<div class="action-card">
-					<div class="action-header">
-						<Icon name="user" size={24} className="text-formeta-action" />
-						<h3>PERFIL</h3>
-					</div>
-					<p class="action-description">
-						Gestiona tu información personal y preferencias
-					</p>
-					<button class="action-btn">
-						ACCEDER
-					</button>
-				</div>
-
-				<!-- Documents -->
-				<div class="action-card">
-					<div class="action-header">
-						<Icon name="file-text" size={24} className="text-formeta-action" />
-						<h3>DOCUMENTOS</h3>
-					</div>
-					<p class="action-description">
-						Accede a documentos y recursos internos
-					</p>
-					<button class="action-btn">
-						ACCEDER
-					</button>
-				</div>
-
-				<!-- Admin Panel (only for admins) -->
-				{#if user.role === 'ADMIN'}
-					<div class="action-card admin-card">
-						<div class="action-header">
-							<Icon name="shield" size={24} className="text-red-400" />
-							<h3>PANEL DE ADMINISTRACIÓN</h3>
+			<!-- Tools Grid -->
+			<section class="tools-section">
+				<h3 class="section-title">Herramientas Internas</h3>
+				<div class="tools-grid">
+					<a 
+						href="https://automation.formeta.es" 
+						target="_blank" 
+						rel="noopener noreferrer"
+						class="tool-item"
+					>
+						<div class="tool-icon">
+							<Icon name="zap" size={20} />
 						</div>
-						<p class="action-description">
-							Gestión completa del sistema, usuarios y contactos
-						</p>
-						<button 
-							class="action-btn admin-btn"
-							on:click={() => goto('/intranet/admin')}
-						>
-							<Icon name="settings" size={16} className="text-red-400 inline mr-2" />
-							ACCEDER AL PANEL
-						</button>
+						<div class="tool-info">
+							<h4>N8N</h4>
+							<p>Automatización</p>
+						</div>
+					</a>
+
+					<a 
+						href="https://cpanel.formeta.es/" 
+						target="_blank" 
+						rel="noopener noreferrer"
+						class="tool-item"
+					>
+						<div class="tool-icon">
+							<Icon name="server" size={20} />
+						</div>
+						<div class="tool-info">
+							<h4>CloudPanel</h4>
+							<p>Servidor</p>
+						</div>
+					</a>
+
+					<a
+						href="https://links.formeta.es"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="tool-item"
+					>
+						<div class="tool-icon">
+							<Icon name="bookmark" size={20} />
+						</div>
+						<div class="tool-info">
+							<h4>Marcadores</h4>
+							<p>Enlaces</p>
+						</div>
+					</a>
+
+					<a
+						href="https://monitor.formeta.es"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="tool-item"
+					>
+						<div class="tool-icon">
+							<Icon name="activity" size={20} />
+						</div>
+						<div class="tool-info">
+							<h4>Grafana</h4>
+							<p>Monitoreo</p>
+						</div>
+					</a>
+
+					<a
+						href="https://dokploy.formeta.es"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="tool-item"
+					>
+						<div class="tool-icon">
+							<Icon name="rocket-launch" size={20} />
+						</div>
+						<div class="tool-info">
+							<h4>Dokploy</h4>
+							<p>Deploy & Hosting</p>
+						</div>
+					</a>
+
+					<a
+						href="https://supabase.formeta.es"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="tool-item"
+					>
+						<div class="tool-icon">
+							<Icon name="circle-stack" size={20} />
+						</div>
+						<div class="tool-info">
+							<h4>Supabase</h4>
+							<p>Database & Auth</p>
+						</div>
+					</a>
+				</div>
+			</section>
+
+			<!-- External Services Section -->
+			<section class="external-services-section">
+				<h3 class="section-title">🌐 Servicios Externos Integrados</h3>
+				<div class="external-services-grid">
+					<a
+						href="https://clerk.com"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="external-service-item"
+					>
+						<div class="external-service-icon clerk">
+							<Icon name="shield-check" size={20} />
+						</div>
+						<div class="external-service-info">
+							<h4>Clerk</h4>
+							<p>Autenticación</p>
+						</div>
+						<div class="external-link-indicator">
+							<Icon name="arrow-top-right-on-square" size={14} />
+						</div>
+					</a>
+
+					<a
+						href="https://www.smtp2go.com"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="external-service-item"
+					>
+						<div class="external-service-icon smtp2go">
+							<Icon name="envelope" size={20} />
+						</div>
+						<div class="external-service-info">
+							<h4>SMTP2GO</h4>
+							<p>Envío de correos</p>
+						</div>
+						<div class="external-link-indicator">
+							<Icon name="arrow-top-right-on-square" size={14} />
+						</div>
+					</a>
+
+					<a
+						href="https://dash.cloudflare.com"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="external-service-item"
+					>
+						<div class="external-service-icon cloudflare">
+							<Icon name="cloud" size={20} />
+						</div>
+						<div class="external-service-info">
+							<h4>Cloudflare</h4>
+							<p>DNS & Seguridad</p>
+						</div>
+						<div class="external-link-indicator">
+							<Icon name="arrow-top-right-on-square" size={14} />
+						</div>
+					</a>
+
+					<a
+						href="https://mail.proton.me"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="external-service-item"
+					>
+						<div class="external-service-icon protonmail">
+							<Icon name="at-symbol" size={20} />
+						</div>
+						<div class="external-service-info">
+							<h4>ProtonMail</h4>
+							<p>Correo seguro</p>
+						</div>
+						<div class="external-link-indicator">
+							<Icon name="arrow-top-right-on-square" size={14} />
+						</div>
+					</a>
+				</div>
+			</section>
+
+			<!-- User Profile Section -->
+			<section class="profile-section">
+				<div class="profile-card">
+					<div class="profile-header">
+						<h3 class="section-title">Información del Usuario</h3>
+						<div class="connection-status">
+							<div class="status-indicator"></div>
+							<span>Conexión segura</span>
+						</div>
 					</div>
-				{/if}
+					<div class="profile-grid">
+						<div class="profile-item">
+							<Icon name="mail" size={18} className="text-blue-400" />
+							<div class="profile-content">
+								<span class="profile-label">Email</span>
+								<span class="profile-value">{userEmail}</span>
+							</div>
+						</div>
+						<div class="profile-item">
+							<Icon name="shield" size={18} className="text-emerald-400" />
+							<div class="profile-content">
+								<span class="profile-label">Rol</span>
+								<span class="profile-value">{userRole}</span>
+							</div>
+						</div>
+						<div class="profile-item">
+							<Icon name="calendar" size={18} className="text-purple-400" />
+							<div class="profile-content">
+								<span class="profile-label">Fecha de registro</span>
+								<span class="profile-value">{formatDate(createdAt)}</span>
+							</div>
+						</div>
+						<div class="profile-item">
+							<Icon name="clock" size={18} className="text-orange-400" />
+							<div class="profile-content">
+								<span class="profile-label">Última actualización</span>
+								<span class="profile-value">{formatDate(updatedAt)}</span>
+							</div>
+						</div>
+					</div>
+				</div>
 			</section>
 		</main>
 
-		<!-- Footer -->
-		<footer class="bg-formeta-black border-t border-formeta-primary mt-12">
-			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-				<div class="flex justify-between items-center">
-					<div class="text-sm text-formeta-light font-mono">
-						© 2025 Formeta Labs S.L. - Sistema Interno
-					</div>
-					<div class="flex items-center gap-2">
-						<div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-						<span class="text-xs text-formeta-light font-mono">
-							CONEXIÓN SEGURA
-						</span>
+		<!-- Enhanced Footer -->
+		<footer class="dashboard-footer">
+			<div class="footer-content">
+				<div class="footer-left">
+					<span class="footer-text">© 2025 Formeta Labs S.L.</span>
+					<span class="footer-separator">•</span>
+					<span class="footer-text">Sistema Interno</span>
+				</div>
+				<div class="footer-right">
+					<div class="security-badge">
+						<div class="security-icon">
+							<Icon name="shield" size={14} />
+						</div>
+						<span>Conexión Segura</span>
 					</div>
 				</div>
 			</div>
@@ -378,185 +482,696 @@
 {/if}
 
 <style>
-	.btn-logout {
+	/* Dashboard Container */
+	.dashboard-container {
+		min-height: 100vh;
+		background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+		color: #ffffff;
+		font-family: 'Geist', system-ui, -apple-system, sans-serif;
+	}
+
+	/* Enhanced Header */
+	.dashboard-header {
+		background: rgba(0, 0, 0, 0.8);
+		backdrop-filter: blur(20px);
+		border-bottom: 1px solid rgba(74, 144, 226, 0.2);
+		position: sticky;
+		top: 0;
+		z-index: 50;
+	}
+
+	.header-content {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 0 24px;
+		height: 72px;
 		display: flex;
 		align-items: center;
-		gap: 8px;
-		padding: 8px 16px;
+		justify-content: space-between;
+	}
+
+	.header-left {
+		display: flex;
+		align-items: center;
+	}
+
+	.logo-section {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+
+	.header-logo {
+		height: 40px;
+		width: auto;
+	}
+
+	.header-title h1 {
+		font-family: 'Geist Mono', monospace;
+		font-size: 20px;
+		font-weight: 700;
+		color: #ffffff;
+		margin: 0;
+		letter-spacing: 0.5px;
+	}
+
+	.header-subtitle {
 		font-family: 'Geist Mono', monospace;
 		font-size: 12px;
-		font-weight: 500;
-		letter-spacing: 0.5px;
-		text-transform: uppercase;
-		border: 1px solid #666666;
-		background: transparent;
-		color: #CCCCCC;
-		transition: all 0.2s ease;
-		cursor: pointer;
-	}
-	
-	.btn-logout:hover {
-		border-color: #4A90E2;
-		background: rgba(74, 144, 226, 0.1);
 		color: #4A90E2;
-	}
-	
-	.info-item {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		padding: 12px;
-		background: rgba(74, 144, 226, 0.05);
-		border: 1px solid rgba(74, 144, 226, 0.2);
-		border-radius: 4px;
-	}
-	
-	.info-item .label {
-		font-family: 'Geist Mono', monospace;
-		font-size: 11px;
-		font-weight: 600;
-		color: #4A90E2;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-		display: block;
-	}
-	
-	.info-item .value {
-		font-family: 'Geist Mono', monospace;
-		font-size: 13px;
-		color: #CCCCCC;
-		display: block;
-		margin-top: 2px;
-	}
-	
-	.action-card {
-		background: rgba(26, 26, 26, 0.95);
-		border: 2px solid #4A90E2;
-		padding: 24px;
-		transition: all 0.2s ease;
-		cursor: pointer;
-	}
-	
-	.action-card:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 8px 25px rgba(74, 144, 226, 0.2);
-	}
-	
-	.admin-card {
-		border-color: #F44336;
-	}
-	
-	.admin-card:hover {
-		box-shadow: 0 8px 25px rgba(244, 67, 54, 0.2);
-	}
-	
-	.action-header {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		margin-bottom: 12px;
-	}
-	
-	.action-header h3 {
-		font-family: 'Geist Mono', monospace;
-		font-size: 14px;
-		font-weight: 600;
-		color: #FFFFFF;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-	}
-	
-	.action-description {
-		font-size: 13px;
-		color: #CCCCCC;
-		margin-bottom: 20px;
-		line-height: 1.5;
-	}
-	
-	.action-btn {
-		width: 100%;
-		padding: 12px;
-		font-family: 'Geist Mono', monospace;
-		font-size: 12px;
 		font-weight: 500;
 		letter-spacing: 1px;
-		text-transform: uppercase;
-		border: 1px solid #4A90E2;
-		background: transparent;
+	}
+
+	.header-right {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+	}
+
+	.user-info {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 8px 16px;
+		background: rgba(74, 144, 226, 0.1);
+		border: 1px solid rgba(74, 144, 226, 0.2);
+		border-radius: 8px;
+	}
+
+	.user-details {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+	}
+
+	.user-name {
+		font-size: 14px;
+		font-weight: 600;
+		color: #ffffff;
+	}
+
+	.user-role {
+		font-family: 'Geist Mono', monospace;
+		font-size: 11px;
 		color: #4A90E2;
-		transition: all 0.2s ease;
-		cursor: pointer;
+		font-weight: 500;
+		letter-spacing: 0.5px;
+	}
+
+	.user-avatar {
+		width: 36px;
+		height: 36px;
+		background: linear-gradient(135deg, #4A90E2, #357ABD);
+		border-radius: 8px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 8px;
-	}
-	
-	.action-btn:hover {
-		background: #4A90E2;
 		color: white;
 	}
-	
-	.admin-btn {
-		border-color: #F44336;
-		color: #F44336;
+
+	.logout-btn {
+		width: 44px;
+		height: 44px;
+		background: rgba(239, 68, 68, 0.1);
+		border: 1px solid rgba(239, 68, 68, 0.3);
+		border-radius: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #ef4444;
+		cursor: pointer;
+		transition: all 0.2s ease;
 	}
-	
-	.admin-btn:hover {
-		background: #F44336;
+
+	.logout-btn:hover {
+		background: rgba(239, 68, 68, 0.2);
+		border-color: #ef4444;
+		transform: translateY(-1px);
+	}
+
+	/* Main Content */
+	.dashboard-main {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 32px 24px;
+		display: flex;
+		flex-direction: column;
+		gap: 32px;
+	}
+
+	/* Welcome Hero */
+	.welcome-hero {
+		background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(53, 122, 189, 0.05) 100%);
+		border: 1px solid rgba(74, 144, 226, 0.2);
+		border-radius: 16px;
+		padding: 32px;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.welcome-hero::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, #4A90E2, transparent);
+	}
+
+	.hero-content {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 32px;
+	}
+
+	.hero-title {
+		font-size: 32px;
+		font-weight: 700;
+		color: #ffffff;
+		margin: 0 0 8px 0;
+		background: linear-gradient(135deg, #ffffff, #cccccc);
+		background-clip: text;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.hero-subtitle {
+		font-size: 16px;
+		color: #a1a1aa;
+		margin: 0;
+	}
+
+	.role-badge {
+		display: inline-block;
+		padding: 2px 8px;
+		background: rgba(74, 144, 226, 0.2);
+		border: 1px solid rgba(74, 144, 226, 0.4);
+		border-radius: 4px;
+		color: #4A90E2;
+		font-family: 'Geist Mono', monospace;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.5px;
+		text-transform: uppercase;
+	}
+
+	.hero-stats {
+		display: flex;
+		gap: 24px;
+	}
+
+	.stat-item {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 16px 20px;
+		background: rgba(0, 0, 0, 0.3);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
+		backdrop-filter: blur(10px);
+	}
+
+	.stat-content {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.stat-value {
+		font-size: 16px;
+		font-weight: 600;
+		color: #ffffff;
+		line-height: 1.2;
+	}
+
+	.stat-label {
+		font-size: 12px;
+		color: #a1a1aa;
+		font-weight: 500;
+	}
+
+	/* Section Titles */
+	.section-title {
+		font-size: 24px;
+		font-weight: 700;
+		color: #ffffff;
+		margin: 0 0 20px 0;
+		position: relative;
+		padding-left: 16px;
+	}
+
+	.section-title::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 4px;
+		height: 24px;
+		background: linear-gradient(135deg, #4A90E2, #357ABD);
+		border-radius: 2px;
+	}
+
+	/* Quick Actions */
+	.actions-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+		gap: 24px;
+	}
+
+	.action-card {
+		background: rgba(0, 0, 0, 0.4);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 16px;
+		padding: 24px;
+		transition: all 0.3s ease;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.action-card::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, rgba(74, 144, 226, 0.5), transparent);
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.action-card:hover {
+		transform: translateY(-4px);
+		border-color: rgba(74, 144, 226, 0.3);
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+	}
+
+	.action-card:hover::before {
+		opacity: 1;
+	}
+
+	.action-card.primary {
+		background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(53, 122, 189, 0.05));
+		border-color: rgba(74, 144, 226, 0.2);
+	}
+
+	.action-card.admin {
+		background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+		border-color: rgba(239, 68, 68, 0.2);
+	}
+
+	.card-header {
+		display: flex;
+		align-items: flex-start;
+		gap: 16px;
+		margin-bottom: 20px;
+	}
+
+	.card-icon {
+		width: 48px;
+		height: 48px;
+		background: linear-gradient(135deg, #4A90E2, #357ABD);
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		color: white;
+		flex-shrink: 0;
 	}
-	
-	.tool-link {
+
+	.admin-icon {
+		background: linear-gradient(135deg, #ef4444, #dc2626);
+	}
+
+	.card-title h4 {
+		font-size: 18px;
+		font-weight: 700;
+		color: #ffffff;
+		margin: 0 0 4px 0;
+	}
+
+	.card-title p {
+		font-size: 14px;
+		color: #a1a1aa;
+		margin: 0;
+	}
+
+	.card-action {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		padding: 12px 16px;
+		background: rgba(74, 144, 226, 0.1);
+		border: 1px solid rgba(74, 144, 226, 0.2);
+		border-radius: 8px;
+		color: #4A90E2;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 14px;
+		transition: all 0.2s ease;
+		cursor: pointer;
+	}
+
+	.card-action:hover {
+		background: rgba(74, 144, 226, 0.2);
+		border-color: #4A90E2;
+		transform: translateY(-1px);
+	}
+
+	.admin-action {
+		background: rgba(239, 68, 68, 0.1);
+		border-color: rgba(239, 68, 68, 0.2);
+		color: #ef4444;
+	}
+
+	.admin-action:hover {
+		background: rgba(239, 68, 68, 0.2);
+		border-color: #ef4444;
+	}
+
+	/* Tools Grid */
+	.tools-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 16px;
+	}
+
+	.tool-item {
 		display: flex;
 		align-items: center;
 		gap: 12px;
 		padding: 16px;
-		background: rgba(74, 144, 226, 0.05);
-		border: 1px solid rgba(74, 144, 226, 0.2);
-		border-radius: 4px;
+		background: rgba(0, 0, 0, 0.3);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
 		text-decoration: none;
 		transition: all 0.2s ease;
-		cursor: pointer;
 	}
-	
-	.tool-link:hover {
+
+	.tool-item:hover {
 		background: rgba(74, 144, 226, 0.1);
-		border-color: rgba(74, 144, 226, 0.4);
-		transform: translateY(-1px);
+		border-color: rgba(74, 144, 226, 0.3);
+		transform: translateY(-2px);
 	}
-	
+
 	.tool-icon {
+		width: 40px;
+		height: 40px;
+		background: rgba(74, 144, 226, 0.2);
+		border-radius: 8px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 40px;
-		height: 40px;
-		background: rgba(74, 144, 226, 0.1);
-		border: 1px solid rgba(74, 144, 226, 0.3);
-		border-radius: 4px;
+		color: #4A90E2;
 		flex-shrink: 0;
 	}
-	
-	.tool-info {
-		flex: 1;
-		min-width: 0;
-	}
-	
-	.tool-title {
-		font-family: 'Geist Mono', monospace;
-		font-size: 13px;
+
+	.tool-info h4 {
+		font-size: 14px;
 		font-weight: 600;
-		color: #FFFFFF;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-		margin: 0 0 4px 0;
+		color: #ffffff;
+		margin: 0 0 2px 0;
 	}
-	
-	.tool-desc {
-		font-size: 11px;
-		color: #CCCCCC;
+
+	.tool-info p {
+		font-size: 12px;
+		color: #a1a1aa;
 		margin: 0;
-		line-height: 1.3;
+	}
+
+	/* External Services Section */
+	.external-services-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 16px;
+	}
+
+	.external-service-item {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 16px;
+		background: rgba(0, 0, 0, 0.3);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
+		text-decoration: none;
+		transition: all 0.2s ease;
+		position: relative;
+	}
+
+	.external-service-item:hover {
+		background: rgba(0, 0, 0, 0.5);
+		border-color: rgba(255, 255, 255, 0.2);
+		transform: translateY(-2px);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+	}
+
+	.external-service-icon {
+		width: 40px;
+		height: 40px;
+		border-radius: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	.external-service-icon.clerk {
+		background: linear-gradient(135deg, #6366f1, #4f46e5);
+		color: white;
+	}
+
+	.external-service-icon.smtp2go {
+		background: linear-gradient(135deg, #059669, #047857);
+		color: white;
+	}
+
+	.external-service-icon.cloudflare {
+		background: linear-gradient(135deg, #f97316, #ea580c);
+		color: white;
+	}
+
+	.external-service-icon.protonmail {
+		background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+		color: white;
+	}
+
+	.external-service-info {
+		flex: 1;
+	}
+
+	.external-service-info h4 {
+		font-size: 14px;
+		font-weight: 600;
+		color: #ffffff;
+		margin: 0 0 2px 0;
+	}
+
+	.external-service-info p {
+		font-size: 12px;
+		color: #a1a1aa;
+		margin: 0;
+	}
+
+	.external-link-indicator {
+		color: #a1a1aa;
+		opacity: 0.6;
+		transition: all 0.2s ease;
+	}
+
+	.external-service-item:hover .external-link-indicator {
+		color: #ffffff;
+		opacity: 1;
+		transform: translate(2px, -2px);
+	}
+
+	/* Profile Section */
+	.profile-card {
+		background: rgba(0, 0, 0, 0.4);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 16px;
+		padding: 24px;
+	}
+
+	.profile-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 24px;
+	}
+
+	.connection-status {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 12px;
+		color: #10b981;
+		font-weight: 500;
+	}
+
+	.status-indicator {
+		width: 8px;
+		height: 8px;
+		background: #10b981;
+		border-radius: 50%;
+		animation: pulse 2s infinite;
+	}
+
+	.profile-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 16px;
+	}
+
+	.profile-item {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 16px;
+		background: rgba(0, 0, 0, 0.3);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 12px;
+	}
+
+	.profile-content {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+	}
+
+	.profile-label {
+		font-size: 12px;
+		color: #a1a1aa;
+		font-weight: 500;
+		margin-bottom: 2px;
+	}
+
+	.profile-value {
+		font-size: 14px;
+		color: #ffffff;
+		font-weight: 600;
+	}
+
+	/* Footer */
+	.dashboard-footer {
+		background: rgba(0, 0, 0, 0.8);
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		margin-top: 40px;
+	}
+
+	.footer-content {
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 20px 24px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.footer-left {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.footer-text {
+		font-size: 13px;
+		color: #a1a1aa;
+	}
+
+	.footer-separator {
+		color: #525252;
+	}
+
+	.security-badge {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 6px 12px;
+		background: rgba(16, 185, 129, 0.1);
+		border: 1px solid rgba(16, 185, 129, 0.2);
+		border-radius: 6px;
+		font-size: 11px;
+		color: #10b981;
+		font-weight: 500;
+	}
+
+	.security-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* Animations */
+	@keyframes pulse {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0.5; }
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		.header-content {
+			padding: 0 16px;
+			height: 64px;
+		}
+
+		.dashboard-main {
+			padding: 20px 16px;
+			gap: 24px;
+		}
+
+		.hero-content {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 20px;
+		}
+
+		.hero-stats {
+			flex-direction: column;
+			width: 100%;
+			gap: 12px;
+		}
+
+		.stat-item {
+			width: 100%;
+		}
+
+		.actions-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.tools-grid {
+			grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+		}
+
+		.external-services-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.profile-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.footer-content {
+			flex-direction: column;
+			gap: 12px;
+			text-align: center;
+		}
+
+		.user-info {
+			display: none;
+		}
+
+		.header-title h1 {
+			font-size: 16px;
+		}
+
+		.header-subtitle {
+			font-size: 10px;
+		}
 	}
 </style>

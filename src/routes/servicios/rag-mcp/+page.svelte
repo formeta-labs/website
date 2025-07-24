@@ -2,7 +2,7 @@
 	import Icon from '$lib/components/Icon.svelte';
 	import { debug } from '$lib/utils/debug';
 	
-	let selectedComplexity = 'standard';
+	let selectedComplexity: 'basic' | 'standard' | 'enterprise' = 'standard';
 	let documentVolume = 1000;
 	let queryVolume = 500;
 	let currentPrice = 0;
@@ -36,20 +36,6 @@
 		currentPrice = complexityLevels[selectedComplexity].price;
 	}
 	
-	let contactForm = {
-		nombre: '',
-		empresa: '',
-		email: '',
-		telefono: '',
-		tipo_datos: '',
-		volumen_docs: '',
-		use_case: '',
-		mensaje: ''
-	};
-	
-	function handleSubmit() {
-		debug.log('Enviando consulta RAG+MCP:', contactForm);
-	}
 </script>
 
 <svelte:head>
@@ -63,236 +49,299 @@
 </svelte:head>
 
 <!-- Hero Section -->
-<section class="relative min-h-[70vh] bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 overflow-hidden">
-	<!-- Background Pattern -->
-	<div class="absolute inset-0 pattern-dots opacity-20"></div>
+<section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
+	<!-- Professional geometric patterns -->
+	<div class="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent"></div>
+	<div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(147,51,234,0.1),transparent_70%)]"></div>
+	<div class="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_80%,rgba(79,70,229,0.08),transparent_70%)]"></div>
 	
-	<!-- AI Floating Elements -->
-	<div class="absolute top-20 left-20 bg-white/10 backdrop-blur-sm border border-white/30 px-4 py-2 text-white text-sm font-mono animate-pulse">
-		🤖 RAG + MCP
-	</div>
-	<div class="absolute top-32 right-32 bg-purple-500/30 backdrop-blur-sm border border-white/30 px-4 py-2 text-white text-sm font-mono">
-		EMBEDDINGS ✨
-	</div>
-	<div class="absolute bottom-32 left-32 bg-indigo-500/30 backdrop-blur-sm border border-white/30 px-4 py-2 text-white text-sm font-mono">
-		VECTOR DB 🔗
+	<!-- Floating Professional Indicator -->
+	<div class="floating-indicator-rag">
+		<div class="flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-full">
+			<Icon name="brain" size={24} className="text-purple-400" />
+			<span class="text-white font-mono text-sm font-medium">RAG + MCP ENTERPRISE</span>
+		</div>
 	</div>
 	
-	<div class="relative container mx-auto px-6 min-h-[70vh] flex items-center">
-		<div class="max-w-4xl">
-			<div class="flex items-center gap-4 mb-6">
-				<div class="text-white/90">
-					<Icon name="brain" size={24} />
-				</div>
-				<span class="text-white/80 text-lg font-mono">RAG + MCP INTEGRATION</span>
-			</div>
-			
-			<h1 class="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight">
-				IA QUE
-				<span class="block text-purple-200">CONOCE TUS</span>
-				<span class="block text-indigo-200">DATOS</span>
-			</h1>
-			
-			<p class="text-xl text-white/90 mb-8 max-w-3xl leading-relaxed">
-				<strong>RAG (Retrieval Augmented Generation)</strong> + <strong>MCP (Model Context Protocol)</strong> 
-				para crear sistemas de IA conversacional que responden con información actualizada 
-				de tus propios documentos y bases de datos.
+	<!-- ASCII Decorative Shapes -->
+	<div class="absolute top-20 left-12 text-purple-400/30 text-6xl font-mono select-none">▦</div>
+	<div class="absolute top-32 right-16 text-indigo-400/25 text-4xl font-mono select-none">◆</div>
+	<div class="absolute bottom-24 left-20 text-purple-400/20 text-5xl font-mono select-none">●</div>
+	<div class="absolute bottom-12 right-12 text-indigo-400/30 text-3xl font-mono select-none">▲</div>
+	<div class="absolute top-1/2 left-8 text-purple-400/15 text-2xl font-mono select-none transform -translate-y-1/2">▦▦</div>
+	<div class="absolute top-1/3 right-8 text-indigo-400/20 text-2xl font-mono select-none">◆◆</div>
+	
+	<div class="relative container mx-auto px-6 text-center text-white z-10">
+		<!-- Hero Section Header -->
+		<div class="flex items-center justify-center gap-3 mb-8">
+			<span class="text-purple-400/60 text-sm font-mono">///</span>
+			<span class="text-white/80 text-sm font-mono font-medium tracking-wider uppercase">INTELIGENCIA ARTIFICIAL EMPRESARIAL</span>
+			<span class="text-purple-400/60 text-sm font-mono">///</span>
+		</div>
+		
+		<!-- Main Headlines -->
+		<h1 class="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+			<span class="text-white">IA que Conoce</span>
+			<span class="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">Tus Datos</span>
+		</h1>
+		
+		<div class="mb-8">
+			<p class="text-xl text-white/90 font-medium mb-4 max-w-4xl mx-auto leading-relaxed">
+				<strong>RAG + MCP Protocol</strong> para crear sistemas de IA conversacional que consultan 
+				<strong class="text-purple-400">tu información empresarial privada</strong>
 			</p>
-			
-			<!-- Key Features -->
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-				<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-4">
-					<div class="flex items-center gap-3 mb-2">
-						<Icon name="zap" size={20} color="white" />
-						<span class="text-white font-bold">Respuestas Precisas</span>
-					</div>
-					<p class="text-white/80 text-sm">IA que cita fuentes y referencias específicas</p>
-				</div>
-				<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-4">
-					<div class="flex items-center gap-3 mb-2">
-						<Icon name="database" size={20} color="white" />
-						<span class="text-white font-bold">Múltiples Fuentes</span>
-					</div>
-					<p class="text-white/80 text-sm">PDFs, documentos, APIs, bases de datos</p>
-				</div>
-				<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-4">
-					<div class="flex items-center gap-3 mb-2">
-						<Icon name="shield" size={20} color="white" />
-						<span class="text-white font-bold">Datos Privados</span>
-					</div>
-					<p class="text-white/80 text-sm">Tu información nunca sale de tu infraestructura</p>
-				</div>
+			<p class="text-lg text-white/75 max-w-3xl mx-auto">
+				Retrieval Augmented Generation · Model Context Protocol · 100% Local y Privado
+			</p>
+		</div>
+		
+		<!-- Enterprise Metrics Grid -->
+		<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+			<div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 hover:bg-white/10 transition-all duration-300">
+				<div class="text-2xl font-bold text-purple-400 mb-2">100%</div>
+				<div class="text-sm text-white/80 font-medium">Datos Privados</div>
 			</div>
-			
-			<!-- CTA Buttons -->
-			<div class="flex flex-col sm:flex-row gap-6">
-				<a href="#calculadora" class="bg-white text-purple-600 px-8 py-4 font-bold text-lg hover:bg-white/90 transition-all duration-200">
-					VER PRECIOS Y CONFIGURACIÓN
-				</a>
-				<a href="#contact" class="border-2 border-white text-white px-8 py-4 font-bold text-lg hover:bg-white hover:text-purple-600 transition-all duration-200">
-					DEMO PERSONALIZADA
-				</a>
+			<div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 hover:bg-white/10 transition-all duration-300">
+				<div class="text-2xl font-bold text-indigo-400 mb-2">Multi</div>
+				<div class="text-sm text-white/80 font-medium">Fuentes de Datos</div>
+			</div>
+			<div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 hover:bg-white/10 transition-all duration-300">
+				<div class="text-2xl font-bold text-green-400 mb-2">RAG+</div>
+				<div class="text-sm text-white/80 font-medium">MCP Protocol</div>
+			</div>
+			<div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 hover:bg-white/10 transition-all duration-300">
+				<div class="text-2xl font-bold text-orange-400 mb-2">Local</div>
+				<div class="text-sm text-white/80 font-medium">Sin Cloud</div>
+			</div>
+		</div>
+		
+		<!-- Hero Feature Cards -->
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+			<div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-300 group">
+				<div class="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-purple-500/10 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+					<Icon name="zap" size={28} className="text-purple-400" />
+				</div>
+				<h3 class="text-lg font-bold mb-2 text-white">Respuestas Precisas</h3>
+				<p class="text-sm text-white/70">IA que cita fuentes y referencias específicas</p>
+			</div>
+			<div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-300 group">
+				<div class="w-16 h-16 bg-gradient-to-br from-indigo-500/20 to-indigo-500/10 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+					<Icon name="database" size={28} className="text-indigo-400" />
+				</div>
+				<h3 class="text-lg font-bold mb-2 text-white">Múltiples Fuentes</h3>
+				<p class="text-sm text-white/70">PDFs, documentos, APIs, bases de datos</p>
+			</div>
+			<div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-300 group">
+				<div class="w-16 h-16 bg-gradient-to-br from-green-500/20 to-green-500/10 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+					<Icon name="shield" size={28} className="text-green-400" />
+				</div>
+				<h3 class="text-lg font-bold mb-2 text-white">Datos Privados</h3>
+				<p class="text-sm text-white/70">Tu información nunca sale de tu infraestructura</p>
+			</div>
+		</div>
+		
+		<!-- Enterprise Badges -->
+		<div class="flex flex-wrap justify-center gap-4 mb-10">
+			<div class="bg-purple-500/10 border border-purple-500/30 px-4 py-2 rounded-lg backdrop-blur-sm">
+				<span class="text-purple-400 text-sm font-bold">✓ RAG ENTERPRISE</span>
+			</div>
+			<div class="bg-indigo-500/10 border border-indigo-500/30 px-4 py-2 rounded-lg backdrop-blur-sm">
+				<span class="text-indigo-400 text-sm font-bold">✓ MCP PROTOCOL</span>
+			</div>
+			<div class="bg-green-500/10 border border-green-500/30 px-4 py-2 rounded-lg backdrop-blur-sm">
+				<span class="text-green-400 text-sm font-bold">✓ 100% PRIVADO</span>
+			</div>
+		</div>
+		
+		<!-- Executive CTAs -->
+		<div class="flex flex-col sm:flex-row gap-6 justify-center">
+			<a href="#calculadora" class="group bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25 flex items-center justify-center gap-3 min-w-[250px]">
+				VER PRECIOS Y CONFIGURACIÓN
+				<Icon name="arrow-down" size={20} className="group-hover:translate-y-1 transition-transform duration-300" />
+			</a>
+			<a href="/contacto" class="group bg-white/10 backdrop-blur-sm border-2 border-white/20 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:bg-white/20 hover:scale-105 flex items-center justify-center gap-3 min-w-[250px]">
+				DEMO PERSONALIZADA
+				<Icon name="arrow-right" size={20} className="group-hover:translate-x-1 transition-transform duration-300" />
+			</a>
+		</div>
+	</div>
+</section>
+
+<!-- ¿Qué es RAG + MCP? Section -->
+<section class="py-24 bg-gradient-to-br from-gray-50 to-gray-100">
+	<div class="container mx-auto px-6">
+		<div class="text-center mb-16">
+			<h2 class="text-5xl font-extrabold text-gray-900 mb-6">¿Qué es RAG + MCP?</h2>
+			<p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
+				<strong class="text-purple-600">RAG (Retrieval Augmented Generation)</strong> y
+				<strong class="text-indigo-600">MCP (Model Context Protocol)</strong> son tecnologías avanzadas que permiten a la IA consultar y procesar información empresarial específica, garantizando precisión, privacidad y personalización.
+			</p>
+		</div>
+
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+			<div class="bg-white shadow-lg rounded-xl p-8 hover:shadow-2xl transition-shadow duration-300">
+				<div class="flex items-center gap-4 mb-6">
+					<div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-400 rounded-full flex items-center justify-center">
+						<Icon name="search" size={32} className="text-white" />
+					</div>
+					<h3 class="text-2xl font-bold text-gray-900">RAG: IA con Contexto</h3>
+				</div>
+				<p class="text-gray-700 leading-relaxed">
+					<strong class="text-gray-900">Retrieval Augmented Generation</strong> permite a los modelos de IA buscar y recuperar información relevante de múltiples fuentes, como documentos, bases de datos y APIs, para generar respuestas precisas y basadas en datos reales.
+				</p>
+			</div>
+
+			<div class="bg-white shadow-lg rounded-xl p-8 hover:shadow-2xl transition-shadow duration-300">
+				<div class="flex items-center gap-4 mb-6">
+					<div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-400 rounded-full flex items-center justify-center">
+						<Icon name="cpu" size={32} className="text-white" />
+					</div>
+					<h3 class="text-2xl font-bold text-gray-900">MCP: Protocolo Empresarial</h3>
+				</div>
+				<p class="text-gray-700 leading-relaxed">
+					<strong class="text-gray-900">Model Context Protocol</strong> optimiza la interacción entre la IA y tus datos empresariales, asegurando privacidad, cumplimiento normativo y personalización total para cada consulta.
+				</p>
 			</div>
 		</div>
 	</div>
 </section>
 
-<!-- What is RAG + MCP Section -->
-<section class="py-24 bg-white">
+<!-- Beneficios de RAG + MCP -->
+<section class="py-24 bg-gradient-to-br from-purple-50 to-indigo-50">
 	<div class="container mx-auto px-6">
 		<div class="text-center mb-16">
-			<h2 class="text-4xl font-bold text-gray-900 mb-6">¿Qué es RAG + MCP?</h2>
-			<p class="text-xl text-gray-600 max-w-3xl mx-auto">
-				Tecnologías de vanguardia que permiten a la IA acceder y procesar información específica de tu empresa.
+			<h2 class="text-5xl font-extrabold text-gray-900 mb-6">Beneficios de RAG + MCP</h2>
+			<p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
+				Descubre cómo estas tecnologías transforman la manera en que tu empresa utiliza la inteligencia artificial para obtener resultados excepcionales.
 			</p>
 		</div>
-		
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-			<!-- RAG Explanation -->
-			<div>
-				<div class="bg-purple-100 p-6 mb-6">
-					<h3 class="text-2xl font-bold text-purple-800 mb-4">🔍 RAG (Retrieval Augmented Generation)</h3>
-					<p class="text-gray-700 mb-4">
-						Técnica que combina la capacidad generativa de los LLMs con búsqueda semántica 
-						en bases de datos vectoriales para proporcionar respuestas precisas y actualizadas.
-					</p>
-					<div class="space-y-2">
-						<div class="flex items-center gap-3">
-							<Icon name="check-circle" size={16} color="#7c3aed" />
-							<span class="text-sm">Búsqueda semántica avanzada</span>
-						</div>
-						<div class="flex items-center gap-3">
-							<Icon name="check-circle" size={16} color="#7c3aed" />
-							<span class="text-sm">Embeddings multi-modales</span>
-						</div>
-						<div class="flex items-center gap-3">
-							<Icon name="check-circle" size={16} color="#7c3aed" />
-							<span class="text-sm">Respuestas con referencias</span>
-						</div>
-					</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+			<div class="bg-white shadow-lg rounded-xl p-8 hover:shadow-2xl transition-shadow duration-300">
+				<div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-400 rounded-full flex items-center justify-center mb-6">
+					<Icon name="shield-check" size={32} className="text-white" />
 				</div>
+				<h3 class="text-2xl font-bold text-gray-900 mb-4">Privacidad Garantizada</h3>
+				<p class="text-gray-700 leading-relaxed">
+					Tus datos permanecen en tu infraestructura, asegurando cumplimiento normativo y control total sobre la información.
+				</p>
 			</div>
-			
-			<!-- MCP Explanation -->
-			<div>
-				<div class="bg-indigo-100 p-6 mb-6">
-					<h3 class="text-2xl font-bold text-indigo-800 mb-4">🔗 MCP (Model Context Protocol)</h3>
-					<p class="text-gray-700 mb-4">
-						Protocolo estándar que permite a los modelos de IA conectarse de forma segura 
-						con herramientas, bases de datos y servicios externos de tu empresa.
-					</p>
-					<div class="space-y-2">
-						<div class="flex items-center gap-3">
-							<Icon name="check-circle" size={16} color="#4f46e5" />
-							<span class="text-sm">Conexiones seguras y estándar</span>
-						</div>
-						<div class="flex items-center gap-3">
-							<Icon name="check-circle" size={16} color="#4f46e5" />
-							<span class="text-sm">Integración con herramientas existentes</span>
-						</div>
-						<div class="flex items-center gap-3">
-							<Icon name="check-circle" size={16} color="#4f46e5" />
-							<span class="text-sm">Acceso controlado a recursos</span>
-						</div>
-					</div>
+
+			<div class="bg-white shadow-lg rounded-xl p-8 hover:shadow-2xl transition-shadow duration-300">
+				<div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center mb-6">
+					<Icon name="zap" size={32} className="text-white" />
 				</div>
+				<h3 class="text-2xl font-bold text-gray-900 mb-4">Respuestas Precisas</h3>
+				<p class="text-gray-700 leading-relaxed">
+					La IA genera respuestas basadas en datos reales, citando fuentes específicas para mayor confianza y transparencia.
+				</p>
+			</div>
+
+			<div class="bg-white shadow-lg rounded-xl p-8 hover:shadow-2xl transition-shadow duration-300">
+				<div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full flex items-center justify-center mb-6">
+					<Icon name="database" size={32} className="text-white" />
+				</div>
+				<h3 class="text-2xl font-bold text-gray-900 mb-4">Integración Flexible</h3>
+				<p class="text-gray-700 leading-relaxed">
+					Compatible con múltiples fuentes de datos: documentos, APIs, bases de datos y más, adaptándose a tus necesidades empresariales.
+				</p>
 			</div>
 		</div>
 	</div>
 </section>
 
 <!-- Use Cases Section -->
-<section class="py-24 bg-gray-50">
+<section class="py-24 bg-gradient-to-br from-gray-50 to-white">
 	<div class="container mx-auto px-6">
 		<div class="text-center mb-16">
-			<h2 class="text-4xl font-bold text-gray-900 mb-6">Casos de Uso Empresarial</h2>
-			<p class="text-xl text-gray-600 max-w-3xl mx-auto">
-				Aplicaciones reales de RAG + MCP que transforman la productividad de tu equipo.
+			<h2 class="text-5xl font-extrabold text-gray-900 mb-6">Casos de Uso Empresarial</h2>
+			<p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
+				Aplicaciones reales de <strong class="text-purple-600">RAG + MCP</strong> que transforman la productividad y eficiencia de tu organización.
 			</p>
 		</div>
 		
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-			<div class="bg-white p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-				<div class="bg-blue-100 w-12 h-12 mb-4 flex items-center justify-center">
-					<Icon name="help-circle" size={24} color="#2563eb" />
+			<div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+				<div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full flex items-center justify-center mb-6">
+					<Icon name="help-circle" size={32} className="text-white" />
 				</div>
-				<h3 class="text-xl font-bold mb-3">Soporte Técnico IA</h3>
-				<p class="text-gray-600 mb-4">
+				<h3 class="text-2xl font-bold text-gray-900 mb-4">Soporte Técnico IA</h3>
+				<p class="text-gray-700 mb-6 leading-relaxed">
 					Responde automáticamente consultas técnicas basándose en manuales, 
-					documentación y casos anteriores.
+					documentación y casos anteriores con precisión empresarial.
 				</p>
-				<div class="text-sm text-blue-600 font-medium">
-					Reduce 70% tickets de soporte
+				<div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+					<div class="text-sm font-bold text-blue-700">✓ Reduce 70% tickets de soporte</div>
 				</div>
 			</div>
 			
-			<div class="bg-white p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-				<div class="bg-green-100 w-12 h-12 mb-4 flex items-center justify-center">
-					<Icon name="search" size={24} color="#16a34a" />
+			<div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+				<div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-400 rounded-full flex items-center justify-center mb-6">
+					<Icon name="search" size={32} className="text-white" />
 				</div>
-				<h3 class="text-xl font-bold mb-3">Búsqueda Empresarial</h3>
-				<p class="text-gray-600 mb-4">
+				<h3 class="text-2xl font-bold text-gray-900 mb-4">Búsqueda Empresarial</h3>
+				<p class="text-gray-700 mb-6 leading-relaxed">
 					Encuentra información en documentos, emails, procedimientos y 
-					bases de conocimiento usando lenguaje natural.
+					bases de conocimiento usando consultas en lenguaje natural.
 				</p>
-				<div class="text-sm text-green-600 font-medium">
-					Ahorra 2h/día por empleado
+				<div class="bg-green-50 border border-green-200 rounded-lg p-3">
+					<div class="text-sm font-bold text-green-700">✓ Ahorra 2h/día por empleado</div>
 				</div>
 			</div>
 			
-			<div class="bg-white p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-				<div class="bg-purple-100 w-12 h-12 mb-4 flex items-center justify-center">
-					<Icon name="book" size={24} color="#7c3aed" />
+			<div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+				<div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-400 rounded-full flex items-center justify-center mb-6">
+					<Icon name="book" size={32} className="text-white" />
 				</div>
-				<h3 class="text-xl font-bold mb-3">Compliance Automatizado</h3>
-				<p class="text-gray-600 mb-4">
+				<h3 class="text-2xl font-bold text-gray-900 mb-4">Compliance Automatizado</h3>
+				<p class="text-gray-700 mb-6 leading-relaxed">
 					Verificación automática de documentos contra normativas, 
-					políticas internas y regulaciones.
+					políticas internas y regulaciones con trazabilidad completa.
 				</p>
-				<div class="text-sm text-purple-600 font-medium">
-					99.5% precisión normativa
+				<div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
+					<div class="text-sm font-bold text-purple-700">✓ 99.5% precisión normativa</div>
 				</div>
 			</div>
 			
-			<div class="bg-white p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-				<div class="bg-yellow-100 w-12 h-12 mb-4 flex items-center justify-center">
-					<Icon name="users" size={24} color="#eab308" />
+			<div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+				<div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center mb-6">
+					<Icon name="users" size={32} className="text-white" />
 				</div>
-				<h3 class="text-xl font-bold mb-3">Onboarding Inteligente</h3>
-				<p class="text-gray-600 mb-4">
+				<h3 class="text-2xl font-bold text-gray-900 mb-4">Onboarding Inteligente</h3>
+				<p class="text-gray-700 mb-6 leading-relaxed">
 					Guía personalizada para nuevos empleados basada en rol, 
-					departamento y procedimientos específicos.
+					departamento y procedimientos específicos de la empresa.
 				</p>
-				<div class="text-sm text-yellow-600 font-medium">
-					50% menos tiempo integración
+				<div class="bg-orange-50 border border-orange-200 rounded-lg p-3">
+					<div class="text-sm font-bold text-orange-700">✓ 50% menos tiempo integración</div>
 				</div>
 			</div>
 			
-			<div class="bg-white p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-				<div class="bg-red-100 w-12 h-12 mb-4 flex items-center justify-center">
-					<Icon name="bar-chart" size={24} color="#dc2626" />
+			<div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+				<div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-400 rounded-full flex items-center justify-center mb-6">
+					<Icon name="bar-chart" size={32} className="text-white" />
 				</div>
-				<h3 class="text-xl font-bold mb-3">Análisis de Datos</h3>
-				<p class="text-gray-600 mb-4">
+				<h3 class="text-2xl font-bold text-gray-900 mb-4">Análisis de Datos</h3>
+				<p class="text-gray-700 mb-6 leading-relaxed">
 					Consultas en lenguaje natural sobre métricas, KPIs y 
 					informes empresariales con visualizaciones automáticas.
 				</p>
-				<div class="text-sm text-red-600 font-medium">
-					Reportes en tiempo real
+				<div class="bg-red-50 border border-red-200 rounded-lg p-3">
+					<div class="text-sm font-bold text-red-700">✓ Reportes en tiempo real</div>
 				</div>
 			</div>
 			
-			<div class="bg-white p-6 border border-gray-200 hover:shadow-lg transition-shadow">
-				<div class="bg-indigo-100 w-12 h-12 mb-4 flex items-center justify-center">
-					<Icon name="settings" size={24} color="#4f46e5" />
+			<div class="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+				<div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-400 rounded-full flex items-center justify-center mb-6">
+					<Icon name="settings" size={32} className="text-white" />
 				</div>
-				<h3 class="text-xl font-bold mb-3">Asistente Procesos</h3>
-				<p class="text-gray-600 mb-4">
+				<h3 class="text-2xl font-bold text-gray-900 mb-4">Asistente Procesos</h3>
+				<p class="text-gray-700 mb-6 leading-relaxed">
 					Automatización y guía step-by-step para procesos empresariales 
-					complejos y workflows específicos.
+					complejos y workflows específicos con validación.
 				</p>
-				<div class="text-sm text-indigo-600 font-medium">
-					80% automatización procesos
+				<div class="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
+					<div class="text-sm font-bold text-indigo-700">✓ 80% automatización procesos</div>
 				</div>
 			</div>
 		</div>
@@ -300,352 +349,508 @@
 </section>
 
 <!-- Technical Architecture Section -->
-<section class="py-24 bg-white">
+<section class="py-24 bg-gradient-to-br from-white to-gray-50">
 	<div class="container mx-auto px-6">
 		<div class="text-center mb-16">
-			<h2 class="text-4xl font-bold text-gray-900 mb-6">Arquitectura Técnica</h2>
-			<p class="text-xl text-gray-600 max-w-3xl mx-auto">
-				Infraestructura robusta y escalable para implementaciones empresariales críticas.
+			<h2 class="text-5xl font-extrabold text-gray-900 mb-6">Arquitectura Técnica</h2>
+			<p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
+				Infraestructura robusta, escalable y segura diseñada para <strong class="text-purple-600">implementaciones empresariales críticas</strong> con máximo rendimiento.
 			</p>
 		</div>
 		
-		<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+		<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
 			<!-- Data Ingestion -->
-			<div class="text-center">
-				<div class="bg-blue-100 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-					<Icon name="download" size={32} color="#2563eb" />
+			<div class="bg-white rounded-xl shadow-lg p-8 text-center hover:shadow-2xl transition-all duration-300">
+				<div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-6">
+					<Icon name="download" size={40} className="text-white" />
 				</div>
-				<h3 class="text-xl font-bold mb-4">1. Ingesta de Datos</h3>
-				<div class="space-y-3 text-left">
-					<div class="flex items-center gap-2">
-						<Icon name="file-text" size={16} color="#2563eb" />
-						<span class="text-sm">PDFs, Word, Excel</span>
+				<h3 class="text-2xl font-bold text-gray-900 mb-6">1. Ingesta de Datos</h3>
+				<div class="space-y-4 text-left">
+					<div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+						<Icon name="file-text" size={20} className="text-blue-600" />
+						<span class="text-gray-700 font-medium">PDFs, Word, Excel, PowerPoint</span>
 					</div>
-					<div class="flex items-center gap-2">
-						<Icon name="database" size={16} color="#2563eb" />
-						<span class="text-sm">PostgreSQL, MySQL</span>
+					<div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+						<Icon name="database" size={20} className="text-blue-600" />
+						<span class="text-gray-700 font-medium">PostgreSQL, MySQL, MongoDB</span>
 					</div>
-					<div class="flex items-center gap-2">
-						<Icon name="globe" size={16} color="#2563eb" />
-						<span class="text-sm">APIs REST/GraphQL</span>
+					<div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+						<Icon name="globe" size={20} className="text-blue-600" />
+						<span class="text-gray-700 font-medium">APIs REST/GraphQL en tiempo real</span>
 					</div>
-					<div class="flex items-center gap-2">
-						<Icon name="mail" size={16} color="#2563eb" />
-						<span class="text-sm">Email, Slack, Teams</span>
+					<div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+						<Icon name="mail" size={20} className="text-blue-600" />
+						<span class="text-gray-700 font-medium">Email, Slack, Teams, SharePoint</span>
 					</div>
 				</div>
 			</div>
 			
 			<!-- Processing -->
-			<div class="text-center">
-				<div class="bg-purple-100 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-					<Icon name="cpu" size={32} color="#7c3aed" />
+			<div class="bg-white rounded-xl shadow-lg p-8 text-center hover:shadow-2xl transition-all duration-300">
+				<div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-400 rounded-full flex items-center justify-center mx-auto mb-6">
+					<Icon name="cpu" size={40} className="text-white" />
 				</div>
-				<h3 class="text-xl font-bold mb-4">2. Procesamiento IA</h3>
-				<div class="space-y-3 text-left">
-					<div class="flex items-center gap-2">
-						<Icon name="brain" size={16} color="#7c3aed" />
-						<span class="text-sm">Embeddings OpenAI/Cohere</span>
+				<h3 class="text-2xl font-bold text-gray-900 mb-6">2. Procesamiento IA</h3>
+				<div class="space-y-4 text-left">
+					<div class="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+						<Icon name="brain" size={20} className="text-purple-600" />
+						<span class="text-gray-700 font-medium">Embeddings OpenAI/Cohere/Local</span>
 					</div>
-					<div class="flex items-center gap-2">
-						<Icon name="layers" size={16} color="#7c3aed" />
-						<span class="text-sm">Chunking inteligente</span>
+					<div class="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+						<Icon name="layers" size={20} className="text-purple-600" />
+						<span class="text-gray-700 font-medium">Chunking inteligente contextual</span>
 					</div>
-					<div class="flex items-center gap-2">
-						<Icon name="search" size={16} color="#7c3aed" />
-						<span class="text-sm">Vector similarity search</span>
+					<div class="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+						<Icon name="search" size={20} className="text-purple-600" />
+						<span class="text-gray-700 font-medium">Vector similarity search optimizado</span>
 					</div>
-					<div class="flex items-center gap-2">
-						<Icon name="filter" size={16} color="#7c3aed" />
-						<span class="text-sm">Re-ranking avanzado</span>
+					<div class="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+						<Icon name="filter" size={20} className="text-purple-600" />
+						<span class="text-gray-700 font-medium">Re-ranking avanzado con MCP</span>
 					</div>
 				</div>
 			</div>
 			
 			<!-- Output -->
-			<div class="text-center">
-				<div class="bg-green-100 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-					<Icon name="message-circle" size={32} color="#16a34a" />
+			<div class="bg-white rounded-xl shadow-lg p-8 text-center hover:shadow-2xl transition-all duration-300">
+				<div class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-400 rounded-full flex items-center justify-center mx-auto mb-6">
+					<Icon name="message-circle" size={40} className="text-white" />
 				</div>
-				<h3 class="text-xl font-bold mb-4">3. Interfaz IA</h3>
-				<div class="space-y-3 text-left">
-					<div class="flex items-center gap-2">
-						<Icon name="monitor" size={16} color="#16a34a" />
-						<span class="text-sm">Web dashboard</span>
+				<h3 class="text-2xl font-bold text-gray-900 mb-6">3. Interfaz IA</h3>
+				<div class="space-y-4 text-left">
+					<div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+						<Icon name="monitor" size={20} className="text-green-600" />
+						<span class="text-gray-700 font-medium">Dashboard web responsivo</span>
 					</div>
-					<div class="flex items-center gap-2">
-						<Icon name="smartphone" size={16} color="#16a34a" />
-						<span class="text-sm">App móvil nativa</span>
+					<div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+						<Icon name="smartphone" size={20} className="text-green-600" />
+						<span class="text-gray-700 font-medium">App móvil nativa iOS/Android</span>
 					</div>
-					<div class="flex items-center gap-2">
-						<Icon name="code" size={16} color="#16a34a" />
-						<span class="text-sm">API REST</span>
+					<div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+						<Icon name="code" size={20} className="text-green-600" />
+						<span class="text-gray-700 font-medium">API REST con documentación</span>
 					</div>
-					<div class="flex items-center gap-2">
-						<Icon name="link" size={16} color="#16a34a" />
-						<span class="text-sm">Widgets embebidos</span>
+					<div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+						<Icon name="link" size={20} className="text-green-600" />
+						<span class="text-gray-700 font-medium">Widgets embebidos personalizables</span>
 					</div>
 				</div>
+			</div>
+		</div>
+		
+		<!-- Technical Features Grid -->
+		<div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+			<div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 text-center">
+				<div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center mx-auto mb-4">
+					<Icon name="shield" size={24} className="text-white" />
+				</div>
+				<h4 class="text-lg font-bold text-gray-900 mb-2">Seguridad Enterprise</h4>
+				<p class="text-sm text-gray-700">Cifrado AES-256, autenticación SSO, auditoría completa</p>
+			</div>
+			
+			<div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-6 text-center">
+				<div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4">
+					<Icon name="trending-up" size={24} className="text-white" />
+				</div>
+				<h4 class="text-lg font-bold text-gray-900 mb-2">Escalabilidad</h4>
+				<p class="text-sm text-gray-700">Arquitectura distribuida, balanceador de carga automático</p>
+			</div>
+			
+			<div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center">
+				<div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-400 rounded-full flex items-center justify-center mx-auto mb-4">
+					<Icon name="check-circle" size={24} className="text-white" />
+				</div>
+				<h4 class="text-lg font-bold text-gray-900 mb-2">Alta Disponibilidad</h4>
+				<p class="text-sm text-gray-700">SLA 99.9%, backup automático, failover instantáneo</p>
+			</div>
+			
+			<div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 text-center">
+				<div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-400 rounded-full flex items-center justify-center mx-auto mb-4">
+					<Icon name="settings" size={24} className="text-white" />
+				</div>
+				<h4 class="text-lg font-bold text-gray-900 mb-2">Personalización</h4>
+				<p class="text-sm text-gray-700">Configuración flexible, modelos fine-tuned, UI custom</p>
 			</div>
 		</div>
 	</div>
 </section>
 
 <!-- Price Calculator Section -->
-<section id="calculadora" class="py-24 bg-gradient-to-br from-purple-600 to-indigo-600 text-white">
-	<div class="container mx-auto px-6">
+<section id="calculadora" class="py-24 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 text-white relative overflow-hidden">
+	<!-- Background Effects -->
+	<div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.1),transparent_50%)]"></div>
+	<div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(147,51,234,0.3),transparent_50%)]"></div>
+	
+	<div class="container mx-auto px-6 relative z-10">
 		<div class="text-center mb-16">
-			<h2 class="text-4xl font-bold mb-6">Configurador de Proyecto RAG + MCP</h2>
-			<p class="text-xl text-white/90 max-w-3xl mx-auto">
-				Estima el coste de implementación basado en volumen de datos y complejidad de tu caso de uso.
+			<div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 rounded-full mb-6">
+				<Icon name="calculator" size={20} className="text-white" />
+				<span class="text-sm font-medium text-white/90">CALCULADORA INTELIGENTE</span>
+			</div>
+			<h2 class="text-5xl font-extrabold mb-6">Configurador de Proyecto RAG + MCP</h2>
+			<p class="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+				Estima el coste de implementación basado en volumen de datos y complejidad de tu caso de uso específico.
 			</p>
 		</div>
 		
-		<div class="max-w-6xl mx-auto bg-white/10 backdrop-blur-sm p-8 border border-white/20">
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-				<!-- Configuration Input -->
-				<div>
-					<h3 class="text-2xl font-bold mb-6">Configuración del Proyecto</h3>
+		<div class="max-w-7xl mx-auto">
+			<!-- Main Calculator Card -->
+			<div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
+				<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
 					
-					<div class="mb-6">
-						<label for="document-volume" class="block text-white/90 mb-2">Volumen de Documentos</label>
-						<input 
-							id="document-volume"
-							type="range" 
-							min="100" 
-							max="100000" 
-							bind:value={documentVolume}
-							class="w-full"
-						>
-						<div class="flex justify-between text-sm text-white/70 mt-1">
-							<span>100</span>
-							<span class="font-bold text-white">{documentVolume.toLocaleString()} documentos</span>
-							<span>100K+</span>
-						</div>
-					</div>
-					
-					<div class="mb-6">
-						<label for="monthly-queries" class="block text-white/90 mb-2">Consultas por Mes</label>
-						<input 
-							id="monthly-queries"
-							type="range" 
-							min="50" 
-							max="10000" 
-							bind:value={queryVolume}
-							class="w-full"
-						>
-						<div class="flex justify-between text-sm text-white/70 mt-1">
-							<span>50</span>
-							<span class="font-bold text-white">{queryVolume.toLocaleString()} queries/mes</span>
-							<span>10K+</span>
-						</div>
-					</div>
-					
-					<!-- Complexity Selection -->
-					<div class="mb-6">
-						<h4 class="text-lg font-bold mb-4">Complejidad Recomendada</h4>
-						<div class="bg-white/20 p-4 border border-white/30">
-							<div class="flex justify-between items-center mb-2">
-								<span class="font-bold text-lg">{complexityLevels[selectedComplexity].name}</span>
-								<span class="text-2xl font-bold">{currentPrice}€</span>
+					<!-- Configuration Panel -->
+					<div class="xl:col-span-2 space-y-8">
+						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+							<h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+								<Icon name="settings" size={24} className="text-purple-300" />
+								Configuración del Proyecto
+							</h3>
+							
+							<!-- Document Volume Slider -->
+							<div class="mb-8">
+								<div class="flex justify-between items-center mb-4">
+									<label for="document-volume" class="text-lg font-semibold text-white">Volumen de Documentos</label>
+									<div class="bg-purple-500/20 border border-purple-400/30 px-4 py-2 rounded-lg">
+										<span class="font-bold text-purple-200">{documentVolume.toLocaleString()} docs</span>
+									</div>
+								</div>
+								<div class="relative">
+									<input 
+										id="document-volume"
+										type="range" 
+										min="100" 
+										max="100000" 
+										bind:value={documentVolume}
+										class="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer slider-thumb"
+									>
+									<div class="flex justify-between text-sm text-white/70 mt-2">
+										<span>100</span>
+										<span>10K</span>
+										<span>50K</span>
+										<span>100K+</span>
+									</div>
+								</div>
+								<div class="mt-3 text-sm text-white/80">
+									<Icon name="info" size={16} className="inline mr-1" />
+									Incluye PDFs, Word, Excel, presentaciones y documentos estructurados
+								</div>
 							</div>
-							<p class="text-white/80 text-sm mb-3">Tiempo implementación: {complexityLevels[selectedComplexity].setupTime}</p>
-							<div class="space-y-1">
-								{#each complexityLevels[selectedComplexity].features as feature}
-									<div class="flex items-center gap-2">
-										<Icon name="check" size={14} color="white" />
-										<span class="text-sm text-white/90">{feature}</span>
+							
+							<!-- Query Volume Slider -->
+							<div class="mb-8">
+								<div class="flex justify-between items-center mb-4">
+									<label for="monthly-queries" class="text-lg font-semibold text-white">Consultas por Mes</label>
+									<div class="bg-indigo-500/20 border border-indigo-400/30 px-4 py-2 rounded-lg">
+										<span class="font-bold text-indigo-200">{queryVolume.toLocaleString()} queries</span>
+									</div>
+								</div>
+								<div class="relative">
+									<input 
+										id="monthly-queries"
+										type="range" 
+										min="50" 
+										max="10000" 
+										bind:value={queryVolume}
+										class="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer slider-thumb"
+									>
+									<div class="flex justify-between text-sm text-white/70 mt-2">
+										<span>50</span>
+										<span>1K</span>
+										<span>5K</span>
+										<span>10K+</span>
+									</div>
+								</div>
+								<div class="mt-3 text-sm text-white/80">
+									<Icon name="zap" size={16} className="inline mr-1" />
+									Consultas de IA procesadas mensualmente por todos los usuarios
+								</div>
+							</div>
+							
+							<!-- Recommended Plan Display -->
+							<div class="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 rounded-2xl p-6">
+								<div class="flex items-center gap-3 mb-4">
+									<div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+										<Icon name="check-circle" size={20} className="text-white" />
+									</div>
+									<div>
+										<h4 class="text-lg font-bold text-green-200">Plan Recomendado</h4>
+										<p class="text-sm text-green-300">Optimizado para tus necesidades</p>
+									</div>
+								</div>
+								
+								<div class="bg-white/10 rounded-xl p-4">
+									<div class="flex justify-between items-center mb-3">
+										<span class="text-xl font-bold text-white">{complexityLevels[selectedComplexity].name}</span>
+										<div class="text-right">
+											<div class="text-3xl font-extrabold text-white">{currentPrice}€</div>
+											<div class="text-sm text-white/70">Implementación única</div>
+										</div>
+									</div>
+									<div class="flex items-center gap-2 mb-4">
+										<Icon name="clock" size={16} className="text-green-300" />
+										<span class="text-sm text-white/90">Tiempo de implementación: {complexityLevels[selectedComplexity].setupTime}</span>
+									</div>
+									
+									<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+										{#each complexityLevels[selectedComplexity].features as feature}
+											<div class="flex items-center gap-2 bg-white/5 rounded-lg p-2">
+												<Icon name="check" size={14} className="text-green-400 flex-shrink-0" />
+												<span class="text-sm text-white/90">{feature}</span>
+											</div>
+										{/each}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Plans Comparison Panel -->
+					<div class="space-y-6">
+						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+							<h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+								<Icon name="layers" size={20} className="text-indigo-300" />
+								Todos los Planes
+							</h3>
+							
+							<div class="space-y-4">
+								{#each Object.entries(complexityLevels) as [key, plan]}
+									<div class="relative group cursor-pointer transition-all duration-300 {selectedComplexity === key ? 'ring-2 ring-white/50 bg-white/10' : 'bg-white/5 hover:bg-white/8'} rounded-xl p-4 border border-white/10">
+										{#if selectedComplexity === key}
+											<div class="absolute -top-2 -right-2">
+												<div class="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+													RECOMENDADO
+												</div>
+											</div>
+										{/if}
+										
+										<div class="flex justify-between items-start mb-3">
+											<div>
+												<h4 class="font-bold text-lg text-white">{plan.name}</h4>
+												<div class="flex items-center gap-2 mt-1">
+													<Icon name="clock" size={14} className="text-white/60" />
+													<span class="text-sm text-white/70">{plan.setupTime}</span>
+												</div>
+											</div>
+											<div class="text-right">
+												<div class="text-2xl font-bold text-white">{plan.price}€</div>
+												<div class="text-xs text-white/60">Una sola vez</div>
+											</div>
+										</div>
+										
+										<div class="space-y-2">
+											{#each plan.features.slice(0, 3) as feature}
+												<div class="flex items-center gap-2">
+													<Icon name="check" size={12} className="text-green-400 flex-shrink-0" />
+													<span class="text-xs text-white/80">{feature}</span>
+												</div>
+											{/each}
+											{#if plan.features.length > 3}
+												<div class="text-xs text-white/60 mt-2">
+													+{plan.features.length - 3} características más
+												</div>
+											{/if}
+										</div>
 									</div>
 								{/each}
 							</div>
 						</div>
-					</div>
-				</div>
-				
-				<!-- All Plans Comparison -->
-				<div>
-					<h3 class="text-2xl font-bold mb-6">Comparativa de Planes</h3>
-					
-					<div class="space-y-4">
-						{#each Object.entries(complexityLevels) as [key, plan]}
-							<div class="bg-white/20 p-4 border border-white/30 {selectedComplexity === key ? 'ring-2 ring-white' : ''}">
-								<div class="flex justify-between items-center mb-2">
-									<h4 class="font-bold text-lg">{plan.name}</h4>
-									<span class="text-xl font-bold">{plan.price}€</span>
+						
+						<!-- Cost Breakdown -->
+						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+							<h4 class="font-bold mb-4 flex items-center gap-2">
+								<Icon name="credit-card" size={20} className="text-yellow-400" />
+								Desglose de Costes
+							</h4>
+							
+							<div class="space-y-3">
+								<div class="flex justify-between items-center py-2 border-b border-white/10">
+									<span class="text-sm text-white/80">Implementación base</span>
+									<span class="font-semibold text-white">{currentPrice}€</span>
 								</div>
-								<p class="text-white/70 text-sm mb-3">{plan.setupTime}</p>
-								<div class="grid grid-cols-1 gap-1">
-									{#each plan.features as feature}
-										<div class="flex items-center gap-2">
-											<Icon name="check" size={12} color="white" />
-											<span class="text-xs text-white/80">{feature}</span>
+								
+								<div class="bg-yellow-500/10 border border-yellow-400/20 rounded-lg p-3">
+									<div class="flex items-center gap-2 mb-2">
+										<Icon name="info" size={16} className="text-yellow-400" />
+										<span class="text-sm font-semibold text-yellow-200">Costes Opcionales</span>
+									</div>
+									<div class="space-y-1 text-xs text-white/70">
+										<div class="flex justify-between">
+											<span>Embeddings OpenAI</span>
+											<span>0.0001€/1K tokens</span>
 										</div>
-									{/each}
+										<div class="flex justify-between">
+											<span>Vector DB hosting</span>
+											<span>70€/mes</span>
+										</div>
+										<div class="flex justify-between">
+											<span>Mantenimiento</span>
+											<span>15% mensual</span>
+										</div>
+									</div>
 								</div>
 							</div>
-						{/each}
-					</div>
-					
-					<!-- Additional Costs -->
-					<div class="mt-6 bg-white/10 p-4 border border-white/20">
-						<h4 class="font-bold mb-3">💰 Costes Adicionales (Opcionales)</h4>
-						<div class="space-y-2 text-sm">
-							<div class="flex justify-between">
-								<span>Embeddings OpenAI (por token)</span>
-								<span>0.0001€/1K tokens</span>
-							</div>
-							<div class="flex justify-between">
-								<span>Hosting Vector DB (Pinecone/Weaviate)</span>
-								<span>70€/mes</span>
-							</div>
-							<div class="flex justify-between">
-								<span>API Gateway (Claude/GPT)</span>
-								<span>Según uso</span>
-							</div>
-							<div class="flex justify-between">
-								<span>Mantenimiento mensual</span>
-								<span>15% del proyecto</span>
-							</div>
+						</div>
+						
+						<!-- CTA Button -->
+						<div class="bg-gradient-to-r from-purple-500 to-indigo-500 rounded-2xl p-6 text-center">
+							<h4 class="font-bold text-lg mb-2">¿Listo para empezar?</h4>
+							<p class="text-sm text-white/80 mb-4">Obtén una propuesta personalizada</p>
+							<a href="/contacto" class="inline-flex items-center gap-2 bg-white text-purple-600 font-bold px-6 py-3 rounded-lg hover:bg-white/90 transition-all duration-300 transform hover:scale-105">
+								<Icon name="arrow-right" size={16} />
+								SOLICITAR PROPUESTA
+							</a>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- Contact Form Section -->
-<section id="contact" class="py-24 bg-white">
-	<div class="container mx-auto px-6">
-		<div class="max-w-2xl mx-auto">
-			<div class="text-center mb-12">
-				<h2 class="text-4xl font-bold text-gray-900 mb-6">Demo Personalizada RAG + MCP</h2>
-				<p class="text-xl text-gray-600">
-					Te mostramos cómo funcionaría con tus datos reales. 
-					<strong>Demo interactiva</strong> en 48 horas.
-				</p>
 			</div>
 			
-			<form on:submit|preventDefault={handleSubmit} class="space-y-6">
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-					<div>
-						<label class="block text-gray-700 font-medium mb-2">Nombre Completo *</label>
-						<input 
-							type="text" 
-							bind:value={contactForm.nombre}
-							required
-							class="w-full px-4 py-3 border border-gray-300 focus:border-purple-600 focus:outline-none"
-						>
+			<!-- Additional Features Grid -->
+			<div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+				<div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
+					<div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-400 rounded-full flex items-center justify-center mx-auto mb-4">
+						<Icon name="shield-check" size={24} className="text-white" />
 					</div>
-					<div>
-						<label class="block text-gray-700 font-medium mb-2">Empresa *</label>
-						<input 
-							type="text" 
-							bind:value={contactForm.empresa}
-							required
-							class="w-full px-4 py-3 border border-gray-300 focus:border-purple-600 focus:outline-none"
-						>
-					</div>
+					<h4 class="font-bold text-white mb-2">Garantía Total</h4>
+					<p class="text-sm text-white/70">30 días de garantía de satisfacción o devolución completa</p>
 				</div>
 				
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-					<div>
-						<label class="block text-gray-700 font-medium mb-2">Email Corporativo *</label>
-						<input 
-							type="email" 
-							bind:value={contactForm.email}
-							required
-							class="w-full px-4 py-3 border border-gray-300 focus:border-purple-600 focus:outline-none"
-						>
+				<div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
+					<div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-4">
+						<Icon name="headphones" size={24} className="text-white" />
 					</div>
-					<div>
-						<label class="block text-gray-700 font-medium mb-2">Teléfono</label>
-						<input 
-							type="tel" 
-							bind:value={contactForm.telefono}
-							class="w-full px-4 py-3 border border-gray-300 focus:border-purple-600 focus:outline-none"
-						>
-					</div>
+					<h4 class="font-bold text-white mb-2">Soporte 24/7</h4>
+					<p class="text-sm text-white/70">Equipo técnico dedicado con respuesta garantizada en 2 horas</p>
 				</div>
 				
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-					<div>
-						<label class="block text-gray-700 font-medium mb-2">Tipo de Datos Principales</label>
-						<select bind:value={contactForm.tipo_datos} class="w-full px-4 py-3 border border-gray-300 focus:border-purple-600 focus:outline-none">
-							<option value="">Seleccionar...</option>
-							<option value="documentos">Documentos técnicos/manuales</option>
-							<option value="emails">Emails y comunicaciones</option>
-							<option value="contratos">Contratos y legal</option>
-							<option value="bases-datos">Bases de datos estructuradas</option>
-							<option value="mixto">Múltiples tipos</option>
-						</select>
+				<div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
+					<div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-400 rounded-full flex items-center justify-center mx-auto mb-4">
+						<Icon name="trending-up" size={24} className="text-white" />
 					</div>
-					<div>
-						<label class="block text-gray-700 font-medium mb-2">Volumen Aproximado</label>
-						<select bind:value={contactForm.volumen_docs} class="w-full px-4 py-3 border border-gray-300 focus:border-purple-600 focus:outline-none">
-							<option value="">Seleccionar...</option>
-							<option value="pequeno">Menos de 1,000 documentos</option>
-							<option value="medio">1,000 - 10,000 documentos</option>
-							<option value="grande">10,000 - 100,000 documentos</option>
-							<option value="enterprise">Más de 100,000 documentos</option>
-						</select>
-					</div>
+					<h4 class="font-bold text-white mb-2">Escalabilidad</h4>
+					<p class="text-sm text-white/70">Arquitectura preparada para crecer con tu empresa sin límites</p>
 				</div>
-				
-				<div>
-					<label class="block text-gray-700 font-medium mb-2">Caso de Uso Principal</label>
-					<select bind:value={contactForm.use_case} class="w-full px-4 py-3 border border-gray-300 focus:border-purple-600 focus:outline-none">
-						<option value="">Seleccionar...</option>
-						<option value="soporte">Soporte técnico automatizado</option>
-						<option value="busqueda">Búsqueda empresarial avanzada</option>
-						<option value="compliance">Compliance y auditoría</option>
-						<option value="onboarding">Onboarding empleados</option>
-						<option value="analisis">Análisis de datos</option>
-						<option value="otro">Otro caso de uso</option>
-					</select>
-				</div>
-				
-				<div>
-					<label class="block text-gray-700 font-medium mb-2">Descripción del Proyecto</label>
-					<textarea 
-						bind:value={contactForm.mensaje}
-						rows="4"
-						placeholder="Describe qué tipo de preguntas quieres que la IA pueda responder, qué datos tienes disponibles, integración con sistemas existentes..."
-						class="w-full px-4 py-3 border border-gray-300 focus:border-purple-600 focus:outline-none"
-					></textarea>
-				</div>
-				
-				<div class="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 p-4">
-					<div class="flex items-start gap-3">
-						<Icon name="lightbulb" size={20} color="#7c3aed" />
-						<div>
-							<h4 class="font-bold text-purple-800 mb-1">Demo Personalizada Incluida</h4>
-							<p class="text-purple-700 text-sm">
-								Configuramos una demo con una muestra de tus datos reales para que veas 
-								el potencial exacto del sistema antes de cualquier compromiso.
-							</p>
-						</div>
-					</div>
-				</div>
-				
-				<button 
-					type="submit"
-					class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-4 px-8 font-bold text-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-200"
-				>
-					SOLICITAR DEMO PERSONALIZADA - 48H
-				</button>
-				
-				<p class="text-center text-gray-500 text-sm">
-					Demo completamente gratuita y sin compromiso. Datos tratados según RGPD.
-				</p>
-			</form>
+			</div>
 		</div>
 	</div>
 </section>
 
 <style>
-	.pattern-dots {
-		background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-		background-size: 20px 20px;
+	/* Professional Floating Indicator for RAG */
+	.floating-indicator-rag {
+		position: absolute;
+		top: 120px;
+		right: 80px;
+		z-index: 20;
+		animation: floatSlow 6s ease-in-out infinite;
+	}
+
+	@keyframes floatSlow {
+		0%, 100% { 
+			transform: translateY(0px) rotate(0deg); 
+		}
+		33% { 
+			transform: translateY(-8px) rotate(1deg); 
+		}
+		66% { 
+			transform: translateY(-4px) rotate(-1deg); 
+		}
+	}
+
+	/* Custom Range Slider Styles */
+	.slider-thumb {
+		background: linear-gradient(90deg, rgba(147, 51, 234, 0.8), rgba(79, 70, 229, 0.8));
+		outline: none;
+		border: none;
+	}
+
+	.slider-thumb::-webkit-slider-thumb {
+		appearance: none;
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #8b5cf6, #6366f1);
+		cursor: pointer;
+		border: 3px solid white;
+		box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+		transition: all 0.3s ease;
+	}
+
+	.slider-thumb::-webkit-slider-thumb:hover {
+		transform: scale(1.2);
+		box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+	}
+
+	.slider-thumb::-moz-range-thumb {
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #8b5cf6, #6366f1);
+		cursor: pointer;
+		border: 3px solid white;
+		box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+		transition: all 0.3s ease;
+	}
+
+	.slider-thumb::-moz-range-thumb:hover {
+		transform: scale(1.2);
+		box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+	}
+
+	/* Custom range track */
+	.slider-thumb::-webkit-slider-track {
+		background: linear-gradient(90deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.3));
+		height: 8px;
+		border-radius: 4px;
+	}
+
+	.slider-thumb::-moz-range-track {
+		background: linear-gradient(90deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.3));
+		height: 8px;
+		border-radius: 4px;
+		border: none;
+	}
+
+
+	@keyframes slideUpFade {
+		from {
+			opacity: 0;
+			transform: translateY(30px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+
+	@media (max-width: 1024px) {
+		.floating-indicator-rag {
+			top: 100px;
+			right: 40px;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.floating-indicator-rag {
+			display: none;
+		}
+		
+		.slider-thumb::-webkit-slider-thumb {
+			width: 20px;
+			height: 20px;
+		}
+		
+		.slider-thumb::-moz-range-thumb {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	/* Reduced motion support */
+	@media (prefers-reduced-motion: reduce) {
+		.floating-indicator-rag {
+			animation: none;
+			transition: none;
+		}
 	}
 </style>

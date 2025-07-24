@@ -12,9 +12,20 @@
 	import { contactFormData, contactFormState, setSubmissionState, clearSubmissionMessage } from '$lib/stores/contact';
 	import { useContactForm } from '$lib/composables/useContactForm';
 	import { getCompanySuggestions, getPositionSuggestions, getEmailSuggestions } from '$lib/data/autocomplete';
+	import { tweened } from 'svelte/motion';
+	import SEO from '$lib/components/SEO.svelte';
+	import { SEO_PAGES, generateLocalBusinessSchema } from '$lib/utils/seo';
+	import { cubicOut } from 'svelte/easing';
+	import { toast } from '$lib/stores/toast';
 	
 	let form: HTMLFormElement;
 	let showValidation = false;
+	
+	// Hero metrics animation
+	const responseTime = tweened(0, { duration: 2000, easing: cubicOut });
+	const satisfaction = tweened(0, { duration: 2000, easing: cubicOut });
+	const support = tweened(0, { duration: 2000, easing: cubicOut });
+	const experts = tweened(0, { duration: 2000, easing: cubicOut });
 	
 	// Use stores for reactive state
 	$: formData = $contactFormData;
@@ -22,6 +33,16 @@
 	
 	// Initialize form handler
 	const { submitForm, validateEmail, validateName, validateMessage, validateCompany } = useContactForm();
+	
+	onMount(() => {
+		// Start metrics animation
+		setTimeout(() => {
+			responseTime.set(2);
+			satisfaction.set(98.5);
+			support.set(99.9);
+			experts.set(4);
+		}, 800);
+	});
 	
 	const contactStats = [
 		{ label: 'VeriFactu Urgente', value: '2h', description: 'Tiempo respuesta' },
@@ -99,7 +120,26 @@
 	
 	async function handleSubmit() {
 		showValidation = true;
-		await submitForm(form);
+		
+		// Use toast.promise for automatic loading, success, and error handling
+		try {
+			await toast.promise(
+				submitForm(form),
+				{
+					loading: 'Enviando tu consulta...',
+					success: 'Tu consulta se ha enviado correctamente. Te contactaremos pronto.',
+					error: (err) => {
+						// Extract meaningful error message
+						if (typeof err === 'string') return err;
+						if (err?.message) return err.message;
+						return 'Error al enviar la consulta. Por favor, inténtalo de nuevo.';
+					}
+				}
+			);
+		} catch (error) {
+			// Error is already handled by toast.promise
+			console.error('Contact form submission failed:', error);
+		}
 	}
 	
 	function clearMessage() {
@@ -143,9 +183,9 @@
 	}
 	
 	// Dynamic suggestions based on current input
-	$: companySuggestions = getCompanySuggestions(formData.company);
-	$: positionSuggestions = getPositionSuggestions(formData.position);
-	$: emailSuggestions = getEmailSuggestions(formData.email);
+	$: companySuggestions = getCompanySuggestions(formData.company || '');
+	$: positionSuggestions = getPositionSuggestions(formData.position || '');
+	$: emailSuggestions = getEmailSuggestions(formData.email || '');
 	
 	// Form progress tracking
 	$: completedFields = [
@@ -156,7 +196,8 @@
 		formData.message.trim()
 	].filter(Boolean).length;
 	
-	$: formValid = formData.name.trim() && 
+	$: formValid = Boolean(
+		formData.name.trim() && 
 		formData.email.trim() && 
 		formData.company.trim() && 
 		formData.service.trim() && 
@@ -164,7 +205,8 @@
 		formData.gdprConsent &&
 		validateEmail(formData.email) &&
 		validateName(formData.name) &&
-		validateMessage(formData.message);
+		validateMessage(formData.message)
+	);
 	
 	$: currentStep = completedFields <= 2 ? 1 : completedFields <= 4 ? 2 : 3;
 	
@@ -172,85 +214,176 @@
 	$: showFormSummary = formValid && !isSubmitting && completedFields >= 3 && formData.service && formData.message.length > 50;
 </script>
 
-<svelte:head>
-	<title>Contacto Enterprise - Formeta Labs | Consulta Técnica Gratuita</title>
-	<meta name="description" content="Contacto enterprise con Formeta Labs. Especialistas en VeriFactu, IA local y desarrollo web. Respuesta garantizada en 2 horas para proyectos críticos." />
-	<meta name="keywords" content="contacto enterprise, VeriFactu urgente, IA local, consulta técnica, desarrollo web, CRM enterprise" />
-</svelte:head>
+<!-- SEO optimizado para página de contacto -->
+<SEO 
+	title={SEO_PAGES.contacto.title}
+	description={SEO_PAGES.contacto.description}
+	keywords={SEO_PAGES.contacto.keywords}
+	ogType={SEO_PAGES.contacto.ogType}
+	ogImage="/images/og/formeta-labs-contacto.jpg"
+	schemas={[generateLocalBusinessSchema()]}
+/>
 
 <!-- Hero Section -->
-<section class="relative min-h-[70vh] bg-gradient-to-br from-formeta-text via-formeta-primary to-formeta-secondary overflow-hidden">
-	<!-- Background Patterns -->
-	<div class="absolute inset-0 opacity-5">
-		<div class="pattern-grid h-full w-full"></div>
+<section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-950 via-slate-900 to-red-800 overflow-hidden">
+	<!-- Dynamic communication patterns -->
+	<div class="absolute inset-0">
+		<div class="absolute inset-0 bg-gradient-to-br from-orange-950/40 via-transparent to-red-950/30"></div>
+		<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(251,146,60,0.15),transparent_60%)]"></div>
+		<div class="absolute inset-0 bg-[linear-gradient(45deg,transparent_40%,rgba(239,68,68,0.1)_50%,transparent_60%)]"></div>
+		<div class="absolute top-0 left-0 w-96 h-96 bg-gradient-radial from-orange-400/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+		<div class="absolute bottom-0 right-0 w-96 h-96 bg-gradient-radial from-red-400/15 to-transparent rounded-full blur-3xl animate-pulse delay-1000"></div>
 	</div>
 	
-	<!-- Floating Technical Elements -->
-	<div class="absolute top-20 left-20 bg-white/10 backdrop-blur-sm border border-white/30 px-4 py-2 text-white text-sm font-mono">
-		<Icon name="phone" size={16} className="inline mr-2" color="white" />
-		CONTACT.ENTERPRISE
-	</div>
-	<div class="absolute top-32 right-32 bg-white/10 backdrop-blur-sm border border-white/30 px-4 py-2 text-white text-sm font-mono">
-		<Icon name="clock" size={16} className="inline mr-2" color="white" />
-		RESPONSE.2H
-	</div>
-	<div class="absolute bottom-32 left-32 bg-white/10 backdrop-blur-sm border border-white/30 px-4 py-2 text-white text-sm font-mono">
-		<Icon name="shield" size={16} className="inline mr-2" color="white" />
-		VERIFACTU.URGENT
+	<!-- Floating contact indicator -->
+	<div class="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
+		<div class="flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 px-8 py-4 rounded-2xl shadow-2xl">
+			<Icon name="phone" size={20} className="text-orange-400" />
+			<span class="text-white font-mono text-sm font-semibold tracking-wide">CONTACTO ENTERPRISE</span>
+			<div class="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+		</div>
 	</div>
 	
-	<div class="relative z-10 container-formeta flex items-center min-h-[70vh]">
-		<div class="max-w-4xl">
-			<div class="flex items-center gap-4 mb-6">
-				<span class="text-white/80 text-lg font-mono">///</span>
-				<span class="text-white/80 text-lg font-mono">CONTACTO ENTERPRISE</span>
+	<!-- Communication ASCII patterns -->
+	<div class="absolute inset-0 font-mono text-orange-400/20 select-none pointer-events-none">
+		<div class="absolute top-20 left-16 text-4xl animate-pulse">@</div>
+		<div class="absolute top-40 right-20 text-3xl animate-bounce delay-1000">#</div>
+		<div class="absolute bottom-24 left-12 animate-pulse delay-500">
+			<Icon name="mail" size={48} className="text-blue-400/30" />
+		</div>
+		<div class="absolute bottom-40 right-16 animate-bounce delay-700">
+			<Icon name="zap" size={24} className="text-yellow-400/40" />
+		</div>
+		<div class="absolute top-1/2 left-8 text-xl opacity-40">{'>>> '}</div>
+		<div class="absolute top-1/3 right-8 text-xl opacity-40">{' <<<'}</div>
+	</div>
+	
+	<div class="relative container mx-auto px-6 text-center text-white z-10">
+		<!-- Contact header design -->
+		<div class="mb-10">
+			<div class="flex items-center justify-center gap-4 mb-8">
+				<span class="w-16 h-px bg-gradient-to-r from-transparent via-orange-400 to-transparent"></span>
+				<span class="text-orange-300/80 text-sm font-mono font-medium tracking-[0.3em] uppercase">CONSULTA ESTRATÉGICA</span>
+				<span class="w-16 h-px bg-gradient-to-l from-transparent via-orange-400 to-transparent"></span>
 			</div>
 			
-			<h1 class="text-6xl md:text-7xl font-bold text-white mb-8 leading-tight">
-				CONSULTA
-				<br>
-				<span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">
-					TÉCNICA
-				</span>
+			<h1 class="text-6xl md:text-8xl font-bold mb-6 leading-none">
+				<span class="text-white">Contacto</span>
+				<span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-red-400 to-orange-500">Enterprise</span>
 			</h1>
 			
-			<p class="text-xl text-white/90 mb-8 max-w-2xl leading-relaxed">
-				<strong>Especialistas en VeriFactu, IA empresarial local</strong> y desarrollo web avanzado. 
-				<strong>Respuesta garantizada en 2 horas</strong> para proyectos críticos.
-			</p>
-			
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-				{#each contactStats as stat}
-					<div class="text-center">
-						<div class="text-3xl font-bold text-white mb-1">{stat.value}</div>
-						<div class="text-sm text-white/80 font-bold">{stat.label}</div>
-						<div class="text-xs text-white/60">{stat.description}</div>
-					</div>
-				{/each}
+			<div class="max-w-4xl mx-auto mb-8">
+				<p class="text-xl md:text-2xl text-orange-200 font-medium mb-4 leading-relaxed">
+					<strong>Especialistas técnicos</strong> en VeriFactu, IA local y desarrollo enterprise
+					<strong class="text-orange-400">Respuesta garantizada</strong>
+				</p>
+				<p class="text-lg text-white/80 leading-relaxed">
+					Consulta Técnica Gratuita • Análisis de Requisitos • Presupuesto Personalizado • Soporte 24/7
+				</p>
 			</div>
-			
-			<div class="flex flex-wrap gap-4">
-				<a href="#contacto" class="bg-white text-formeta-primary px-8 py-4 font-bold text-lg hover:bg-white/90 transition-all duration-200 border-2 border-white">
-					ENVIAR CONSULTA
-				</a>
-				<a href="/servicios" class="border-2 border-white text-white px-8 py-4 font-bold text-lg hover:bg-white hover:text-formeta-primary transition-all duration-200">
-					VER SERVICIOS
-				</a>
+		</div>
+		
+		<!-- Contact metrics design -->
+		<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-4xl mx-auto">
+			<div class="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300 group">
+				<div class="text-3xl font-bold text-orange-400 mb-2 group-hover:text-orange-300 transition-colors">
+					{'<'}{Math.round($responseTime)}h
+				</div>
+				<div class="text-sm text-white/90 font-medium mb-1">Respuesta</div>
+				<div class="text-xs text-white/60">Garantizada</div>
+			</div>
+			<div class="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300 group">
+				<div class="text-3xl font-bold text-red-400 mb-2 group-hover:text-red-300 transition-colors">
+					{$satisfaction.toFixed(1)}%
+				</div>
+				<div class="text-sm text-white/90 font-medium mb-1">Satisfacción</div>
+				<div class="text-xs text-white/60">Cliente</div>
+			</div>
+			<div class="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300 group">
+				<div class="text-3xl font-bold text-orange-400 mb-2 group-hover:text-orange-300 transition-colors">
+					{$support.toFixed(1)}%
+				</div>
+				<div class="text-sm text-white/90 font-medium mb-1">Disponibilidad</div>
+				<div class="text-xs text-white/60">SLA</div>
+			</div>
+			<div class="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300 group">
+				<div class="text-3xl font-bold text-red-400 mb-2 group-hover:text-red-300 transition-colors">
+					{Math.round($experts)}
+				</div>
+				<div class="text-sm text-white/90 font-medium mb-1">Especialistas</div>
+				<div class="text-xs text-white/60">Técnicos</div>
+			</div>
+		</div>
+		
+		<!-- Contact focused CTAs -->
+		<div class="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+			<a href="#contacto-form" class="group bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-semibold px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-orange-500/25">
+				<span class="flex items-center gap-3">
+					INICIAR CONSULTA
+					<Icon name="arrow-down" size={16} className="group-hover:translate-y-1 transition-transform" />
+				</span>
+			</a>
+			<a href="tel:+34-XXX-XXX-XXX" class="group bg-white/10 backdrop-blur-xl border border-white/30 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105">
+				<span class="flex items-center gap-3">
+					LLAMADA DIRECTA
+					<Icon name="phone" size={16} className="group-hover:rotate-12 transition-transform" />
+				</span>
+			</a>
+		</div>
+		
+		<!-- Contact feature badges -->
+		<div class="flex flex-wrap gap-4 justify-center">
+			<div class="bg-gradient-to-r from-orange-600/20 to-orange-400/10 backdrop-blur-sm border border-orange-400/30 rounded-full px-6 py-3 flex items-center gap-2">
+				<Icon name="clock" size={16} className="text-orange-400" />
+				<span class="text-sm font-medium text-orange-200">Respuesta Rápida</span>
+			</div>
+			<div class="bg-gradient-to-r from-red-600/20 to-red-400/10 backdrop-blur-sm border border-red-400/30 rounded-full px-6 py-3 flex items-center gap-2">
+				<Icon name="shield-check" size={16} className="text-red-400" />
+				<span class="text-sm font-medium text-red-200">VeriFactu Urgente</span>
+			</div>
+			<div class="bg-gradient-to-r from-green-600/20 to-green-400/10 backdrop-blur-sm border border-green-400/30 rounded-full px-6 py-3 flex items-center gap-2">
+				<Icon name="user-check" size={16} className="text-green-400" />
+				<span class="text-sm font-medium text-green-200">Consulta Gratuita</span>
 			</div>
 		</div>
 	</div>
 </section>
 
 <!-- Contact Form Section -->
-<section class="py-20 bg-white">
-	<div class="container mx-auto px-6">
+<section id="contacto-form" class="py-20 bg-gradient-to-br from-slate-50 to-gray-100 relative overflow-hidden">
+	<!-- Professional background pattern -->
+	<div class="absolute inset-0 opacity-10">
+		<div class="pattern-formeta h-full w-full"></div>
+	</div>
+	
+	<!-- Floating decorative elements -->
+	<div class="absolute top-16 left-16 text-orange-400/30 text-5xl font-mono select-none">@</div>
+	<div class="absolute top-32 right-20 text-red-400/25 text-4xl font-mono select-none">#</div>
+	<div class="absolute bottom-20 left-20 select-none">
+		<Icon name="mail" size={64} className="text-orange-400/20" />
+	</div>
+	<div class="absolute bottom-16 right-16 select-none">
+		<Icon name="zap" size={32} className="text-red-400/30" />
+	</div>
+	
+	<div class="container mx-auto px-6 relative z-10">
 		<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
 			<!-- Enhanced Contact Form -->
 			<div class="lg:col-span-2">
-				<div class="bg-white border-2 border-formeta-primary p-8 shadow-lg">
-					<h2 class="text-3xl font-bold text-formeta-text mb-8">
-						Formulario de Contacto <span class="text-formeta-primary">Enterprise</span>
-					</h2>
+				<div class="formeta-card-enterprise">
+					<!-- Form Header -->
+					<div class="text-center mb-8">
+						<div class="flex items-center justify-center gap-3 mb-4">
+							<span class="text-orange-500 text-xl font-mono">@</span>
+							<h2 class="text-2xl font-bold text-formeta-text uppercase tracking-wide">
+								Formulario de Contacto Enterprise
+							</h2>
+							<span class="text-orange-500 text-xl font-mono">@</span>
+						</div>
+						<p class="text-formeta-text/70 leading-relaxed">
+							<strong>Respuesta garantizada en 2 horas</strong> para consultas técnicas y VeriFactu urgente
+						</p>
+					</div>
 					
 					<!-- Form Progress Indicator -->
 					<FormProgress 
@@ -423,7 +556,7 @@
 						<button 
 							type="submit" 
 							disabled={isSubmitting}
-							class="w-full bg-formeta-primary hover:bg-formeta-primary/90 text-white px-8 py-4 font-bold text-lg transition-all duration-200 border-2 border-formeta-primary {isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'}"
+							class="w-full glass-button bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-white px-8 py-4 font-bold text-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg {isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-xl'}"
 						>
 							{#if isSubmitting}
 								<LoadingSpinner size="md" color="text-white">
@@ -457,141 +590,170 @@
 					</form>
 				</div>
 			</div>
-			<!-- Enhanced Contact Info -->
-			<div class="space-y-8">
-				<!-- Direct Contact -->
-				<div class="bg-gray-50 p-6 border-2 border-gray-200">
-					<h3 class="text-2xl font-bold text-formeta-text mb-6">Contacto Directo</h3>
+			<!-- Enhanced Contact Info Sidebar -->
+			<div class="space-y-6">
+				<!-- Contact Methods Card -->
+				<div class="formeta-card-contact">
+					<div class="text-center mb-6">
+						<div class="flex items-center justify-center gap-2 mb-3">
+							<Icon name="zap" size={18} className="text-orange-500" />
+							<h3 class="text-xl font-bold text-formeta-text uppercase tracking-wider">Contacto Directo</h3>
+							<Icon name="zap" size={18} className="text-orange-500" />
+						</div>
+						<p class="text-sm text-formeta-text/70">Especialistas técnicos disponibles</p>
+					</div>
 					
 					<div class="space-y-4">
-						<div class="flex items-start gap-4">
-							<div class="w-10 h-10 bg-formeta-primary text-white flex items-center justify-center rounded">
+						<!-- Enterprise Email -->
+						<div class="contact-method-card group">
+							<div class="contact-icon bg-gradient-to-br from-orange-600 to-red-600">
 								<Icon name="mail" size={20} className="text-white" />
 							</div>
-							<div>
-								<h4 class="font-bold text-formeta-text">Email Enterprise</h4>
-								<a href="mailto:enterprise@formeta-labs.com" class="text-formeta-primary hover:underline">
+							<div class="flex-1">
+								<h4 class="font-bold text-formeta-text group-hover:text-orange-600 transition-colors">Email Enterprise</h4>
+								<a href="mailto:enterprise@formeta-labs.com" class="text-orange-600 hover:text-orange-700 font-mono text-sm transition-colors">
 									enterprise@formeta-labs.com
 								</a>
-								<p class="text-sm text-formeta-text/70">Respuesta garantizada en 2-4h</p>
+								<p class="text-xs text-formeta-text/60 mt-1">Respuesta garantizada {'<'} 2h</p>
+							</div>
+							<div class="contact-status">
+								<div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
 							</div>
 						</div>
 						
-						<div class="flex items-start gap-4">
-							<div class="w-10 h-10 bg-formeta-primary text-white flex items-center justify-center rounded">
+						<!-- Technical Call -->
+						<div class="contact-method-card group">
+							<div class="contact-icon bg-gradient-to-br from-red-600 to-orange-600">
 								<Icon name="phone" size={20} className="text-white" />
 							</div>
-							<div>
-								<h4 class="font-bold text-formeta-text">Consulta Técnica</h4>
-								<a href="tel:+34-600-000-000" class="text-formeta-primary hover:underline">
+							<div class="flex-1">
+								<h4 class="font-bold text-formeta-text group-hover:text-red-600 transition-colors">Consulta Técnica</h4>
+								<a href="tel:+34-600-000-000" class="text-red-600 hover:text-red-700 font-mono text-sm transition-colors">
 									+34 600 000 000
 								</a>
-								<p class="text-sm text-formeta-text/70">Lun-Vie 9:00-18:00</p>
+								<p class="text-xs text-formeta-text/60 mt-1">Lun-Vie 9:00-18:00 CET</p>
+							</div>
+							<div class="contact-status">
+								<div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
 							</div>
 						</div>
 						
-						<div class="flex items-start gap-4">
-							<div class="w-10 h-10 bg-red-500 text-white flex items-center justify-center text-lg">🚨</div>
-							<div>
-								<h4 class="font-bold text-formeta-text">VeriFactu Urgente</h4>
-								<a href="mailto:verifactu@formeta-labs.com" class="text-red-600 hover:underline">
+						<!-- VeriFactu Urgent -->
+						<div class="contact-method-card group border-red-200 bg-red-50/50">
+							<div class="contact-icon bg-gradient-to-br from-red-700 to-red-600">
+								<span class="text-lg">🚨</span>
+							</div>
+							<div class="flex-1">
+								<h4 class="font-bold text-red-700 group-hover:text-red-800 transition-colors">VeriFactu URGENTE</h4>
+								<a href="mailto:verifactu@formeta-labs.com" class="text-red-700 hover:text-red-800 font-mono text-sm transition-colors">
 									verifactu@formeta-labs.com
 								</a>
-								<p class="text-sm text-red-600 flex items-center gap-1">
-									<Icon name="zap" size={16} className="text-red-600" />
+								<p class="text-xs text-red-600 mt-1 flex items-center gap-1">
+									<Icon name="zap" size={12} className="text-red-600" />
 									<span>Respuesta en 2 horas</span>
 								</p>
 							</div>
+							<div class="contact-status">
+								<div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+							</div>
 						</div>
 						
-						<div class="flex items-start gap-4">
-							<div class="w-10 h-10 bg-purple-500 text-white flex items-center justify-center text-lg">🤖</div>
-							<div>
-								<h4 class="font-bold text-formeta-text">IA & Demos</h4>
-								<a href="mailto:ai@formeta-labs.com" class="text-purple-600 hover:underline">
+						<!-- AI Demo -->
+						<div class="contact-method-card group">
+							<div class="contact-icon bg-gradient-to-br from-purple-600 to-indigo-600">
+								<span class="text-lg">🤖</span>
+							</div>
+							<div class="flex-1">
+								<h4 class="font-bold text-formeta-text group-hover:text-purple-600 transition-colors">IA & Demos Técnicas</h4>
+								<a href="mailto:ai@formeta-labs.com" class="text-purple-600 hover:text-purple-700 font-mono text-sm transition-colors">
 									ai@formeta-labs.com
 								</a>
-								<p class="text-sm text-purple-600">Demo técnica en 4h</p>
+								<p class="text-xs text-formeta-text/60 mt-1">Demo técnica en 4h</p>
+							</div>
+							<div class="contact-status">
+								<div class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
 							</div>
 						</div>
 					</div>
 				</div>
 				
-				<!-- Service Badges -->
-				<div class="bg-white p-6 border-2 border-formeta-primary">
-					<h3 class="text-xl font-bold text-formeta-text mb-4">Servicios Disponibles</h3>
+				<!-- Service Badges Card -->
+				<div class="formeta-card-services">
+					<div class="text-center mb-4">
+						<h3 class="text-lg font-bold text-formeta-text uppercase tracking-wider">Servicios Disponibles</h3>
+						<div class="w-12 h-px bg-gradient-to-r from-transparent via-orange-400 to-transparent mx-auto mt-2"></div>
+					</div>
 					<div class="space-y-3">
 						{#each services as service}
-							<div class="flex items-center justify-between">
-								<span class="text-sm text-formeta-text">{service.name.split(' (')[0]}</span>
-								<span class="text-xs px-2 py-1 {getServiceBadgeClass(service)}">
-									{getServiceBadge(service)}
-								</span>
+							<div class="service-item">
+								<div class="flex items-center justify-between">
+									<span class="text-sm text-formeta-text font-medium">{service.name.split(' (')[0]}</span>
+									<span class="service-badge-mini {getServiceBadgeClass(service)}">
+										{getServiceBadge(service)}
+									</span>
+								</div>
+								{#if service.urgent}
+									<div class="text-xs text-red-600 mt-1 font-medium flex items-center gap-1">
+										<Icon name="zap" size={12} className="text-red-600" />
+										Implementación Express
+									</div>
+								{/if}
 							</div>
 						{/each}
 					</div>
 				</div>
 				
-				<!-- Response Time Guarantee -->
-				<div class="bg-formeta-primary p-6 text-white">
-					<div class="flex items-center gap-3 mb-4">
-						<Icon name="zap" size={24} className="text-formeta-primary" />
-						<h3 class="text-xl font-bold">Garantía de Respuesta</h3>
+				<!-- Response Time Guarantee Card -->
+				<div class="formeta-card-guarantee">
+					<div class="text-center mb-4">
+						<div class="flex items-center justify-center gap-2 mb-2">
+							<Icon name="shield-check" size={20} className="text-green-600" />
+							<h3 class="text-lg font-bold text-white">Garantía de Respuesta</h3>
+						</div>
+						<p class="text-sm text-green-100">SLA Enterprise garantizado</p>
 					</div>
-					<div class="space-y-3 text-sm">
-						<div class="flex justify-between">
-							<span>🚨 VeriFactu Crítico:</span>
-							<span class="font-bold">2 horas</span>
+					<div class="space-y-3">
+						<div class="response-time-item">
+							<div class="flex items-center justify-between">
+								<span class="flex items-center gap-2">
+									<span class="text-red-400">🚨</span>
+									<span>VeriFactu Crítico</span>
+								</span>
+								<span class="response-time-badge bg-red-500/20 text-red-200">2 horas</span>
+							</div>
 						</div>
-						<div class="flex justify-between">
-							<span>🤖 IA & Demos:</span>
-							<span class="font-bold">4 horas</span>
+						<div class="response-time-item">
+							<div class="flex items-center justify-between">
+								<span class="flex items-center gap-2">
+									<span class="text-purple-400">🤖</span>
+									<span>IA & Demos</span>
+								</span>
+								<span class="response-time-badge bg-purple-500/20 text-purple-200">4 horas</span>
+							</div>
 						</div>
-						<div class="flex justify-between">
-							<span class="flex items-center gap-2">
-								<Icon name="briefcase" size={16} className="text-formeta-primary" />
-								<span>Consulta Enterprise:</span>
-							</span>
-							<span class="font-bold">24 horas</span>
+						<div class="response-time-item">
+							<div class="flex items-center justify-between">
+								<span class="flex items-center gap-2">
+									<Icon name="briefcase" size={14} className="text-orange-300" />
+									<span>Consulta Enterprise</span>
+								</span>
+								<span class="response-time-badge bg-orange-500/20 text-orange-200">24 horas</span>
+							</div>
 						</div>
-						<div class="flex justify-between">
-							<span class="flex items-center gap-2">
-								<Icon name="phone" size={16} className="text-formeta-primary" />
-								<span>Soporte General:</span>
-							</span>
-							<span class="font-bold">48 horas</span>
+						<div class="response-time-item">
+							<div class="flex items-center justify-between">
+								<span class="flex items-center gap-2">
+									<Icon name="phone" size={14} className="text-green-300" />
+									<span>Soporte General</span>
+								</span>
+								<span class="response-time-badge bg-green-500/20 text-green-200">48 horas</span>
+							</div>
 						</div>
 					</div>
 					<p class="text-xs text-white/80 mt-4">
 						*Tiempos de respuesta en días laborables. 
 						Proyectos críticos pueden requerir SLA personalizado.
 					</p>
-				</div>
-				
-				<!-- Location & Legal -->
-				<div class="bg-gray-50 p-6 border-2 border-gray-200">
-					<div class="flex items-center gap-3 mb-4">
-						<Icon name="map-pin" size={24} className="text-formeta-primary" />
-						<h3 class="text-xl font-bold text-formeta-text">Información Legal</h3>
-					</div>
-					<div class="space-y-2 text-sm text-formeta-text">
-						<p><strong>Formeta Labs S.L.</strong></p>
-						<p>CIF: B-XXXXXXXX</p>
-						<p>Madrid, España</p>
-						<p>Registro Mercantil de Madrid</p>
-					</div>
-					<div class="mt-4 pt-4 border-t border-gray-300">
-						<div class="text-xs text-formeta-text/70">
-							<div class="flex items-center gap-2 mb-2">
-								<Icon name="lock" size={16} className="text-formeta-primary" />
-								<strong>Datos 100% en España</strong>
-							</div>
-							<div>
-								Cumplimiento RGPD, LOPD e ISO 27001.<br>
-								Soberanía digital garantizada.
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -620,7 +782,7 @@
 					</p>
 					<a href="https://calendly.com/formeta-labs/demo-ia" 
 					   target="_blank" 
-					   class="bg-white text-formeta-primary px-6 py-3 font-bold hover:bg-white/90 transition-all duration-200">
+					   class="bg-white text-black px-6 py-3 font-bold hover:bg-white/90 hover:text-black transition-all duration-200">
 						AGENDAR DEMO IA
 					</a>
 				</div>
@@ -661,13 +823,181 @@
 </section>
 
 <style>
-	.pattern-grid {
+	/* Formeta Enterprise Patterns */
+	.pattern-formeta {
 		background-image: 
-			linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-			linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-		background-size: 20px 20px;
+			linear-gradient(45deg, rgba(251,146,60,0.05) 25%, transparent 25%),
+			linear-gradient(-45deg, rgba(239,68,68,0.05) 25%, transparent 25%),
+			linear-gradient(45deg, transparent 75%, rgba(251,146,60,0.05) 75%),
+			linear-gradient(-45deg, transparent 75%, rgba(239,68,68,0.05) 75%);
+		background-size: 30px 30px;
+		background-position: 0 0, 0 15px, 15px -15px, -15px 0px;
+		animation: patternShift 20s linear infinite;
 	}
 	
+	@keyframes patternShift {
+		0% { background-position: 0 0, 0 15px, 15px -15px, -15px 0px; }
+		100% { background-position: 30px 30px, 30px 45px, 45px 15px, 15px 30px; }
+	}
+	
+	/* Enterprise Cards */
+	.formeta-card-enterprise {
+		background: rgba(255, 255, 255, 0.95);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		border: 2px solid rgba(251, 146, 60, 0.2);
+		border-radius: 20px;
+		padding: 40px 32px;
+		box-shadow: 
+			0 25px 50px rgba(0, 0, 0, 0.1),
+			0 0 0 1px rgba(255, 255, 255, 0.05),
+			inset 0 1px 0 rgba(255, 255, 255, 0.1);
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.formeta-card-enterprise::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 4px;
+		background: linear-gradient(90deg, #fb923c, #ef4444, #fb923c);
+		background-size: 200% 100%;
+		animation: gradientShift 3s ease-in-out infinite;
+	}
+	
+	@keyframes gradientShift {
+		0%, 100% { background-position: 0% 50%; }
+		50% { background-position: 100% 50%; }
+	}
+	
+	.formeta-card-contact {
+		background: rgba(255, 255, 255, 0.98);
+		backdrop-filter: blur(16px);
+		border: 2px solid rgba(251, 146, 60, 0.3);
+		border-radius: 16px;
+		padding: 24px;
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+	
+	.formeta-card-contact:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+	}
+	
+	.formeta-card-services {
+		background: rgba(255, 255, 255, 0.95);
+		backdrop-filter: blur(16px);
+		border: 2px solid rgba(251, 146, 60, 0.2);
+		border-radius: 16px;
+		padding: 20px;
+		box-shadow: 0 15px 30px rgba(0, 0, 0, 0.06);
+	}
+	
+	.formeta-card-guarantee {
+		background: linear-gradient(135deg, rgba(34, 197, 94, 0.9), rgba(16, 185, 129, 0.9));
+		backdrop-filter: blur(16px);
+		border: 2px solid rgba(255, 255, 255, 0.2);
+		border-radius: 16px;
+		padding: 20px;
+		box-shadow: 
+			0 20px 40px rgba(34, 197, 94, 0.2),
+			inset 0 1px 0 rgba(255, 255, 255, 0.1);
+	}
+	
+	/* Contact Method Cards */
+	.contact-method-card {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		padding: 16px;
+		background: rgba(251, 146, 60, 0.05);
+		border: 1px solid rgba(251, 146, 60, 0.2);
+		border-radius: 12px;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		cursor: pointer;
+	}
+	
+	.contact-method-card:hover {
+		background: rgba(251, 146, 60, 0.1);
+		border-color: rgba(251, 146, 60, 0.4);
+		transform: translateX(4px);
+		box-shadow: 0 8px 16px rgba(251, 146, 60, 0.15);
+	}
+	
+	.contact-icon {
+		width: 40px;
+		height: 40px;
+		border-radius: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+		transition: all 0.3s ease;
+	}
+	
+	.contact-method-card:hover .contact-icon {
+		transform: rotate(5deg) scale(1.05);
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	}
+	
+	.contact-status {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 8px;
+	}
+	
+	/* Service Items */
+	.service-item {
+		padding: 12px 16px;
+		background: rgba(251, 146, 60, 0.05);
+		border: 1px solid rgba(251, 146, 60, 0.15);
+		border-radius: 8px;
+		transition: all 0.2s ease;
+	}
+	
+	.service-item:hover {
+		background: rgba(251, 146, 60, 0.1);
+		border-color: rgba(251, 146, 60, 0.3);
+	}
+	
+	.service-badge-mini {
+		padding: 4px 8px;
+		border-radius: 6px;
+		font-size: 10px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+	
+	/* Response Time Items */
+	.response-time-item {
+		padding: 12px 16px;
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 8px;
+		transition: all 0.2s ease;
+	}
+	
+	.response-time-item:hover {
+		background: rgba(255, 255, 255, 0.15);
+		transform: translateX(4px);
+	}
+	
+	.response-time-badge {
+		padding: 4px 12px;
+		border-radius: 12px;
+		font-size: 11px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+	
+	/* Form Styles */
 	.form-label {
 		display: block;
 		font-weight: 600;
@@ -682,22 +1012,69 @@
 		width: 100%;
 		padding: 12px 16px;
 		font-size: 16px;
-		border: 2px solid #333333;
-		background: white;
+		border: 2px solid rgba(251, 146, 60, 0.3);
+		background: rgba(255, 255, 255, 0.95);
 		color: #333333;
-		transition: border-color 0.2s ease;
+		border-radius: 8px;
+		transition: all 0.3s ease;
+		backdrop-filter: blur(8px);
 	}
 	
 	.input-pixel:focus {
 		outline: none;
-		border-color: #4A90E2;
+		border-color: #fb923c;
+		background: rgba(255, 255, 255, 1);
+		box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
 	}
 	
 	.input-pixel:required:invalid {
-		border-color: #dc2626;
+		border-color: #ef4444;
 	}
 	
 	.input-pixel:required:valid {
-		border-color: #16a34a;
+		border-color: #22c55e;
+	}
+	
+	/* Reduced motion support */
+	@media (prefers-reduced-motion: reduce) {
+		.pattern-formeta,
+		.formeta-card-enterprise::before,
+		.contact-method-card,
+		.contact-icon,
+		.service-item,
+		.response-time-item {
+			animation: none;
+			transition: none;
+		}
+		
+		.contact-method-card:hover,
+		.contact-method-card:hover .contact-icon,
+		.response-time-item:hover {
+			transform: none;
+		}
+	}
+	
+	/* Mobile responsive */
+	@media (max-width: 768px) {
+		.formeta-card-enterprise {
+			padding: 28px 20px;
+			border-radius: 16px;
+		}
+		
+		.formeta-card-contact,
+		.formeta-card-services,
+		.formeta-card-guarantee {
+			padding: 20px 16px;
+			border-radius: 12px;
+		}
+		
+		.contact-method-card {
+			padding: 12px;
+		}
+		
+		.contact-icon {
+			width: 36px;
+			height: 36px;
+		}
 	}
 </style>

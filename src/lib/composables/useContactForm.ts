@@ -64,9 +64,9 @@ export function useContactForm() {
           
           // If backend provides additional info, use it
           if (error.data?.contactAlternatives?.email) {
-            errorMessage += `\n\nAlternativas de contacto:\n📧 Email: ${error.data.contactAlternatives.email}`;
+            errorMessage += `\n\nAlternativas de contacto:\n• Email: ${error.data.contactAlternatives.email}`;
             if (error.data.contactAlternatives.phone) {
-              errorMessage += `\n📞 Teléfono: ${error.data.contactAlternatives.phone}`;
+              errorMessage += `\n• Teléfono: ${error.data.contactAlternatives.phone}`;
             }
           }
         } else if (error.status === 400) {

@@ -1,498 +1,443 @@
+/* Formeta Design System - Imported from Styleguide */
 /* Tailwind CSS */
+@import url('/fonts/geist-fonts.css');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Base Styles */
+/* ========================================
+   1. TIPOGRAFÍA SISTEMA - OPTIMIZADA
+   ======================================== */
+
+/* Sistema de fuentes nativo para mejor rendimiento */
+
+/* Variables tipográficas */
+:root {
+  /* Familia tipográfica - Sistema optimizado */
+  --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, system-ui, sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, Menlo, monospace;
+  
+  /* Jerarquía tipográfica */
+  --font-size-display-large: 48px;
+  --font-size-display: 36px;
+  --font-size-heading-large: 30px;
+  --font-size-heading: 24px;
+  --font-size-heading-small: 20px;
+  --font-size-heading-xs: 16px;
+  --font-size-body-large: 18px;
+  --font-size-body: 16px;
+  --font-size-body-small: 14px;
+  --font-size-caption: 12px;
+  
+  /* Pesos tipográficos */
+  --font-weight-thin: 100;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+  
+  /* Interlineado */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-loose: 1.75;
+}
+
+/* ========================================
+   2. SISTEMA DE COLOR
+   ======================================== */
+
+:root {
+  /* Colores primarios */
+  --color-blue-digital: #007AFF;
+  --color-gray-ice: #64748B;
+  --color-coral-digital: #FF6B6B;
+  
+  /* Colores de superficie */
+  --color-white-neutral: #F8FAFC;
+  --color-gray-surface: #F1F5F9;
+  --color-gray-light: #E2E8F0;
+  
+  /* Jerarquía de texto */
+  --color-text-primary: #1E293B;
+  --color-text-secondary: #64748B;
+  --color-text-tertiary: #94A3B8;
+  
+  /* Colores de estado */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  
+  /* Gradientes */
+  --gradient-blue-digital: linear-gradient(135deg, #007AFF 0%, #64748B 100%);
+  --gradient-coral: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+  --gradient-surface: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+}
+
+/* Tema oscuro */
+[data-theme="dark"] {
+  /* Colores primarios (mantienen su identidad) */
+  --color-blue-digital: #0A84FF;
+  --color-gray-ice: #8E8E93;
+  --color-coral-digital: #FF6B6B;
+  
+  /* Colores de superficie invertidos */
+  --color-white-neutral: #1C1C1E;
+  --color-gray-surface: #2C2C2E;
+  --color-gray-light: #3A3A3C;
+  
+  /* Jerarquía de texto invertida */
+  --color-text-primary: #F2F2F7;
+  --color-text-secondary: #8E8E93;
+  --color-text-tertiary: #636366;
+  
+  /* Colores de estado ajustados */
+  --color-success: #30D158;
+  --color-warning: #FF9F0A;
+  --color-error: #FF453A;
+  --color-info: #007AFF;
+  
+  /* Gradientes adaptados */
+  --gradient-blue-digital: linear-gradient(135deg, #0A84FF 0%, #8E8E93 100%);
+  --gradient-coral: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+  --gradient-surface: linear-gradient(135deg, #1C1C1E 0%, #2C2C2E 100%);
+}
+
+/* ========================================
+   3. SISTEMA DE ESPACIADO
+   ======================================== */
+
+:root {
+  /* Espaciado base (múltiplos de 4px) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+  
+  /* Radios de borde */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+}
+
+/* ========================================
+   4. ANIMACIONES Y TRANSICIONES
+   ======================================== */
+
+:root {
+  /* Duraciones */
+  --duration-fast: 0.1s;
+  --duration-medium: 0.3s;
+  --duration-slow: 0.5s;
+  
+  /* Easing */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ========================================
+   5. BASE STYLES - TAILWIND INTEGRATION
+   ======================================== */
+
 @layer base {
+  * {
+    box-sizing: border-box;
+  }
+
   html {
-    font-family: 'Geist', system-ui, sans-serif;
+    font-size: 16px;
     scroll-behavior: smooth;
+    font-family: var(--font-primary);
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900;
+    font-family: var(--font-primary);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-primary);
+    background-color: var(--color-white-neutral);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
-  body {
-    @apply bg-formeta-white text-formeta-text;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-    font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04';
-  }
-  
-  /* Enterprise Typography Hierarchy - Valores enteros para pixel art */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 600;
-    letter-spacing: 0;
-    line-height: 1.2;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
+
+  /* Jerarquía tipográfica */
   h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl font-bold;
-    text-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
+    font-size: var(--font-size-display-large);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--space-lg);
+    @apply text-slate-900;
   }
-  
+
   h2 {
-    @apply text-3xl md:text-4xl lg:text-5xl font-semibold;
+    font-size: var(--font-size-display);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--space-md);
+    @apply text-slate-900;
   }
-  
+
   h3 {
-    @apply text-2xl md:text-3xl font-medium;
+    font-size: var(--font-size-heading-large);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--space-md);
+    @apply text-slate-900;
   }
-  
+
   h4 {
-    @apply text-xl md:text-2xl font-medium;
+    font-size: var(--font-size-heading);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--space-sm);
+    @apply text-slate-900;
   }
-  
-  /* Technical Text */
-  .font-mono {
-    font-family: 'Geist Mono', Monaco, Menlo, monospace;
-    font-feature-settings: 'cv01', 'cv02', 'cv03', 'cv04';
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
+
+  h5 {
+    font-size: var(--font-size-heading-small);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+    margin-bottom: var(--space-sm);
+    @apply text-slate-900;
   }
-  
-  /* Body Text - Line-height fijo para precisión */
+
+  h6 {
+    font-size: var(--font-size-heading-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+    margin-bottom: var(--space-sm);
+    @apply text-slate-900;
+  }
+
   p {
-    @apply text-base;
-    font-family: 'Geist', system-ui, sans-serif;
-    line-height: 1.5;
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-normal);
+    margin-bottom: var(--space-md);
+    @apply text-slate-600;
   }
-  
-  /* Links - Sin transiciones suaves */
+
   a {
-    transition: none;
-  }
-  
-  /* Focus States - Border desplazado en lugar de ring blur */
-  *:focus {
-    outline: none;
-    border: 2px solid #4A90E2;
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
+    @apply text-blue-600 hover:text-blue-800 transition-colors duration-200;
   }
 }
 
-/* Custom Components */
+/* ========================================
+   6. COMPONENTES UI - TAILWIND INTEGRATION
+   ======================================== */
+
 @layer components {
-  /* PIXEL ART BUTTON V2.0 - ESPECIFICACIÓN ÚNICA */
-  .btn-pixel {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    padding: 12px 24px; /* Múltiplo de 8px */
-    border: 2px solid #4A90E2;
-    background: linear-gradient(180deg, #4A90E2 0%, #A78BFA 100%);
-    color: white;
-    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
-    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
-    border-radius: 0;
-    transition: none;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 14px;
+  /* Botones */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 font-medium text-sm rounded-lg transition-all duration-200 min-h-[44px] gap-2;
+    font-family: var(--font-primary);
   }
-  
-  .btn-pixel:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.4);
-  }
-  
-  .btn-pixel:active {
-    transform: translate(1px, 1px);
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
-  }
-  
-  /* Secondary Button - Fondo lavanda sólido */
-  .btn-secondary {
-    background: #A78BFA;
-    border-color: #A78BFA;
-    color: white;
-  }
-  
-  /* Tertiary Button - Transparente con borde */
-  .btn-tertiary {
-    background: transparent;
-    border-color: #4A90E2;
-    color: #4A90E2;
-    transition: none;
-  }
-  
-  .btn-tertiary:hover {
-    background: #4A90E2;
-    color: white;
-  }
-  
-  /* PIXEL ART CARD V2.0 - ESPECIFICACIÓN ÚNICA */
-  .card-pixel {
-    background: rgba(255, 255, 255, 0.95);
-    border: 2px solid #4A90E2;
-    border-radius: 0;
-    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
-    padding: 24px; /* Múltiplo de 8px */
-    transition: none;
-    position: relative;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  /* Patrón interno dots sutil */
-  .card-pixel::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: radial-gradient(circle at 50% 50%, rgba(74, 144, 226, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-    pointer-events: none;
-    z-index: 0;
-  }
-  
-  .card-pixel > * {
-    position: relative;
-    z-index: 1;
-  }
-  
-  .card-pixel:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px rgba(74, 144, 226, 0.4);
-  }
-  
-  /* INPUT FIELDS V2.0 - ESPECIFICACIÓN ÚNICA */
-  .input-pixel {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 400;
-    padding: 12px 16px; /* Múltiplo de 8px */
-    border: 2px solid #4A90E2;
-    border-radius: 0;
-    background: rgba(255, 255, 255, 0.95);
-    color: #333333;
-    transition: none;
-    box-shadow: 2px 2px 0px rgba(74, 144, 226, 0.2);
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-    width: 100%;
-    font-size: 16px;
-  }
-  
-  .input-pixel:focus {
-    outline: none;
-    border-color: #A78BFA;
-    box-shadow: 4px 4px 0px rgba(167, 139, 250, 0.3);
-    transform: translate(-1px, -1px);
-  }
-  
-  .input-pixel.error {
-    border-color: #EF4444;
-    box-shadow: 2px 2px 0px rgba(239, 68, 68, 0.2);
-  }
-  
-  .input-pixel.success {
-    border-color: #10B981;
-    box-shadow: 2px 2px 0px rgba(16, 185, 129, 0.2);
-  }
-  
-  /* Labels */
-  .label-pixel {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    color: #333333;
-    margin-bottom: 8px;
-    display: block;
-  }
-  
-  /* Text Shadows - Solo paleta Formeta */
-  .text-shadow-pixel {
-    text-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
-  }
-  
-  .text-shadow-dark {
-    text-shadow: 2px 2px 0px rgba(74, 144, 226, 0.3);
-  }
-  
-  /* Patrones - Más duros para pixel art */
-  .pattern-dots {
-    background-image: radial-gradient(circle, rgba(74, 144, 226, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-  
-  .pattern-grid {
-    background-image: 
-      linear-gradient(rgba(167, 139, 250, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(167, 139, 250, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-  
-  .pattern-circuits {
-    background-image: 
-      linear-gradient(45deg, transparent 50%, rgba(167, 139, 250, 0.05) 50%, rgba(167, 139, 250, 0.05) 50%, transparent 50%),
-      linear-gradient(-45deg, transparent 50%, rgba(74, 144, 226, 0.08) 50%, rgba(74, 144, 226, 0.08) 50%, transparent 50%);
-    background-size: 30px 30px;
-  }
-  
 
-  
-  /* Modal - Opacidad 95% estándar */
-  .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.95);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50;
   }
-  
+
+  .btn-secondary {
+    @apply bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-blue-600 hover:text-white hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-slate-700 hover:bg-slate-100 hover:text-blue-600;
+  }
+
+  .btn-large {
+    @apply px-6 py-3 text-lg min-h-[52px];
+  }
+
+  .btn-small {
+    @apply px-2 py-1 text-sm min-h-[36px];
+  }
+
+  /* Tarjetas */
+  .card {
+    @apply bg-white rounded-xl p-6 shadow-sm border border-slate-200 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20;
+  }
+
+  .card-header {
+    @apply mb-4 pb-4 border-b border-slate-200;
+  }
+
+  .card-title {
+    @apply text-xl font-semibold mb-2 text-slate-900;
+  }
+
+  .card-subtitle {
+    @apply text-sm text-slate-600;
+  }
+
+  .card-content {
+    @apply mb-4;
+  }
+
+  .card-footer {
+    @apply pt-4 border-t border-slate-200 flex items-center gap-2;
+  }
+
+  /* Formularios */
+  .form-group {
+    @apply mb-4;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-slate-700 mb-2;
+  }
+
+  .form-input {
+    @apply w-full px-3 py-2 bg-white border-2 border-slate-200 rounded-lg text-slate-900 min-h-[44px] transition-all duration-200 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100;
+    font-family: var(--font-primary);
+  }
+
+  .form-input:invalid {
+    @apply border-red-500;
+  }
+
+  .form-textarea {
+    @apply min-h-[120px] resize-y;
+  }
+
+  .form-select {
+    @apply appearance-none bg-no-repeat pr-8;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 8px center;
+    background-size: 16px;
+  }
+
+  /* Alertas */
+  .alert {
+    @apply p-4 rounded-lg border-l-4 mb-4 text-sm;
+  }
+
+  .alert-success {
+    @apply bg-green-50 text-green-800 border-l-green-500;
+  }
+
+  .alert-warning {
+    @apply bg-yellow-50 text-yellow-800 border-l-yellow-500;
+  }
+
+  .alert-error {
+    @apply bg-red-50 text-red-800 border-l-red-500;
+  }
+
+  .alert-info {
+    @apply bg-blue-50 text-blue-800 border-l-blue-500;
+  }
+
+  /* Container */
+  .container-formeta {
+    @apply max-w-6xl mx-auto px-4 md:px-8 lg:px-12;
+  }
+
+  /* Grid System */
+  .grid-formeta {
+    @apply grid gap-4;
+  }
+
+  /* Modal */
+  .modal {
+    @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300;
+  }
+
+  .modal.is-active {
+    @apply opacity-100 visible;
+  }
+
   .modal-content {
-    background: #333333;
-    border: 2px solid white;
-    padding: 32px; /* Múltiplo de 8px */
-    max-width: 42rem;
-    width: 100%;
-    margin: 0 1rem;
-    box-shadow: 6px 6px 0px rgba(255, 255, 255, 0.2);
-    border-radius: 0;
+    @apply bg-white rounded-xl p-8 max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto transform scale-90 transition-transform duration-300;
   }
-  
-  /* Contenedores de Cristal - Solo para overlays específicos */
-  .container-glass {
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(74, 144, 226, 0.3);
-    border-radius: 0;
-    padding: 32px;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
+
+  .modal.is-active .modal-content {
+    @apply scale-100;
   }
-  
-  /* Enterprise Card - Consistente con card-pixel */
-  .enterprise-card {
-    background: rgba(255, 255, 255, 0.95);
-    border: 2px solid #4A90E2;
-    border-radius: 0;
-    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
-    transition: none;
-    padding: 24px;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
+
+  .modal-header {
+    @apply flex justify-between items-center mb-6 pb-4 border-b border-slate-200;
   }
-  
-  .enterprise-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px rgba(74, 144, 226, 0.4);
+
+  .modal-title {
+    @apply text-xl font-semibold m-0 text-slate-900;
   }
-  
-  /* Botones Enterprise - Consistentes con btn-pixel */
-  .btn-enterprise {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    padding: 12px 24px;
-    border: 2px solid #4A90E2;
-    background: linear-gradient(180deg, #4A90E2 0%, #A78BFA 100%);
-    color: white;
-    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
-    box-shadow: 4px 4px 0px rgba(74, 144, 226, 0.3);
-    border-radius: 0;
-    transition: none;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
+
+  .modal-close {
+    @apply bg-none border-none text-2xl cursor-pointer text-slate-400 w-8 h-8 flex items-center justify-center rounded hover:bg-slate-100 hover:text-slate-600 transition-colors;
   }
-  
-  .btn-enterprise:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 5px 5px 0px rgba(74, 144, 226, 0.4);
-  }
-  
-  .btn-enterprise-secondary {
-    background: transparent;
-    color: #4A90E2;
-    border-color: #4A90E2;
-    transition: none;
-  }
-  
-  .btn-enterprise-secondary:hover {
-    background: #4A90E2;
-    color: white;
-  }
-  
-  /* Status Badges */
-  .status-badge {
-    font-family: 'Geist Mono', monospace;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 4px 8px;
-    border: 1px solid;
-    border-radius: 0;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .status-production { 
-    border-color: #4A90E2; 
-    background: rgba(74, 144, 226, 0.1); 
-    color: #4A90E2; 
-  }
-  
-  /* Navigation */
-  .nav-enterprise {
-    background: rgba(255, 255, 255, 0.95);
-    border-bottom: 2px solid rgba(74, 144, 226, 0.1);
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  .nav-link-enterprise {
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #333333;
-    transition: none;
-    position: relative;
-  }
-  
-  .nav-link-enterprise:hover {
-    color: #4A90E2;
-  }
-  
-  .nav-link-enterprise::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: #4A90E2;
-    transition: none;
-  }
-  
-  .nav-link-enterprise:hover::after {
-    width: 100%;
+
+  .modal-footer {
+    @apply flex justify-end gap-2 mt-6 pt-4 border-t border-slate-200;
   }
 }
 
-/* Utility Classes */
+/* ========================================
+   7. UTILIDADES
+   ======================================== */
+
 @layer utilities {
-  .container-formeta {
-    max-width: 72rem;
-    margin: 0 auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
   }
   
-  @media (min-width: 768px) {
-    .container-formeta {
-      padding-left: 2rem;
-      padding-right: 2rem;
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .container-formeta {
-      padding-left: 3rem;
-      padding-right: 3rem;
-    }
+  .bg-formeta-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600;
   }
   
   .section-spacing {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
+    @apply py-16 md:py-24;
   }
   
-  @media (min-width: 768px) {
-    .section-spacing {
-      padding-top: 6rem;
-      padding-bottom: 6rem;
-    }
+  /* Theme toggle utilities */
+  .theme-toggle {
+    @apply fixed top-5 right-5 z-50 bg-white border-2 border-slate-200 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer shadow-md hover:scale-110 hover:shadow-lg transition-all duration-200;
   }
   
-  .text-gradient {
-    background: linear-gradient(180deg, #4A90E2 0%, #A78BFA 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .theme-toggle-icon {
+    @apply w-5 h-5 fill-current text-slate-700 transition-all duration-200;
   }
-  
-  /* Formeta Color Utilities */
-  .bg-formeta-gradient {
-    background: linear-gradient(180deg, #4A90E2 0%, #A78BFA 100%);
+}
+
+/* ========================================
+   8. RESPONSIVE DESIGN
+   ======================================== */
+
+/* Los breakpoints de Tailwind ya manejan la responsividad */
+
+/* ========================================
+   9. MODO OSCURO - USANDO TAILWIND DARK MODE
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-blue-digital: #0A84FF;
+    --color-gray-ice: #8E8E93;
+    --color-white-neutral: #1C1C1E;
+    --color-gray-surface: #2C2C2E;
+    --color-gray-light: #3A3A3C;
+    --color-text-primary: #F2F2F7;
+    --color-text-secondary: #8E8E93;
+    --color-text-tertiary: #636366;
   }
-  
-  .bg-formeta-hero {
-    background: linear-gradient(180deg, #333333 0%, #4A90E2 50%, #A78BFA 100%);
-  }
-  
-  /* Tag colors - Solo paleta Formeta */
-  .tag-technology { 
-    background: rgba(74, 144, 226, 0.1); 
-    color: #4A90E2; 
-    border: 1px solid #4A90E2;
-    border-radius: 0;
-    padding: 4px 8px;
-    font-family: 'Geist Mono', monospace;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  .tag-development { 
-    background: rgba(167, 139, 250, 0.1); 
-    color: #A78BFA; 
-    border: 1px solid #A78BFA;
-    border-radius: 0;
-    padding: 4px 8px;
-    font-family: 'Geist Mono', monospace;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  /* Aplicar image-rendering globalmente */
-  .crisp-edges {
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-  
-  /* Espaciado múltiplos de 8px */
-  .spacing-8 { margin: 8px; }
-  .spacing-16 { margin: 16px; }
-  .spacing-24 { margin: 24px; }
-  .spacing-32 { margin: 32px; }
-  .spacing-40 { margin: 40px; }
-  .spacing-48 { margin: 48px; }
-  .spacing-56 { margin: 56px; }
-  .spacing-64 { margin: 64px; }
-  
-  .padding-8 { padding: 8px; }
-  .padding-16 { padding: 16px; }
-  .padding-24 { padding: 24px; }
-  .padding-32 { padding: 32px; }
-  .padding-40 { padding: 40px; }
-  .padding-48 { padding: 48px; }
-  .padding-56 { padding: 56px; }
-  .padding-64 { padding: 64px; }
+}
+
+/* Transiciones suaves para cambio de tema */
+* {
+  transition: background-color var(--duration-medium) var(--ease-in-out),
+              color var(--duration-medium) var(--ease-in-out),
+              border-color var(--duration-medium) var(--ease-in-out);
 }

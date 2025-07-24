@@ -9,6 +9,9 @@
 		Settings,
 		Rocket,
 		Shield,
+		ShieldCheck,
+		ShieldOff,
+		ShieldX,
 		Cpu,
 		Server,
 		Cloud,
@@ -64,6 +67,7 @@
         Newspaper,
 		DollarSign,
 		TrendingUp,
+		TrendingDown,
 		Link,
 		Euro,
 		Book,
@@ -83,7 +87,21 @@
 		AlertCircle,
 		Edit,
 		Trash,
-		RefreshCw
+		RefreshCw,
+		Loader,
+		Bell,
+		Info,
+		ThumbsUp,
+		Palette,
+		Accessibility,
+		ExternalLink,
+		Play,
+		Sun,
+		Moon,
+		Tablet,
+		Laptop,
+		RotateCcw,
+		Award
 	} from 'lucide-svelte';
 
 	export let name: string;
@@ -119,6 +137,9 @@
 		'settings': Settings,
 		'rocket': Rocket,
 		'shield': Shield,
+		'shield-check': ShieldCheck,
+		'shield-off': ShieldOff,
+		'shield-x': ShieldX,
 		'cpu': Cpu,
 		'server': Server,
 		'cloud': Cloud,
@@ -172,6 +193,7 @@
 		'credit-card': CreditCard,
 		'shopping-cart': ShoppingCart,
 		'trending-up': TrendingUp,
+		'trending-down': TrendingDown,
 		'bar-chart': BarChart,
 		'layers': Layers,
 		'scale': Scale,
@@ -183,7 +205,21 @@
 		'alert-circle': AlertCircle,
 		'edit': Edit,
 		'trash': Trash,
-		'refresh': RefreshCw
+		'refresh': RefreshCw,
+		'loader': Loader,
+		'bell': Bell,
+		'info': Info,
+		'thumbs-up': ThumbsUp,
+		'palette': Palette,
+		'accessibility': Accessibility,
+		'external-link': ExternalLink,
+		'play': Play,
+		'sun': Sun,
+		'moon': Moon,
+		'tablet': Tablet,
+		'laptop': Laptop,
+		'rotate-ccw': RotateCcw,
+		'award': Award
 	} as const;
 
 	type IconName = keyof typeof icons;
