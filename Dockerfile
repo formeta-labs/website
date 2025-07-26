@@ -12,15 +12,18 @@ COPY .npmrc ./
 
 # Etapa de construcción
 FROM base AS builder
-ARG CACHEBUST=$(date +%s)
+# Cache bust: version 1
 WORKDIR /app
 
 # Copiar archivos de configuración de dependencias
 COPY package*.json ./
 COPY .npmrc ./
 
+# Debug: Cache bust v3
 # Instalar todas las dependencias (incluyendo devDependencies)
 RUN npm ci && npm cache clean --force && npm install -g vite
+
+ENV PATH /app/node_modules/.bin:$PATH
 
 # Copiar código fuente
 COPY . .
@@ -30,7 +33,7 @@ COPY .env .
 
 
 # Construir la aplicación
-RUN export PATH=/app/node_modules/.bin:$PATH && npm run build
+RUN ls -l /app/node_modules/.bin && which vite && export PATH=/app/node_modules/.bin:$PATH && npm run build
 
 # Etapa de producción
 FROM node:20.19-slim AS runner
