@@ -1,5 +1,5 @@
-# Usar Node.js 20 como imagen base
-FROM node:20-alpine AS base
+# Usar Node.js 20 como imagen base con tag específico
+FROM node:20.11.1-alpine3.19 AS base
 
 # Imagen base optimizada sin dependencias adicionales
 WORKDIR /app
@@ -20,7 +20,8 @@ COPY package*.json ./
 COPY .npmrc ./
 
 # Instalar todas las dependencias (incluyendo devDependencies)
-RUN npm install --verbose
+# Deshabilitar audit y configuraciones que requieren red
+RUN npm install --no-audit --no-fund --prefer-offline --verbose
 
 # Verificar instalación de vite
 RUN echo "Checking vite installation..."
@@ -34,7 +35,7 @@ COPY . .
 RUN ./node_modules/.bin/vite build
 
 # Etapa de producción
-FROM node:20-alpine AS runner
+FROM node:20.11.1-alpine3.19 AS runner
 WORKDIR /app
 
 # Crear usuario no-root
@@ -47,7 +48,8 @@ COPY --from=builder /app/package.json .
 COPY --from=builder /app/package-lock.json .
 
 # Solo instalar dependencias de producción
-RUN npm ci --omit=dev && npm cache clean --force
+# Deshabilitar audit y configuraciones que requieren red
+RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
 
 # Cambiar al usuario no-root
 USER sveltekit
