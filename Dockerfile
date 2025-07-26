@@ -1,8 +1,8 @@
 # Usar Node.js 20 como imagen base
-FROM node:20-alpine AS base
+FROM node:20-alpine3.19 AS base
 
 # Instalar dependencias necesarias
-RUN apk update && apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copiar archivos de configuración de dependencias
@@ -29,7 +29,7 @@ COPY .env .
 RUN npm run build
 
 # Etapa de producción
-FROM node:20-alpine AS runner
+FROM node:20-alpine3.19 AS runner
 WORKDIR /app
 
 # Crear usuario no-root
