@@ -1,5 +1,5 @@
-# Usar Node.js 20 como imagen base (Debian)
-FROM node:20-slim AS base
+# Usar Node.js 20 como imagen base
+FROM node:20-alpine AS base
 
 # Imagen base optimizada sin dependencias adicionales
 WORKDIR /app
@@ -35,12 +35,12 @@ COPY . .
 RUN ./node_modules/.bin/vite build
 
 # Etapa de producción
-FROM node:20-slim AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 # Crear usuario no-root
-RUN groupadd --gid 1001 nodejs
-RUN useradd --uid 1001 --gid nodejs --shell /bin/bash --create-home sveltekit
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S -u 1001 -G nodejs sveltekit
 
 # Copiar archivos de build y configuración
 COPY --from=builder /app/build build/
