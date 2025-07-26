@@ -19,13 +19,21 @@ WORKDIR /app
 COPY package*.json ./
 COPY .npmrc ./
 
-# Debug: Cache bust v4
+# Debug: Cache bust v5
 # Instalar todas las dependencias (incluyendo devDependencies)
-RUN npm ci && npm cache clean --force
+RUN npm ci --include=dev && npm cache clean --force
+
+# Debug: Verificar que npm ci instaló las dependencias correctamente
+RUN echo "Checking npm installation..."
+RUN ls -la node_modules/ | head -20
+RUN npm list --depth=0 || echo "npm list failed"
 
 # Verificar instalación de vite
+RUN echo "Checking for vite installation..."
+RUN npm list vite || echo "vite not in npm list"
 RUN ls -la node_modules/.bin/ | grep vite || echo "vite not found in node_modules/.bin"
 RUN test -f node_modules/.bin/vite && echo "vite binary exists" || echo "vite binary missing"
+RUN test -d node_modules/vite && echo "vite package directory exists" || echo "vite package directory missing"
 
 # Establecer PATH para incluir node_modules/.bin
 ENV PATH="/app/node_modules/.bin:$PATH"
