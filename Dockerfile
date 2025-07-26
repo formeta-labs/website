@@ -1,5 +1,5 @@
 # Usar Node.js 20 como imagen base
-FROM node:20-slim AS base
+FROM node:20.12-slim AS base
 
 # Imagen base optimizada sin dependencias adicionales
 WORKDIR /app
@@ -31,7 +31,7 @@ COPY .env .
 RUN npm run build
 
 # Etapa de producción
-FROM node:20-slim AS runner
+FROM node:20.12-slim AS runner
 WORKDIR /app
 
 # Crear usuario no-root
