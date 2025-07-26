@@ -2,7 +2,7 @@
 FROM node:20-alpine AS base
 
 # Instalar dependencias necesarias
-RUN apk add --no-cache libc6-compat
+RUN apk update && apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copiar archivos de configuración de dependencias
