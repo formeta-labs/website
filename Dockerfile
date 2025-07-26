@@ -1,5 +1,5 @@
 # Usar Node.js 20 como imagen base
-FROM node:20.19-slim AS base
+FROM node:20-alpine AS base
 
 # Imagen base optimizada sin dependencias adicionales
 WORKDIR /app
@@ -53,12 +53,12 @@ RUN node_modules/.bin/vite --version || echo "Direct vite call failed"
 RUN node_modules/.bin/vite build
 
 # Etapa de producción
-FROM node:20.19-slim AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 # Crear usuario no-root
-RUN groupadd --system --gid 1001 nodejs
-RUN useradd --system --uid 1001 --gid nodejs sveltekit
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S -u 1001 -G nodejs sveltekit
 
 # Copiar archivos necesarios desde la etapa de construcción
 COPY --from=builder /app/build build/
