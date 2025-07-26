@@ -17,9 +17,7 @@ services:
       - PUBLIC_APP_NAME=${PUBLIC_APP_NAME:-Formeta Labs}
       - PUBLIC_APP_VERSION=${PUBLIC_APP_VERSION:-2.0.0}
       - PUBLIC_CLERK_PUBLISHABLE_KEY=${PUBLIC_CLERK_PUBLISHABLE_KEY}
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
+
     networks:
       - formeta-network
     healthcheck:
