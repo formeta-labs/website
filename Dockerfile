@@ -29,7 +29,7 @@ COPY .env .
 
 
 # Construir la aplicación
-RUN export PATH="./node_modules/.bin:$PATH" && ls -l node_modules/.bin && echo $PATH && npm run build
+RUN export PATH=/app/node_modules/.bin:$PATH && npm run build
 
 # Etapa de producción
 FROM node:20.19-slim AS runner
