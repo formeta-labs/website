@@ -19,7 +19,7 @@ COPY package*.json ./
 COPY .npmrc ./
 
 # Instalar todas las dependencias (incluyendo devDependencies)
-RUN npm ci && npm cache clean --force
+RUN npm ci && npm cache clean --force && npm install -g vite
 
 # Copiar código fuente
 COPY . .
