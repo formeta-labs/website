@@ -41,12 +41,13 @@ WORKDIR /app
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S -u 1001 -G nodejs sveltekit
 
-# Copiar archivos de build
+# Copiar archivos de build y configuración
 COPY --from=builder /app/build build/
 COPY --from=builder /app/package.json .
+COPY --from=builder /app/package-lock.json .
 
 # Solo instalar dependencias de producción
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Cambiar al usuario no-root
 USER sveltekit
