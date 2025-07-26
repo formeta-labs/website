@@ -1,10 +1,7 @@
 # Usar Node.js 20 como imagen base
 FROM node:20-slim AS base
 
-# Instalar dependencias necesarias para compatibilidad
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+# Imagen base optimizada sin dependencias adicionales
 WORKDIR /app
 
 # Copiar archivos de configuración de dependencias
