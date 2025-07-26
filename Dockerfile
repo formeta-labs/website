@@ -20,18 +20,18 @@ COPY package*.json ./
 COPY .npmrc ./
 
 # Instalar todas las dependencias (incluyendo devDependencies)
-RUN npm install && npm cache clean --force
+RUN npm install --verbose
 
 # Verificar instalación de vite
 RUN echo "Checking vite installation..."
 RUN ls -la node_modules/.bin/ | grep vite || echo "vite not found in node_modules/.bin"
-RUN npx vite --version || echo "npx vite version check failed"
+RUN ./node_modules/.bin/vite --version || echo "vite version check failed"
 
 # Copiar código fuente
 COPY . .
 
-# Construir la aplicación usando npx (más confiable)
-RUN npx vite build
+# Construir la aplicación usando path directo a vite
+RUN ./node_modules/.bin/vite build
 
 # Etapa de producción
 FROM node:20-alpine AS runner
