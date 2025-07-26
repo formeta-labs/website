@@ -19,11 +19,16 @@ WORKDIR /app
 COPY package*.json ./
 COPY .npmrc ./
 
-# Debug: Cache bust v3
+# Debug: Cache bust v4
 # Instalar todas las dependencias (incluyendo devDependencies)
-RUN npm ci && npm cache clean --force && npm install -g vite
+RUN npm ci && npm cache clean --force
 
-ENV PATH /app/node_modules/.bin:$PATH
+# Verificar instalación de vite
+RUN ls -la node_modules/.bin/ | grep vite || echo "vite not found in node_modules/.bin"
+RUN test -f node_modules/.bin/vite && echo "vite binary exists" || echo "vite binary missing"
+
+# Establecer PATH para incluir node_modules/.bin
+ENV PATH="/app/node_modules/.bin:$PATH"
 
 # Copiar código fuente
 COPY . .
@@ -31,9 +36,13 @@ COPY . .
 # Copiar variables de entorno para la construcción
 COPY .env .
 
+# Verificar vite antes del build
+RUN echo "PATH: $PATH"
+RUN which vite || echo "vite not found in PATH"
+RUN node_modules/.bin/vite --version || echo "Direct vite call failed"
 
-# Construir la aplicación
-RUN ls -l /app/node_modules/.bin && which vite && export PATH=/app/node_modules/.bin:$PATH && npm run build
+# Construir la aplicación usando path absoluto
+RUN node_modules/.bin/vite build
 
 # Etapa de producción
 FROM node:20.19-slim AS runner
