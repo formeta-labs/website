@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  formeta-website:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: formeta-website
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+      - PUBLIC_API_URL=${PUBLIC_API_URL:-https://api.formeta.es}
+      - PUBLIC_APP_NAME=${PUBLIC_APP_NAME:-Formeta Labs}
+      - PUBLIC_APP_VERSION=${PUBLIC_APP_VERSION:-2.0.0}
+      - PUBLIC_CLERK_PUBLISHABLE_KEY=${PUBLIC_CLERK_PUBLISHABLE_KEY}
+    networks:
+      - formeta-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  formeta-network:
+    driver: bridge

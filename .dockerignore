@@ -1,0 +1,52 @@
+# Dependencias
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de construcción
+.svelte-kit
+build
+dist
+
+# Variables de entorno
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Documentación
+*.md
+CLAUDE.md
+ESTADO-ACTUAL.md
+GUIA-PANEL-ADMIN.md
+HITO-POSTGRESQL.md
+PROYECTO-COMPLETADO.md
+RESUMEN-ACTUALIZACION.md
+TAREAS.md
+TODO.md
+
+# Otros
+.claude
+.github
+formeta-styleguide

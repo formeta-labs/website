@@ -1,0 +1,443 @@
+/* Formeta Design System - Imported from Styleguide */
+/* Tailwind CSS */
+@import url('/fonts/geist-fonts.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   1. TIPOGRAFÍA SISTEMA - OPTIMIZADA
+   ======================================== */
+
+/* Sistema de fuentes nativo para mejor rendimiento */
+
+/* Variables tipográficas */
+:root {
+  /* Familia tipográfica - Sistema optimizado */
+  --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, system-ui, sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, Menlo, monospace;
+  
+  /* Jerarquía tipográfica */
+  --font-size-display-large: 48px;
+  --font-size-display: 36px;
+  --font-size-heading-large: 30px;
+  --font-size-heading: 24px;
+  --font-size-heading-small: 20px;
+  --font-size-heading-xs: 16px;
+  --font-size-body-large: 18px;
+  --font-size-body: 16px;
+  --font-size-body-small: 14px;
+  --font-size-caption: 12px;
+  
+  /* Pesos tipográficos */
+  --font-weight-thin: 100;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+  
+  /* Interlineado */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-loose: 1.75;
+}
+
+/* ========================================
+   2. SISTEMA DE COLOR
+   ======================================== */
+
+:root {
+  /* Colores primarios */
+  --color-blue-digital: #007AFF;
+  --color-gray-ice: #64748B;
+  --color-coral-digital: #FF6B6B;
+  
+  /* Colores de superficie */
+  --color-white-neutral: #F8FAFC;
+  --color-gray-surface: #F1F5F9;
+  --color-gray-light: #E2E8F0;
+  
+  /* Jerarquía de texto */
+  --color-text-primary: #1E293B;
+  --color-text-secondary: #64748B;
+  --color-text-tertiary: #94A3B8;
+  
+  /* Colores de estado */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  
+  /* Gradientes */
+  --gradient-blue-digital: linear-gradient(135deg, #007AFF 0%, #64748B 100%);
+  --gradient-coral: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+  --gradient-surface: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+}
+
+/* Tema oscuro */
+[data-theme="dark"] {
+  /* Colores primarios (mantienen su identidad) */
+  --color-blue-digital: #0A84FF;
+  --color-gray-ice: #8E8E93;
+  --color-coral-digital: #FF6B6B;
+  
+  /* Colores de superficie invertidos */
+  --color-white-neutral: #1C1C1E;
+  --color-gray-surface: #2C2C2E;
+  --color-gray-light: #3A3A3C;
+  
+  /* Jerarquía de texto invertida */
+  --color-text-primary: #F2F2F7;
+  --color-text-secondary: #8E8E93;
+  --color-text-tertiary: #636366;
+  
+  /* Colores de estado ajustados */
+  --color-success: #30D158;
+  --color-warning: #FF9F0A;
+  --color-error: #FF453A;
+  --color-info: #007AFF;
+  
+  /* Gradientes adaptados */
+  --gradient-blue-digital: linear-gradient(135deg, #0A84FF 0%, #8E8E93 100%);
+  --gradient-coral: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+  --gradient-surface: linear-gradient(135deg, #1C1C1E 0%, #2C2C2E 100%);
+}
+
+/* ========================================
+   3. SISTEMA DE ESPACIADO
+   ======================================== */
+
+:root {
+  /* Espaciado base (múltiplos de 4px) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+  
+  /* Radios de borde */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+}
+
+/* ========================================
+   4. ANIMACIONES Y TRANSICIONES
+   ======================================== */
+
+:root {
+  /* Duraciones */
+  --duration-fast: 0.1s;
+  --duration-medium: 0.3s;
+  --duration-slow: 0.5s;
+  
+  /* Easing */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ========================================
+   5. BASE STYLES - TAILWIND INTEGRATION
+   ======================================== */
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    font-family: var(--font-primary);
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900;
+    font-family: var(--font-primary);
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-primary);
+    background-color: var(--color-white-neutral);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Jerarquía tipográfica */
+  h1 {
+    font-size: var(--font-size-display-large);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--space-lg);
+    @apply text-slate-900;
+  }
+
+  h2 {
+    font-size: var(--font-size-display);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--space-md);
+    @apply text-slate-900;
+  }
+
+  h3 {
+    font-size: var(--font-size-heading-large);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--space-md);
+    @apply text-slate-900;
+  }
+
+  h4 {
+    font-size: var(--font-size-heading);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-tight);
+    margin-bottom: var(--space-sm);
+    @apply text-slate-900;
+  }
+
+  h5 {
+    font-size: var(--font-size-heading-small);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+    margin-bottom: var(--space-sm);
+    @apply text-slate-900;
+  }
+
+  h6 {
+    font-size: var(--font-size-heading-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+    margin-bottom: var(--space-sm);
+    @apply text-slate-900;
+  }
+
+  p {
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-normal);
+    margin-bottom: var(--space-md);
+    @apply text-slate-600;
+  }
+
+  a {
+    @apply text-blue-600 hover:text-blue-800 transition-colors duration-200;
+  }
+}
+
+/* ========================================
+   6. COMPONENTES UI - TAILWIND INTEGRATION
+   ======================================== */
+
+@layer components {
+  /* Botones */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 font-medium text-sm rounded-lg transition-all duration-200 min-h-[44px] gap-2;
+    font-family: var(--font-primary);
+  }
+
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent text-blue-600 border-2 border-blue-600 hover:bg-blue-600 hover:text-white hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-slate-700 hover:bg-slate-100 hover:text-blue-600;
+  }
+
+  .btn-large {
+    @apply px-6 py-3 text-lg min-h-[52px];
+  }
+
+  .btn-small {
+    @apply px-2 py-1 text-sm min-h-[36px];
+  }
+
+  /* Tarjetas */
+  .card {
+    @apply bg-white rounded-xl p-6 shadow-sm border border-slate-200 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20;
+  }
+
+  .card-header {
+    @apply mb-4 pb-4 border-b border-slate-200;
+  }
+
+  .card-title {
+    @apply text-xl font-semibold mb-2 text-slate-900;
+  }
+
+  .card-subtitle {
+    @apply text-sm text-slate-600;
+  }
+
+  .card-content {
+    @apply mb-4;
+  }
+
+  .card-footer {
+    @apply pt-4 border-t border-slate-200 flex items-center gap-2;
+  }
+
+  /* Formularios */
+  .form-group {
+    @apply mb-4;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-slate-700 mb-2;
+  }
+
+  .form-input {
+    @apply w-full px-3 py-2 bg-white border-2 border-slate-200 rounded-lg text-slate-900 min-h-[44px] transition-all duration-200 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100;
+    font-family: var(--font-primary);
+  }
+
+  .form-input:invalid {
+    @apply border-red-500;
+  }
+
+  .form-textarea {
+    @apply min-h-[120px] resize-y;
+  }
+
+  .form-select {
+    @apply appearance-none bg-no-repeat pr-8;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 8px center;
+    background-size: 16px;
+  }
+
+  /* Alertas */
+  .alert {
+    @apply p-4 rounded-lg border-l-4 mb-4 text-sm;
+  }
+
+  .alert-success {
+    @apply bg-green-50 text-green-800 border-l-green-500;
+  }
+
+  .alert-warning {
+    @apply bg-yellow-50 text-yellow-800 border-l-yellow-500;
+  }
+
+  .alert-error {
+    @apply bg-red-50 text-red-800 border-l-red-500;
+  }
+
+  .alert-info {
+    @apply bg-blue-50 text-blue-800 border-l-blue-500;
+  }
+
+  /* Container */
+  .container-formeta {
+    @apply max-w-6xl mx-auto px-4 md:px-8 lg:px-12;
+  }
+
+  /* Grid System */
+  .grid-formeta {
+    @apply grid gap-4;
+  }
+
+  /* Modal */
+  .modal {
+    @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300;
+  }
+
+  .modal.is-active {
+    @apply opacity-100 visible;
+  }
+
+  .modal-content {
+    @apply bg-white rounded-xl p-8 max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto transform scale-90 transition-transform duration-300;
+  }
+
+  .modal.is-active .modal-content {
+    @apply scale-100;
+  }
+
+  .modal-header {
+    @apply flex justify-between items-center mb-6 pb-4 border-b border-slate-200;
+  }
+
+  .modal-title {
+    @apply text-xl font-semibold m-0 text-slate-900;
+  }
+
+  .modal-close {
+    @apply bg-none border-none text-2xl cursor-pointer text-slate-400 w-8 h-8 flex items-center justify-center rounded hover:bg-slate-100 hover:text-slate-600 transition-colors;
+  }
+
+  .modal-footer {
+    @apply flex justify-end gap-2 mt-6 pt-4 border-t border-slate-200;
+  }
+}
+
+/* ========================================
+   7. UTILIDADES
+   ======================================== */
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+  }
+  
+  .bg-formeta-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600;
+  }
+  
+  .section-spacing {
+    @apply py-16 md:py-24;
+  }
+  
+  /* Theme toggle utilities */
+  .theme-toggle {
+    @apply fixed top-5 right-5 z-50 bg-white border-2 border-slate-200 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer shadow-md hover:scale-110 hover:shadow-lg transition-all duration-200;
+  }
+  
+  .theme-toggle-icon {
+    @apply w-5 h-5 fill-current text-slate-700 transition-all duration-200;
+  }
+}
+
+/* ========================================
+   8. RESPONSIVE DESIGN
+   ======================================== */
+
+/* Los breakpoints de Tailwind ya manejan la responsividad */
+
+/* ========================================
+   9. MODO OSCURO - USANDO TAILWIND DARK MODE
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-blue-digital: #0A84FF;
+    --color-gray-ice: #8E8E93;
+    --color-white-neutral: #1C1C1E;
+    --color-gray-surface: #2C2C2E;
+    --color-gray-light: #3A3A3C;
+    --color-text-primary: #F2F2F7;
+    --color-text-secondary: #8E8E93;
+    --color-text-tertiary: #636366;
+  }
+}
+
+/* Transiciones suaves para cambio de tema */
+* {
+  transition: background-color var(--duration-medium) var(--ease-in-out),
+              color var(--duration-medium) var(--ease-in-out),
+              border-color var(--duration-medium) var(--ease-in-out);
+}

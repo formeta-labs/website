@@ -1,0 +1,27 @@
+# robots.txt para Formeta Labs
+User-agent: *
+Allow: /
+
+# Permitir acceso a recursos estáticos importantes
+Allow: /images/
+Allow: /fonts/
+Allow: /_app/
+
+# Bloquear acceso a páginas internas/privadas
+Disallow: /intranet/
+Disallow: /admin/
+Disallow: /.svelte-kit/
+Disallow: /node_modules/
+
+# Bloquear archivos temporales y de desarrollo
+Disallow: /*.log
+Disallow: /*.tmp
+Disallow: /*/.env
+Disallow: /package.json
+Disallow: /package-lock.json
+
+# Sitemap location
+Sitemap: https://formetalabs.com/sitemap.xml
+
+# Rate limiting para crawlers
+Crawl-delay: 1

@@ -1,0 +1,60 @@
+# Configuración de Dokploy para Formeta Labs Website
+name: formeta-website
+description: "Sitio web oficial de Formeta Labs - Estudio tecnológico especializado en desarrollo web, IA y automatización"
+
+# Configuración del proyecto
+project:
+  type: docker-compose
+  source: git
+  repository: https://github.com/tu-usuario/formeta-website.git
+  branch: main
+  buildPath: ./
+  dockerCompose: docker-compose.yml
+
+# Variables de entorno requeridas
+environment:
+  - name: PUBLIC_API_URL
+    value: https://api.formeta.es
+    description: URL de la API backend
+  
+  - name: PUBLIC_APP_NAME
+    value: Formeta Labs
+    description: Nombre de la aplicación
+  
+  - name: PUBLIC_APP_VERSION
+    value: "2.0.0"
+    description: Versión de la aplicación
+  
+  - name: PUBLIC_CLERK_PUBLISHABLE_KEY
+    value: ""
+    description: Clave pública de Clerk para autenticación (REQUERIDA)
+    required: true
+    secret: false
+
+# Configuración de red
+network:
+  port: 3000
+  domain: formeta.es
+  ssl: true
+  redirectWww: true
+
+# Configuración de recursos
+resources:
+  memory: 512Mi
+  cpu: 0.5
+  replicas: 1
+
+# Health checks
+healthCheck:
+  enabled: true
+  path: /
+  interval: 30s
+  timeout: 10s
+  retries: 3
+
+# Configuración de logs
+logging:
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
