@@ -19,9 +19,9 @@ WORKDIR /app
 COPY package*.json ./
 COPY .npmrc ./
 
-# Debug: Cache bust v5
+# Debug: Cache bust v6
 # Instalar todas las dependencias (incluyendo devDependencies)
-RUN npm ci --include=dev && npm cache clean --force
+RUN npm install && npm cache clean --force
 
 # Debug: Verificar que npm ci instaló las dependencias correctamente
 RUN echo "Checking npm installation..."
