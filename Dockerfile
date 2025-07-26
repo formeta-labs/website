@@ -12,45 +12,26 @@ COPY .npmrc ./
 
 # Etapa de construcción
 FROM base AS builder
-# Cache bust: version 1
+# Cache bust: version 2 - optimized with npx vite build
 WORKDIR /app
 
 # Copiar archivos de configuración de dependencias
 COPY package*.json ./
 COPY .npmrc ./
 
-# Debug: Cache bust v6
 # Instalar todas las dependencias (incluyendo devDependencies)
 RUN npm install && npm cache clean --force
 
-# Debug: Verificar que npm ci instaló las dependencias correctamente
-RUN echo "Checking npm installation..."
-RUN ls -la node_modules/ | head -20
-RUN npm list --depth=0 || echo "npm list failed"
-
 # Verificar instalación de vite
-RUN echo "Checking for vite installation..."
-RUN npm list vite || echo "vite not in npm list"
+RUN echo "Checking vite installation..."
 RUN ls -la node_modules/.bin/ | grep vite || echo "vite not found in node_modules/.bin"
-RUN test -f node_modules/.bin/vite && echo "vite binary exists" || echo "vite binary missing"
-RUN test -d node_modules/vite && echo "vite package directory exists" || echo "vite package directory missing"
-
-# Establecer PATH para incluir node_modules/.bin
-ENV PATH="/app/node_modules/.bin:$PATH"
+RUN npx vite --version || echo "npx vite version check failed"
 
 # Copiar código fuente
 COPY . .
 
-# Copiar variables de entorno para la construcción
-COPY .env .
-
-# Verificar vite antes del build
-RUN echo "PATH: $PATH"
-RUN which vite || echo "vite not found in PATH"
-RUN node_modules/.bin/vite --version || echo "Direct vite call failed"
-
-# Construir la aplicación usando path absoluto
-RUN node_modules/.bin/vite build
+# Construir la aplicación usando npx (más confiable)
+RUN npx vite build
 
 # Etapa de producción
 FROM node:20-alpine AS runner
@@ -60,11 +41,12 @@ WORKDIR /app
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S -u 1001 -G nodejs sveltekit
 
-# Copiar archivos necesarios desde la etapa de construcción
+# Copiar archivos de build
 COPY --from=builder /app/build build/
-COPY --from=builder /app/node_modules node_modules/
 COPY --from=builder /app/package.json .
-COPY --from=builder /app/static static/
+
+# Solo instalar dependencias de producción
+RUN npm ci --only=production && npm cache clean --force
 
 # Cambiar al usuario no-root
 USER sveltekit
