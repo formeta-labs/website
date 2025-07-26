@@ -14,6 +14,10 @@ COPY .npmrc ./
 FROM base AS builder
 WORKDIR /app
 
+# Copiar archivos de configuración de dependencias
+COPY package*.json ./
+COPY .npmrc ./
+
 # Instalar todas las dependencias (incluyendo devDependencies)
 RUN npm ci && npm cache clean --force
 
@@ -24,7 +28,7 @@ COPY . .
 COPY .env .
 
 # Construir la aplicación
-RUN ls -l node_modules/.bin && echo $PATH && export PATH="./node_modules/.bin:$PATH" && npm run build
+RUN npm run build
 
 # Etapa de producción
 FROM node:20-slim AS runner
