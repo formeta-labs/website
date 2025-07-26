@@ -1,8 +1,10 @@
 # Usar Node.js 20 como imagen base
-FROM node:20-alpine3.19 AS base
+FROM node:20-slim AS base
 
-# Instalar dependencias necesarias
-RUN apk add --no-cache libc6-compat
+# Instalar dependencias necesarias para compatibilidad
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
 # Copiar archivos de configuración de dependencias
@@ -29,12 +31,12 @@ COPY .env .
 RUN npm run build
 
 # Etapa de producción
-FROM node:20-alpine3.19 AS runner
+FROM node:20-slim AS runner
 WORKDIR /app
 
 # Crear usuario no-root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 sveltekit
+RUN groupadd --system --gid 1001 nodejs
+RUN useradd --system --uid 1001 --gid nodejs sveltekit
 
 # Copiar archivos necesarios desde la etapa de construcción
 COPY --from=builder /app/build build/
