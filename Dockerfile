@@ -12,6 +12,7 @@ COPY .npmrc ./
 
 # Etapa de construcción
 FROM base AS builder
+ARG CACHEBUST=$(date +%s)
 WORKDIR /app
 
 # Copiar archivos de configuración de dependencias
