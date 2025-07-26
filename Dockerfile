@@ -9,7 +9,7 @@ COPY package*.json ./
 COPY .npmrc ./
 
 # Instalar dependencias
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci && npm cache clean --force
 
 # Etapa de construcción
 FROM base AS builder
@@ -25,7 +25,7 @@ COPY . .
 COPY .env .
 
 # Construir la aplicación
-RUN npm run build
+RUN export PATH="./node_modules/.bin:$PATH" && npm run build
 
 # Etapa de producción
 FROM node:20-slim AS runner
