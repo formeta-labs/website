@@ -1,5 +1,5 @@
-# Usar Node.js 18 como imagen base (más estable y probable que esté en caché)
-FROM node:18-alpine AS base
+# Usar Node.js 20 como imagen base (más estable y probable que esté en caché)
+FROM node:20-alpine AS base
 
 # Imagen base optimizada sin dependencias adicionales
 WORKDIR /app
@@ -35,7 +35,7 @@ COPY . .
 RUN ./node_modules/.bin/vite build
 
 # Etapa de producción
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 # Crear usuario no-root
