@@ -118,7 +118,7 @@
 	{#each services as service}
 		<div class="service-card-modern group" on:click={() => openServiceModal(service)} on:keydown={(e) => e.key === 'Enter' && openServiceModal(service)} tabindex="0" role="button">
 			<div class="service-icon-container mb-6">
-				<div class="service-icon {service.iconColor} bg-opacity-20" style="background-color: {service.iconColor === 'text-formeta-primary' ? '#007AFF' : service.iconColor === 'text-formeta-accent' ? '#FF6B6B' : service.iconColor === 'text-formeta-secondary' ? '#4ECDC4' : '#10B981'}">
+				<div class="service-icon {service.iconColor} bg-opacity-20" style="background-color: {service.iconColor === 'text-formeta-primary' ? '#007AFF' : service.iconColor === 'text-formeta-accent' ? '#FF6B6B' : service.iconColor === 'text-formeta-secondary' ? '#FFD700' : '#10B981'}">
 					<Icon name={service.icon} size={24} className="text-white" />
 				</div>
 				<h3 class="text-heading font-bold text-formeta-text mt-4 group-hover:text-formeta-primary transition-colors">
