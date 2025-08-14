@@ -154,7 +154,7 @@
 		</div>
 		
 		<!-- Executive CTAs -->
-		<div class="flex flex-col sm:flex-row gap-6 justify-center">
+		<div class="flex flex-col sm:flex-row gap-6 justify-center pb-12">
 			<a href="#calculadora" class="group bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25 flex items-center justify-center gap-3 min-w-[250px]">
 				VER PRECIOS Y CONFIGURACIÓN
 				<Icon name="arrow-down" size={20} className="group-hover:translate-y-1 transition-transform duration-300" />
@@ -487,7 +487,7 @@
 				<Icon name="calculator" size={20} className="text-white" />
 				<span class="text-sm font-medium text-white/90">CALCULADORA INTELIGENTE</span>
 			</div>
-			<h2 class="text-5xl font-extrabold mb-6">Configurador de Proyecto RAG + MCP</h2>
+			<h2 class="text-5xl font-extrabold mb-6 text-white">Configurador de Proyecto RAG + MCP</h2>
 			<p class="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
 				Estima el coste de implementación basado en volumen de datos y complejidad de tu caso de uso específico.
 			</p>
@@ -501,10 +501,10 @@
 					<!-- Configuration Panel -->
 					<div class="xl:col-span-2 space-y-8">
 						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-							<h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
-								<Icon name="settings" size={24} className="text-purple-300" />
-								Configuración del Proyecto
-							</h3>
+							<h3 class="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+							<Icon name="settings" size={24} className="text-purple-300" />
+							Configuración del Proyecto
+						</h3>
 							
 							<!-- Document Volume Slider -->
 							<div class="mb-8">
@@ -607,10 +607,10 @@
 					<!-- Plans Comparison Panel -->
 					<div class="space-y-6">
 						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-							<h3 class="text-xl font-bold mb-6 flex items-center gap-3">
-								<Icon name="layers" size={20} className="text-indigo-300" />
-								Todos los Planes
-							</h3>
+							<h3 class="text-xl font-bold mb-6 flex items-center gap-3 text-white">
+						<Icon name="layers" size={20} className="text-indigo-300" />
+						Todos los Planes
+					</h3>
 							
 							<div class="space-y-4">
 								{#each Object.entries(complexityLevels) as [key, plan]}
@@ -657,10 +657,10 @@
 						
 						<!-- Cost Breakdown -->
 						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-							<h4 class="font-bold mb-4 flex items-center gap-2">
-								<Icon name="credit-card" size={20} className="text-yellow-400" />
-								Desglose de Costes
-							</h4>
+							<h4 class="font-bold mb-4 flex items-center gap-2 text-white">
+							<Icon name="credit-card" size={20} className="text-yellow-400" />
+							Desglose de Costes
+						</h4>
 							
 							<div class="space-y-3">
 								<div class="flex justify-between items-center py-2 border-b border-white/10">
@@ -693,7 +693,7 @@
 						
 						<!-- CTA Button -->
 						<div class="bg-gradient-to-r from-purple-500 to-indigo-500 rounded-2xl p-6 text-center">
-							<h4 class="font-bold text-lg mb-2">¿Listo para empezar?</h4>
+							<h4 class="font-bold text-lg mb-2 text-white">¿Listo para empezar?</h4>
 							<p class="text-sm text-white/80 mb-4">Obtén una propuesta personalizada</p>
 							<a href="/contacto" class="inline-flex items-center gap-2 bg-white text-purple-600 font-bold px-6 py-3 rounded-lg hover:bg-white/90 transition-all duration-300 transform hover:scale-105">
 								<Icon name="arrow-right" size={16} />

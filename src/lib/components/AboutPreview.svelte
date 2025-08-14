@@ -25,7 +25,7 @@
 		<!-- Valor 1: Innovación -->
 		<div class="value-card group">
 			<div class="value-icon-container">
-				<div class="value-icon bg-gradient-to-br from-formeta-primary to-formeta-secondary">
+				<div class="value-icon" style="background-color: #007AFF;">
 					<Icon name="zap" size={24} className="text-white" />
 				</div>
 			</div>
@@ -41,7 +41,7 @@
 		<!-- Valor 2: Confianza -->
 		<div class="value-card group">
 			<div class="value-icon-container">
-				<div class="value-icon bg-gradient-to-br from-formeta-accent to-formeta-primary">
+				<div class="value-icon" style="background-color: #FF6B6B;">
 					<Icon name="shield" size={24} className="text-white" />
 				</div>
 			</div>
@@ -57,7 +57,7 @@
 		<!-- Valor 3: Accesibilidad -->
 		<div class="value-card group">
 			<div class="value-icon-container">
-				<div class="value-icon bg-gradient-to-br from-formeta-secondary to-formeta-accent">
+				<div class="value-icon" style="background-color: #F59E0B;">
 					<Icon name="users" size={24} className="text-white" />
 				</div>
 			</div>
@@ -74,11 +74,11 @@
 	<!-- Stats section -->
 	<div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
 		<div class="text-center">
-			<div class="text-display-large font-bold text-formeta-primary mb-2">5+</div>
+			<div class="text-display-large font-bold text-formeta-primary mb-2">2+</div>
 			<div class="text-body-small font-medium text-formeta-text/70">Años experiencia</div>
 		</div>
 		<div class="text-center">
-			<div class="text-display-large font-bold text-formeta-primary mb-2">50+</div>
+			<div class="text-display-large font-bold text-formeta-primary mb-2">2+</div>
 			<div class="text-body-small font-medium text-formeta-text/70">Proyectos completados</div>
 		</div>
 		<div class="text-center">

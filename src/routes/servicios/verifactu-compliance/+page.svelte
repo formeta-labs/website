@@ -213,7 +213,7 @@
 		</div>
 		
 		<!-- Executive CTAs -->
-		<div class="flex flex-col sm:flex-row gap-6 justify-center">
+		<div class="flex flex-col sm:flex-row gap-6 justify-center pb-12">
 			<a href="#calculadora" class="group bg-gradient-to-r from-red-500 to-blue-500 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-red-500/25 flex items-center justify-center gap-3 min-w-[250px]">
 				CALCULAR COSTE Y ROI
 				<Icon name="arrow-down" size={20} className="group-hover:translate-y-1 transition-transform duration-300" />
@@ -545,7 +545,7 @@
 				<Icon name="calculator" size={20} className="text-white" />
 				<span class="text-sm font-medium text-white/90">CALCULADORA ROI VERIFACTU</span>
 			</div>
-			<h2 class="text-5xl font-extrabold mb-6">Calculadora VeriFactu + CRM</h2>
+			<h2 class="text-5xl font-extrabold mb-6 text-white">Calculadora VeriFactu + CRM</h2>
 			<p class="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
 				Calcula el coste real de implementación y el <strong class="text-white">ROI inmediato</strong> 
 				en ahorro de multas y optimización operativa.
@@ -580,7 +580,7 @@
 					<!-- Configuration Panel -->
 					<div class="xl:col-span-2 space-y-8">
 						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-							<h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+							<h3 class="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
 								<Icon name="settings" size={24} className="text-white/80" />
 								Configuración Empresarial
 							</h3>
@@ -757,10 +757,10 @@
 					<!-- Results Panel -->
 					<div class="space-y-6">
 						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-							<h3 class="text-xl font-bold mb-6 flex items-center gap-2">
-								<Icon name="trending-up" size={20} className="text-green-400" />
-								Plan Recomendado
-							</h3>
+							<h3 class="text-xl font-bold mb-6 flex items-center gap-2 text-white">
+							<Icon name="trending-up" size={20} className="text-green-400" />
+							Plan Recomendado
+						</h3>
 							
 							{#if selectedService === 'compliance'}
 								<div class="bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-400/30 rounded-xl p-4">
@@ -809,10 +809,10 @@
 						
 						<!-- ROI Analysis -->
 						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-							<h4 class="font-bold mb-4 flex items-center gap-2">
-								<Icon name="euro-sign" size={20} className="text-yellow-400" />
-								Análisis ROI Anual
-							</h4>
+							<h4 class="font-bold mb-4 flex items-center gap-2 text-white">
+							<Icon name="euro-sign" size={20} className="text-yellow-400" />
+							Análisis ROI Anual
+						</h4>
 							
 							<div class="space-y-3">
 								{#if selectedService === 'compliance'}
@@ -863,10 +863,10 @@
 						
 						<!-- Implementation Timeline -->
 						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-							<h4 class="font-bold mb-4 flex items-center gap-2">
-								<Icon name="calendar" size={20} className="text-blue-400" />
-								Timeline Implementación
-							</h4>
+							<h4 class="font-bold mb-4 flex items-center gap-2 text-white">
+							<Icon name="calendar" size={20} className="text-blue-400" />
+							Timeline Implementación
+						</h4>
 							<div class="space-y-3">
 								<div class="flex items-center gap-3">
 									<div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
@@ -940,7 +940,7 @@
 <section class="py-24 bg-gradient-to-br from-red-600 via-blue-600 to-purple-600 text-white overflow-hidden">
 	<div class="relative">
 		<!-- Glassmorphism Background -->
-		<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-3xl"></div>
+		<div class="absolute inset-0"></div>
 		
 		<div class="relative container mx-auto px-6 text-center">
 			<div class="flex items-center justify-center gap-3 mb-6">

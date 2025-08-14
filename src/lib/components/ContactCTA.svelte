@@ -31,65 +31,9 @@
 					<span>CONSULTA TÉCNICA GRATUITA</span>
 					<Icon name="arrow-right" size={16} className="text-white/80 group-hover:translate-x-1 transition-transform" />
 				</a>
-				<a href="mailto:enterprise@formeta-labs.com" class="cta-button-secondary group">
-					<Icon name="mail" size={20} className="text-formeta-primary group-hover:text-white group-hover:scale-110 transition-transform" />
-					<span>CONTACTO DIRECTO</span>
-				</a>
 			</div>
 			
-			<!-- Enhanced Contact Grid -->
-		   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-			   <div class="contact-card bg-gray-50 text-formeta-text text-center group">
-					<div class="contact-icon-container mb-4">
-						<div class="contact-icon bg-gradient-to-br from-formeta-primary to-formeta-secondary">
-							<Icon name="mail" size={24} className="text-white" />
-						</div>
-					</div>
-				   <h3 class="text-body font-bold text-formeta-text mb-2 group-hover:text-formeta-primary transition-colors">
-						Email Enterprise
-					</h3>
-				   <p class="text-body-small text-formeta-text/80 mb-2">
-						enterprise@formeta-labs.com
-					</p>
-				   <p class="text-caption text-formeta-text/60">
-						Respuesta garantizada &lt; 2 horas
-					</p>
-				</div>
-				
-			   <div class="contact-card bg-gray-50 text-formeta-text text-center group">
-					<div class="contact-icon-container mb-4">
-						<div class="contact-icon bg-gradient-to-br from-formeta-accent to-formeta-primary">
-							<Icon name="phone" size={24} className="text-white" />
-						</div>
-					</div>
-				   <h3 class="text-body font-bold text-formeta-text mb-2 group-hover:text-formeta-primary transition-colors">
-						Consulta Técnica
-					</h3>
-				   <p class="text-body-small text-formeta-text/80 mb-2">
-						+34 600 000 000
-					</p>
-				   <p class="text-caption text-formeta-text/60">
-						Lun-Vie 9:00-18:00 CET
-					</p>
-				</div>
-				
-			   <div class="contact-card bg-gray-50 text-formeta-text text-center group">
-					<div class="contact-icon-container mb-4">
-						<div class="contact-icon bg-gradient-to-br from-red-500 to-formeta-accent">
-							<Icon name="headphones" size={24} className="text-white" />
-						</div>
-					</div>
-				   <h3 class="text-body font-bold text-formeta-text mb-2 group-hover:text-formeta-primary transition-colors">
-						Soporte VeriFactu
-					</h3>
-				   <p class="text-body-small text-formeta-text/80 mb-2">
-						Lun - Vie: 9:00 - 18:00
-					</p>
-				   <p class="text-caption text-formeta-text/60">
-						Horario comercial CET
-					</p>
-				</div>
-			</div>
+
 		</div>
 	</div>
 </section>

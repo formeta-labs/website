@@ -48,6 +48,7 @@
 		Plus,
 		PlusCircle,
 		Minus,
+		Calculator,
 		Search,
 		Filter,
 		Download,
@@ -101,7 +102,16 @@
 		Tablet,
 		Laptop,
 		RotateCcw,
-		Award
+		Award,
+		Save,
+		Trash2,
+		Paintbrush,
+		Receipt,
+		Copy,
+		Send,
+		User,
+		Package,
+		Crown
 	} from 'lucide-svelte';
 
 	export let name: string;
@@ -175,6 +185,7 @@
 		'plus': Plus,
 		'plus-circle': PlusCircle,
 		'minus': Minus,
+		'calculator': Calculator,
 		'search': Search,
 		'filter': Filter,
 		'download': Download,
@@ -190,11 +201,13 @@
 		'building': Building,
 		'dollar-sign': DollarSign,
 		'euro': Euro,
+		'euro-sign': Euro,
 		'credit-card': CreditCard,
 		'shopping-cart': ShoppingCart,
 		'trending-up': TrendingUp,
 		'trending-down': TrendingDown,
 		'bar-chart': BarChart,
+		'bar-chart-3': BarChart3,
 		'layers': Layers,
 		'scale': Scale,
 		'user-check': UserCheck,
@@ -219,7 +232,16 @@
 		'tablet': Tablet,
 		'laptop': Laptop,
 		'rotate-ccw': RotateCcw,
-		'award': Award
+		'award': Award,
+		'save': Save,
+		'trash-2': Trash2,
+		'paintbrush': Paintbrush,
+		'receipt': Receipt,
+		'copy': Copy,
+		'send': Send,
+		'user': User,
+		'package': Package,
+		'crown': Crown
 	} as const;
 
 	type IconName = keyof typeof icons;

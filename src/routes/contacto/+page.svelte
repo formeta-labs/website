@@ -323,12 +323,6 @@
 					<Icon name="arrow-down" size={16} className="group-hover:translate-y-1 transition-transform" />
 				</span>
 			</a>
-			<a href="tel:+34-XXX-XXX-XXX" class="group bg-white/10 backdrop-blur-xl border border-white/30 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105">
-				<span class="flex items-center gap-3">
-					LLAMADA DIRECTA
-					<Icon name="phone" size={16} className="group-hover:rotate-12 transition-transform" />
-				</span>
-			</a>
 		</div>
 		
 		<!-- Contact feature badges -->
@@ -592,91 +586,6 @@
 			</div>
 			<!-- Enhanced Contact Info Sidebar -->
 			<div class="space-y-6">
-				<!-- Contact Methods Card -->
-				<div class="formeta-card-contact">
-					<div class="text-center mb-6">
-						<div class="flex items-center justify-center gap-2 mb-3">
-							<Icon name="zap" size={18} className="text-orange-500" />
-							<h3 class="text-xl font-bold text-formeta-text uppercase tracking-wider">Contacto Directo</h3>
-							<Icon name="zap" size={18} className="text-orange-500" />
-						</div>
-						<p class="text-sm text-formeta-text/70">Especialistas técnicos disponibles</p>
-					</div>
-					
-					<div class="space-y-4">
-						<!-- Enterprise Email -->
-						<div class="contact-method-card group">
-							<div class="contact-icon bg-gradient-to-br from-orange-600 to-red-600">
-								<Icon name="mail" size={20} className="text-white" />
-							</div>
-							<div class="flex-1">
-								<h4 class="font-bold text-formeta-text group-hover:text-orange-600 transition-colors">Email Enterprise</h4>
-								<a href="mailto:enterprise@formeta-labs.com" class="text-orange-600 hover:text-orange-700 font-mono text-sm transition-colors">
-									enterprise@formeta-labs.com
-								</a>
-								<p class="text-xs text-formeta-text/60 mt-1">Respuesta garantizada {'<'} 2h</p>
-							</div>
-							<div class="contact-status">
-								<div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-							</div>
-						</div>
-						
-						<!-- Technical Call -->
-						<div class="contact-method-card group">
-							<div class="contact-icon bg-gradient-to-br from-red-600 to-orange-600">
-								<Icon name="phone" size={20} className="text-white" />
-							</div>
-							<div class="flex-1">
-								<h4 class="font-bold text-formeta-text group-hover:text-red-600 transition-colors">Consulta Técnica</h4>
-								<a href="tel:+34-600-000-000" class="text-red-600 hover:text-red-700 font-mono text-sm transition-colors">
-									+34 600 000 000
-								</a>
-								<p class="text-xs text-formeta-text/60 mt-1">Lun-Vie 9:00-18:00 CET</p>
-							</div>
-							<div class="contact-status">
-								<div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-							</div>
-						</div>
-						
-						<!-- VeriFactu Urgent -->
-						<div class="contact-method-card group border-red-200 bg-red-50/50">
-							<div class="contact-icon bg-gradient-to-br from-red-700 to-red-600">
-								<span class="text-lg">🚨</span>
-							</div>
-							<div class="flex-1">
-								<h4 class="font-bold text-red-700 group-hover:text-red-800 transition-colors">VeriFactu URGENTE</h4>
-								<a href="mailto:verifactu@formeta-labs.com" class="text-red-700 hover:text-red-800 font-mono text-sm transition-colors">
-									verifactu@formeta-labs.com
-								</a>
-								<p class="text-xs text-red-600 mt-1 flex items-center gap-1">
-									<Icon name="zap" size={12} className="text-red-600" />
-									<span>Respuesta en 2 horas</span>
-								</p>
-							</div>
-							<div class="contact-status">
-								<div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-							</div>
-						</div>
-						
-						<!-- AI Demo -->
-						<div class="contact-method-card group">
-							<div class="contact-icon bg-gradient-to-br from-purple-600 to-indigo-600">
-								<span class="text-lg">🤖</span>
-							</div>
-							<div class="flex-1">
-								<h4 class="font-bold text-formeta-text group-hover:text-purple-600 transition-colors">IA & Demos Técnicas</h4>
-								<a href="mailto:ai@formeta-labs.com" class="text-purple-600 hover:text-purple-700 font-mono text-sm transition-colors">
-									ai@formeta-labs.com
-								</a>
-								<p class="text-xs text-formeta-text/60 mt-1">Demo técnica en 4h</p>
-							</div>
-							<div class="contact-status">
-								<div class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
 				<!-- Service Badges Card -->
 				<div class="formeta-card-services">
 					<div class="text-center mb-4">
@@ -764,7 +673,7 @@
 <section class="py-20 bg-gradient-to-br from-formeta-primary to-formeta-secondary text-white">
 	<div class="container mx-auto px-6">
 		<div class="max-w-4xl mx-auto text-center">
-			<h2 class="text-4xl md:text-5xl font-bold mb-8">
+			<h2 class="text-4xl md:text-5xl font-bold mb-8 text-white">
 				¿Prefieres Hablar Directamente?
 			</h2>
 			<p class="text-xl text-white/90 mb-12">
@@ -773,51 +682,40 @@
 			</p>
 			
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-				<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-8">
-					<div class="text-4xl mb-4">🤖</div>
-					<h3 class="text-2xl font-bold mb-4">Demo IA Empresarial</h3>
+				<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-8 text-center rounded-lg">
+					<div class="mb-4 flex justify-center">
+						<Icon name="brain" size={48} className="text-white" />
+					</div>
+					<h3 class="text-2xl font-bold mb-4 text-white">Demo IA Empresarial</h3>
 					<p class="text-white/90 mb-6">
 						Demostración en vivo de nuestro sistema de IA local con tus propios documentos. 
 						Verás el ROI inmediato.
 					</p>
 					<a href="https://calendly.com/formeta-labs/demo-ia" 
 					   target="_blank" 
-					   class="bg-white text-black px-6 py-3 font-bold hover:bg-white/90 hover:text-black transition-all duration-200">
+					   class="bg-white text-black px-6 py-3 font-bold hover:bg-white/90 hover:text-black transition-all duration-200 rounded-md">
 						AGENDAR DEMO IA
 					</a>
 				</div>
 				
-				<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-8">
-					<div class="mb-4">
-						<Icon name="scale" size={48} className="text-formeta-primary" />
+				<div class="bg-white/10 backdrop-blur-sm border border-white/20 p-8 text-center rounded-lg">
+					<div class="mb-4 flex justify-center">
+						<Icon name="scale" size={48} className="text-white" />
 					</div>
-					<h3 class="text-2xl font-bold mb-4">Consulta VeriFactu</h3>
+					<h3 class="text-2xl font-bold mb-4 text-white">Consulta VeriFactu</h3>
 					<p class="text-white/90 mb-6">
 						Assessment gratuito de compliance VeriFactu. Analizamos tu situación actual y 
 						te damos roadmap específico.
 					</p>
 					<a href="https://calendly.com/formeta-labs/verifactu-assessment" 
 					   target="_blank" 
-					   class="bg-red-500 text-white px-6 py-3 font-bold hover:bg-red-600 transition-all duration-200">
-						ASSESSMENT VERIFACTU
+					   class="bg-red-500 text-white px-6 py-3 font-bold hover:bg-red-600 transition-all duration-200 rounded-md">
+						AGENDAR VERIFACTU
 					</a>
 				</div>
 			</div>
 			
-			<div class="mt-12 bg-white/10 backdrop-blur-sm border border-white/20 p-6">
-				<div class="flex items-center gap-3 mb-4">
-					<Icon name="phone" size={24} className="text-formeta-primary" />
-					<h4 class="text-xl font-bold">Llamada de Urgencia</h4>
-				</div>
-				<p class="text-white/90 mb-4">
-					Para proyectos críticos que requieren atención inmediata. 
-					Disponible Lun-Vie 9:00-18:00 (CET).
-				</p>
-				<a href="tel:+34-600-000-000" 
-				   class="bg-yellow-500 text-black px-6 py-3 font-bold hover:bg-yellow-400 transition-all duration-200">
-					+34 600 000 000
-				</a>
-			</div>
+
 		</div>
 	</div>
 </section>

@@ -16,8 +16,8 @@
 		// Start metrics animation
 		setTimeout(() => {
 			experience.set(8);
-			projects.set(50);
-			clients.set(15);
+			projects.set(2);
+			clients.set(2);
 			expertise.set(6);
 		}, 800);
 	});
@@ -25,7 +25,7 @@
 	const companyStats = [
 		{ label: 'FUNDACIÓN', value: '2019', description: 'Laboratorio creado' },
 		{ label: 'ESPECIALISTAS', value: '2', description: 'Expertos técnicos' },
-		{ label: 'PROYECTOS', value: '50+', description: 'Enterprise exitosos' },
+		{ label: 'PROYECTOS', value: '2+', description: 'Enterprise exitosos' },
 		{ label: 'SOBERANÍA', value: '100%', description: 'Datos locales' }
 	];
 

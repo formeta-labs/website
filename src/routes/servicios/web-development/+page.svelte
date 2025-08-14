@@ -256,7 +256,7 @@ Tiempo estimado: ${results.weeks} semanas`;
 		</div>
 		
 		<!-- Executive CTAs -->
-		<div class="flex flex-col sm:flex-row gap-6 justify-center">
+		<div class="flex flex-col sm:flex-row gap-6 justify-center pb-12">
 			<a href="#calculadora" class="group bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25 flex items-center justify-center gap-3 min-w-[250px]">
 				CALCULADORA ENTERPRISE
 				<Icon name="calculator" size={20} className="group-hover:translate-y-1 transition-transform duration-300" />
@@ -734,7 +734,7 @@ Tiempo estimado: ${results.weeks} semanas`;
 				<span class="text-sm font-medium text-white/90">CALCULADORA ENTERPRISE</span>
 			</div>
 			
-			<h2 class="text-5xl font-extrabold mb-6">
+			<h2 class="text-5xl font-extrabold mb-6 text-white">
 				Calculadora de Proyecto Web
 			</h2>
 			
@@ -752,10 +752,10 @@ Tiempo estimado: ${results.weeks} semanas`;
 					<!-- Project Configuration -->
 					<div class="space-y-8">
 						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-							<h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
-								<Icon name="settings" size={24} className="text-blue-300" />
-								Configuración del Proyecto
-							</h3>
+							<h3 class="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+							<Icon name="settings" size={24} className="text-blue-300" />
+							Configuración del Proyecto
+						</h3>
 							
 							<!-- Project Type Selection -->
 							<div class="mb-8">
@@ -794,7 +794,7 @@ Tiempo estimado: ${results.weeks} semanas`;
 										<span>1</span>
 										<span>15</span>
 										<span>30</span>
-										<span>50+</span>
+										<span>2+</span>
 									</div>
 								</div>
 								<div class="mt-3 text-sm text-white/80">
@@ -843,10 +843,10 @@ Tiempo estimado: ${results.weeks} semanas`;
 					<!-- Price Summary -->
 					<div class="space-y-8">
 						<div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-							<h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
-								<Icon name="credit-card" size={24} className="text-green-300" />
-								Configuración Avanzada
-							</h3>
+							<h3 class="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+							<Icon name="credit-card" size={24} className="text-green-300" />
+							Configuración Avanzada
+						</h3>
 							
 							<!-- Advanced Configuration -->
 							<div class="space-y-6">

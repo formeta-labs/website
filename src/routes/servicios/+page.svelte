@@ -22,9 +22,9 @@
 		if (browser) {
 			// Start metrics animation
 			setTimeout(() => {
-				projects.set(150);
+				projects.set(5);
 				satisfaction.set(98.5);
-				industries.set(12);
+				industries.set(2);
 				delivery.set(95);
 			}, 800);
 		}
@@ -36,8 +36,9 @@
 			title: 'Desarrollo Web Empresarial',
 			subtitle: 'PROFESIONAL',
 			icon: 'rocket',
+			iconColor: 'text-formeta-primary',
 			badgeColor: 'bg-green-600',
-			description: 'Desarrollo full-stack moderno con SvelteKit, TypeScript y diseño profesional para máximo impacto visual y conversión empresarial',
+
 			shortDesc: 'Full-stack empresarial + Diseño profesional + UX/UI avanzado',
 			techStack: ['SvelteKit', 'TypeScript', 'Tailwind', 'Docker', 'PostgreSQL'],
 			features: [
@@ -72,8 +73,9 @@
 			title: 'Inteligencia Artificial Local',
 			subtitle: 'EMPRESARIAL',
 			icon: 'cpu',
-			badgeColor: 'bg-purple-600',
-			description: 'Sistemas de IA completamente locales con RAG y MCP Protocol para soberanía total de datos empresariales y cumplimiento GDPR',
+			iconColor: 'text-formeta-accent',
+			gradient: 'from-formeta-accent to-formeta-primary',
+
 			shortDesc: 'IA local empresarial + RAG + MCP Protocol - Sin dependencias cloud',
 			techStack: ['Ollama', 'pgvector', 'RAG', 'MCP', 'Docker', 'TypeScript'],
 			features: [
@@ -107,8 +109,9 @@
 			id: 'vericrm',
 			title: 'VeriCRM Enterprise',
 			subtitle: 'PRODUCTIVIDAD',
-			icon: 'dollar-sign',
-			description: 'CRM enterprise con integración VeriFactu nativa para cumplimiento automático AEAT y gestión completa de clientes',
+			icon: 'shield',
+			iconColor: 'text-green-500',
+			gradient: 'from-green-500 to-formeta-primary',
 			shortDesc: 'CRM + VeriFactu AEAT + Facturación - Obligatorio 2026',
 			techStack: ['SvelteKit', 'PostgreSQL', 'AEAT API', 'Docker', 'Prisma'],
 			features: [
@@ -143,8 +146,9 @@
 			title: 'Automatización Empresarial',
 			subtitle: 'PRODUCTIVIDAD',
 			icon: 'zap',
+			iconColor: 'text-formeta-secondary',
 			badgeColor: 'bg-orange-600',
-			description: 'Orquestación de procesos empresariales con n8n, reduciendo tiempos operativos y dependencia de desarrollos manuales',
+
 			shortDesc: 'Automatización empresarial avanzada + Integración APIs + Workflows',
 			techStack: ['n8n', 'Node.js', 'Docker', 'PostgreSQL', 'Webhooks'],
 			features: [
@@ -342,7 +346,7 @@
 		<!-- Services Grid -->
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
 			{#each services as service, index}
-				<div class="glass-card group relative overflow-hidden p-8 hover:scale-[1.02] transition-all duration-300">
+				<div class="glass-card group relative overflow-hidden p-6 hover:scale-[1.02] transition-all duration-300">
 					<!-- Enhanced glassmorphism background -->
 					<div class="absolute inset-0 bg-gradient-to-br from-white/40 to-white/20 backdrop-blur-lg"></div>
 					<div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -352,26 +356,17 @@
 					
 					<!-- Service Header -->
 					<div class="relative z-10 text-center mb-6">
-						<div class="w-20 h-20 bg-gradient-to-br from-formeta-primary/80 to-formeta-accent/60 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-xl backdrop-blur-sm border border-white/30">
-							<Icon name={service.icon} size={40} className="text-white" />
+						<div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 shadow-xl backdrop-blur-sm border border-white/30 {service.iconColor === 'text-green-500' ? 'bg-green-500' : service.iconColor === 'text-formeta-secondary' ? 'bg-yellow-500' : service.iconColor === 'text-formeta-accent' ? 'bg-red-500' : service.iconColor === 'text-formeta-primary' ? 'bg-orange-500' : 'bg-purple-500'}">
+							<Icon name={service.icon} size={32} className="text-white" />
 						</div>
 						<h3 class="text-2xl font-bold text-formeta-text mb-2 group-hover:text-formeta-primary transition-colors">
 							{service.title}
 						</h3>
-						{#if service.subtitle}
-							<span class="inline-block px-4 py-2 text-xs font-bold text-white rounded-full bg-gradient-to-r from-formeta-primary to-formeta-accent mb-3 shadow-lg backdrop-blur-sm">
-								{service.subtitle}
-							</span>
-						{/if}
+
 						<p class="text-formeta-secondary leading-relaxed">{service.shortDesc}</p>
 					</div>
 					
-					<!-- Description -->
-					<div class="relative z-10 mb-6">
-						<p class="text-formeta-text leading-relaxed text-center">
-							{service.description}
-						</p>
-					</div>
+
 					
 					<!-- Tech Stack -->
 					<div class="relative z-10 mb-6">
@@ -404,21 +399,7 @@
 						</ul>
 					</div>
 					
-					<!-- Metrics -->
-					<div class="relative z-10 mb-6">
-						<h4 class="text-sm font-bold text-formeta-text mb-3 uppercase tracking-wide flex items-center gap-2">
-							<Icon name="bar-chart" size={16} className="text-formeta-accent" />
-							Métricas Clave
-						</h4>
-						<div class="grid grid-cols-2 gap-3">
-							{#each Object.entries(service.metrics) as [key, value]}
-								<div class="bg-white/20 backdrop-blur-sm p-3 rounded-lg text-center border border-white/30 shadow-sm">
-									<div class="text-lg font-bold text-formeta-primary">{value}</div>
-									<div class="text-xs text-formeta-secondary uppercase">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
-								</div>
-							{/each}
-						</div>
-					</div>
+
 					
 					<!-- Benefits -->
 					<div class="relative z-10 mb-6">
@@ -512,7 +493,7 @@
 				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 					<!-- Calidad Enterprise -->
 					<div class="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-green-400/50 transition-all duration-300 transform hover:scale-105 text-center">
-						<div class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+						<div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg" style="background-color: #10B981;">
 							<Icon name="shield-check" size={36} className="text-white" />
 						</div>
 						<h4 class="text-xl font-bold text-white mb-3 group-hover:text-green-300 transition-colors">
@@ -531,7 +512,7 @@
 					
 					<!-- Implementación Rápida -->
 					<div class="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-blue-400/50 transition-all duration-300 transform hover:scale-105 text-center">
-						<div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+						<div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg" style="background-color: #3B82F6;">
 							<Icon name="zap" size={36} className="text-white" />
 						</div>
 						<h4 class="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors">
@@ -550,7 +531,7 @@
 					
 					<!-- Soporte 24/7 -->
 					<div class="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-purple-400/50 transition-all duration-300 transform hover:scale-105 text-center">
-						<div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-violet-400 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+						<div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg" style="background-color: #8B5CF6;">
 							<Icon name="headphones" size={36} className="text-white" />
 						</div>
 						<h4 class="text-xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors">
@@ -569,7 +550,7 @@
 					
 					<!-- ROI Garantizado -->
 					<div class="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-orange-400/50 transition-all duration-300 transform hover:scale-105 text-center">
-						<div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+						<div class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg" style="background-color: #F97316;">
 							<Icon name="trending-up" size={36} className="text-white" />
 						</div>
 						<h4 class="text-xl font-bold text-white mb-3 group-hover:text-orange-300 transition-colors">
@@ -643,7 +624,7 @@
 				<Icon name="cpu" size={24} className="text-purple-400" />
 			</div>
 			
-			<h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight">
+			<h2 class="text-5xl md:text-7xl font-black mb-8 leading-tight text-white">
 				¿Necesitas una solución <br>
 				<span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">personalizada</span>?
 			</h2>
@@ -654,155 +635,18 @@
 			</p>
 		</div>
 		
-		<!-- Enterprise Services Grid -->
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-			<!-- Technical Consultation -->
-			<div class="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-blue-400/50 transition-all duration-300 transform hover:scale-105">
-				<div class="flex items-center gap-4 mb-6">
-					<div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-400 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-						<Icon name="brain" size={32} className="text-white" />
-					</div>
-					<div>
-						<h3 class="text-3xl font-bold text-white">Consulta Técnica Avanzada</h3>
-						<p class="text-blue-300 font-medium">Análisis profundo y roadmap estratégico</p>
-					</div>
-				</div>
-				
-				<div class="space-y-6 mb-8">
-					<div>
-						<h4 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
-							<Icon name="search" size={20} className="text-blue-400" />
-							Auditoría Técnica Completa
-						</h4>
-						<ul class="space-y-2 text-gray-300">
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Auditoría completa de sistemas existentes y arquitectura</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Assessment detallado de cumplimiento VeriFactu y normativas</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Roadmap de digitalización y transformación tecnológica</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Análisis ROI detallado con métricas específicas</span>
-							</li>
-						</ul>
-					</div>
-					
-					<div>
-						<h4 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
-							<Icon name="target" size={20} className="text-purple-400" />
-							Estrategia Empresarial
-						</h4>
-						<ul class="space-y-2 text-gray-300">
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Plan de migración sin interrupciones de servicio</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Cronograma de implementación por fases</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Análisis de riesgos y plan de contingencia</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Presupuesto detallado y opciones de financiación</span>
-							</li>
-						</ul>
-					</div>
-				</div>
-				
-				<a 
-					href="/contacto?servicio=consultoria"
-					class="group/btn w-full bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-3"
-				>
-					<Icon name="calendar" size={20} />
-					<span>Solicitar Consulta Técnica</span>
-					<Icon name="arrow-right" size={20} className="group-hover/btn:translate-x-1 transition-transform duration-300" />
-				</a>
-			</div>
-			
-			<!-- Enterprise Demo -->
-			<div class="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-purple-400/50 transition-all duration-300 transform hover:scale-105">
-				<div class="flex items-center gap-4 mb-6">
-					<div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-400 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-						<Icon name="monitor" size={32} className="text-white" />
-					</div>
-					<div>
-						<h3 class="text-3xl font-bold text-white">Demo Enterprise en Vivo</h3>
-						<p class="text-purple-300 font-medium">POC con datos reales de tu empresa</p>
-					</div>
-				</div>
-				
-				<div class="space-y-6 mb-8">
-					<div>
-						<h4 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
-							<Icon name="play-circle" size={20} className="text-purple-400" />
-							Demostración Interactiva
-						</h4>
-						<ul class="space-y-2 text-gray-300">
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Demo en vivo de todas las soluciones empresariales</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>POC (Proof of Concept) con tus datos y procesos reales</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Testing completo VeriFactu + IA Local integrada</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Simulación de workflows específicos de tu sector</span>
-							</li>
-						</ul>
-					</div>
-					
-					<div>
-						<h4 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
-							<Icon name="file-text" size={20} className="text-blue-400" />
-							Documentación Técnica
-						</h4>
-						<ul class="space-y-2 text-gray-300">
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Propuesta técnica detallada y personalizada</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Arquitectura de solución específica para tu empresa</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>SLA y garantías de rendimiento específicas</span>
-							</li>
-							<li class="flex items-start gap-3">
-								<div class="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-								<span>Plan de soporte técnico 24/7 especializado</span>
-							</li>
-						</ul>
-					</div>
-				</div>
-				
-				<a 
-					href="/contacto?servicio=demo"
-					class="group/btn w-full bg-gradient-to-r from-purple-500 to-purple-400 hover:from-purple-600 hover:to-purple-500 text-white py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-3"
-				>
-					<Icon name="play" size={20} />
-					<span>Agendar Demo Enterprise</span>
-					<Icon name="arrow-right" size={20} className="group-hover/btn:translate-x-1 transition-transform duration-300" />
-				</a>
-			</div>
+
+		
+		<!-- Consulta Técnica Button -->
+		<div class="text-center mb-16">
+			<a 
+				href="/contacto?servicio=consultoria"
+				class="group/btn inline-flex bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white py-4 px-8 rounded-xl font-bold text-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 items-center justify-center gap-3"
+			>
+				<Icon name="calendar" size={20} />
+				<span>Solicitar Consulta Técnica</span>
+				<Icon name="arrow-right" size={20} className="group-hover/btn:translate-x-1 transition-transform duration-300" />
+			</a>
 		</div>
 		
 		<!-- Guarantee & Support -->
@@ -974,14 +818,14 @@
 		background: rgba(0, 122, 255, 0.1);
 		border: 1px solid rgba(0, 122, 255, 0.2);
 		border-radius: 8px;
-		color: #007AFF;
+		color: var(--color-blue-digital);
 		transition: all 0.3s ease;
 	}
 
 	.tech-badge:hover {
-		background: #007AFF;
+		background: var(--color-blue-digital);
 		color: white;
-		border-color: #007AFF;
+		border-color: var(--color-blue-digital);
 		transform: translateY(-1px);
 		box-shadow: 0 4px 8px rgba(0, 122, 255, 0.2);
 	}
@@ -1011,7 +855,7 @@
 	}
 
 	.service-cta-button:hover {
-		background: #007AFF;
+		background: var(--color-blue-digital);
 		transform: translateY(-2px);
 		box-shadow: 
 			0 8px 16px rgba(0, 122, 255, 0.35),

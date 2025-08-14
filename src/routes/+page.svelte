@@ -13,14 +13,14 @@
 	// Enterprise metrics (more professional)
 	const savings = tweened(0, { duration: 2000, easing: cubicOut });
 	const clients = tweened(0, { duration: 2000, easing: cubicOut });
-	const uptime = tweened(0, { duration: 2000, easing: cubicOut });
-	const response = tweened(0, { duration: 2000, easing: cubicOut });
+	const uptime = tweened(0.1, { duration: 2000, easing: cubicOut });
+	const response = tweened(0.1, { duration: 2000, easing: cubicOut });
 
 	onMount(() => {
 		// Start enterprise metrics animation
 		setTimeout(() => {
-			savings.set(2.3); // €2.3M saved
-			clients.set(15);   // 15 Fortune 500
+			savings.set(30); // 30% saved
+			clients.set(2);   // +2 clients
 			uptime.set(99.9);  // 99.9% uptime
 			response.set(2);   // <2h response
 		}, 1000);
@@ -89,14 +89,14 @@
 		<!-- Enterprise Stats repositioned for better balance -->
 		<div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16 max-w-4xl mx-auto">
 			<div class="enterprise-stat">
-				<div class="text-2xl md:text-3xl font-bold text-white mb-2">€{$savings.toFixed(1)}M</div>
-				<div class="text-sm text-white/70 font-medium">AHORRADOS</div>
-				<div class="text-xs text-white/50">Clientes enterprise</div>
+				<div class="text-2xl md:text-3xl font-bold text-white mb-2">{Math.round($savings)}%</div>
+				<div class="text-sm text-white/70 font-medium">AHORROS</div>
+				<div class="text-xs text-white/50">Operativo</div>
 			</div>
 			<div class="enterprise-stat">
-				<div class="text-2xl md:text-3xl font-bold text-white mb-2">{Math.round($clients)}+</div>
-				<div class="text-sm text-white/70 font-medium">FORTUNE 500</div>
-				<div class="text-xs text-white/50">Empresas confiadas</div>
+				<div class="text-2xl md:text-3xl font-bold text-white mb-2">+{Math.round($clients)}</div>
+				<div class="text-sm text-white/70 font-medium">EMPRESAS LOCALES</div>
+				<div class="text-xs text-white/50">Confiadas</div>
 			</div>
 			<div class="enterprise-stat">
 				<div class="text-2xl md:text-3xl font-bold text-white mb-2">{$uptime.toFixed(1)}%</div>
@@ -116,9 +116,9 @@
 				AGENDAR CONSULTA ESTRATÉGICA
 				<Icon name="calendar" size={16} />
 			</a>
-			<a href="/casos-estudio" class="executive-cta-secondary">
-				DESCARGAR CASO DE ESTUDIO
-				<Icon name="download" size={16} />
+			<a href="/servicios" class="executive-cta-secondary">
+				VER SERVICIOS ENTERPRISE
+				<Icon name="briefcase" size={16} />
 			</a>
 		</div>
 		
@@ -201,38 +201,7 @@
 			<AboutPreview />
 		</div>
 		
-		<!-- Simplified expertise showcase -->
-		<div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-			<div class="bg-white/70 border border-slate-200/50 rounded-xl p-6 text-center">
-				<div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-					<Icon name="code" size={20} className="text-white" />
-				</div>
-				<h3 class="text-xl font-bold text-slate-800 mb-3">Desarrollo Avanzado</h3>
-				<p class="text-slate-600">
-					Arquitecturas modernas con SvelteKit, TypeScript y tecnologías cutting-edge.
-				</p>
-			</div>
-			
-			<div class="bg-white/70 border border-slate-200/50 rounded-xl p-6 text-center">
-				<div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-					<Icon name="shield" size={20} className="text-white" />
-				</div>
-				<h3 class="text-xl font-bold text-slate-800 mb-3">Compliance VeriFactu</h3>
-				<p class="text-slate-600">
-					Especialistas certificados en normativa AEAT 2025 e integración seamless.
-				</p>
-			</div>
-			
-			<div class="bg-white/70 border border-slate-200/50 rounded-xl p-6 text-center">
-				<div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-					<Icon name="cpu" size={20} className="text-white" />
-				</div>
-				<h3 class="text-xl font-bold text-slate-800 mb-3">IA Local Empresarial</h3>
-				<p class="text-slate-600">
-					Modelos LLM locales con RAG avanzado y garantía de soberanía de datos.
-				</p>
-			</div>
-		</div>
+
 	</div>
 </section>
 
@@ -252,7 +221,7 @@
 				<div class="w-8 h-px bg-cyan-400"></div>
 			</div>
 			
-			<h2 class="text-4xl md:text-5xl font-bold mb-6">
+			<h2 class="text-4xl md:text-5xl font-bold mb-6 text-white/90">
 				Infraestructura de Clase Mundial
 			</h2>
 			
@@ -269,7 +238,7 @@
 					<div class="w-16 h-16 bg-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
 						<Icon name="code" size={24} className="text-white" />
 					</div>
-					<h3 class="text-xl font-bold">Frontend Moderno</h3>
+					<h3 class="text-xl font-bold text-white">Frontend Moderno</h3>
 				</div>
 				<ul class="space-y-3">
 					<li class="flex items-center gap-3 text-white/90">
@@ -297,7 +266,7 @@
 					<div class="w-16 h-16 bg-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4">
 						<Icon name="server" size={24} className="text-white" />
 					</div>
-					<h3 class="text-xl font-bold">Backend Enterprise</h3>
+					<h3 class="text-xl font-bold text-white">Backend Enterprise</h3>
 				</div>
 				<ul class="space-y-3">
 					<li class="flex items-center gap-3 text-white/90">
@@ -325,7 +294,7 @@
 					<div class="w-16 h-16 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4">
 						<Icon name="cpu" size={24} className="text-white" />
 					</div>
-					<h3 class="text-xl font-bold">IA & Compliance</h3>
+					<h3 class="text-xl font-bold text-white">IA & Compliance</h3>
 				</div>
 				<ul class="space-y-3">
 					<li class="flex items-center gap-3 text-white/90">
@@ -350,7 +319,7 @@
 		
 		<!-- Simplified System Status -->
 		<div class="bg-white/5 border border-white/10 rounded-2xl p-8">
-			<h3 class="text-2xl font-bold text-center mb-8">
+			<h3 class="text-2xl font-bold text-center mb-8 text-white">
 				Sistema Enterprise en Tiempo Real
 			</h3>
 			<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -455,6 +424,8 @@
 		font-family: 'Geist', system-ui, sans-serif;
 		font-weight: 600;
 		font-size: 16px;
+		min-width: 280px;
+		min-height: 60px;
 		background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
 		border: 2px solid rgba(59, 130, 246, 0.5);
 		border-radius: 12px;
@@ -498,6 +469,8 @@
 		font-family: 'Geist', system-ui, sans-serif;
 		font-weight: 600;
 		font-size: 16px;
+		min-width: 280px;
+		min-height: 60px;
 		background: rgba(248, 250, 252, 0.08);
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
@@ -600,6 +573,17 @@
 		background: rgba(255, 255, 255, 0.08);
 		border-color: rgba(255, 255, 255, 0.2);
 		transform: translateY(-4px);
+	}
+
+	/* Títulos dentro de tech-card-simple - Override global styles */
+	.tech-card-simple h3.text-xl {
+		color: #F8FAFC !important;
+		font-weight: 600 !important;
+	}
+	
+	.tech-card-simple h3 {
+		color: #F8FAFC !important;
+		font-weight: 600 !important;
 	}
 
 	/* Responsive improvements */

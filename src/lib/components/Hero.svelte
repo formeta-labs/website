@@ -4,7 +4,7 @@
 		{ label: 'COMPLIANCE', value: '15+', description: 'Empresas VeriFactu' },
 		{ label: 'RESPUESTA', value: '<2h', description: 'Garantía técnica' },
 		{ label: 'SOBERANÍA', value: '100%', description: 'Datos locales' },
-		{ label: 'PROYECTOS', value: '50+', description: 'Enterprise exitosos' }
+		{ label: 'PROYECTOS', value: '2+', description: 'Enterprise exitosos' }
 	];
 	
 	function handleCTAClick() {
